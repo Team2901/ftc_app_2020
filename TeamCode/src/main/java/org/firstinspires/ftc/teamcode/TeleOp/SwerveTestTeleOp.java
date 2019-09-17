@@ -18,6 +18,7 @@ public class SwerveTestTeleOp extends OpMode {
         double servoAngle = WHEEL_SERVO_GEAR_RATIO * wheelAngle;
         return servoAngle;
     }
+
     public double servoAngleToPosition(double servoAngle){
        double servoPosition = servoAngle/SERVO_MAX_ANGLE;
        return servoPosition;
