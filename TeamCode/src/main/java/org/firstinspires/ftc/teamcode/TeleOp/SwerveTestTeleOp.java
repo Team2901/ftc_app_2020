@@ -43,12 +43,20 @@ public class SwerveTestTeleOp extends OpMode {
 
     public double joystickPositionToWheelAngle (double joystickPositionX, double joystickPositionY){
         double wheelAngle = Math.atan2(joystickPositionY,joystickPositionX);
+        wheelAngle = radiansDegreesTranslation(wheelAngle);
+        wheelAngle = standardizedAngle(wheelAngle);
         return wheelAngle;
     }
 
+    public double radiansDegreesTranslation (double radians){
+        double degrees = radians * 180 / Math.PI;
+        return degrees;
 
-
-
+    }
+    //Converting -180 to 180 to 0 to 360
+    public double standardizedAngle(double angle) {
+        return (angle + 360) % 360;
+    }
 
 
 
