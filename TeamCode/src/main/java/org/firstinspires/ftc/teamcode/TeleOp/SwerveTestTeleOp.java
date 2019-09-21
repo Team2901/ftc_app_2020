@@ -28,6 +28,7 @@ public class SwerveTestTeleOp extends OpMode {
         telemetry.addData("servoAngle",servoAngle);
         telemetry.addData("servoPosition",servoPosition);
         telemetry.addData("actual servo position",servoFrontLeft.getPosition());
+        telemetry.addData("power" , getPower(joystickPositionX,joystickPositionY));
         telemetry.update();
     }
 
@@ -56,6 +57,11 @@ public class SwerveTestTeleOp extends OpMode {
     //Converting -180 to 180 to 0 to 360
     public double standardizedAngle(double angle) {
         return (angle + 360) % 360;
+    }
+
+    public double getPower (double x, double y){
+        double power = Math.sqrt(Math.pow(x,2)+Math.pow(y,2));
+        return power;
     }
 
 
