@@ -1,9 +1,10 @@
 package org.firstinspires.ftc.teamcode.NewProgrammers;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
-
+@Disabled
 @TeleOp (name = "swerve test teleop")
 public class NikkiSwerveTestTeleop extends OpMode {
     public final static double WHEEL_SERVO_GEAR_RATIO = 1 / 1;
