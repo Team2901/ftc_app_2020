@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 
 @TeleOp (name = "swerve test teleop")
-public class SwerveTestTeleop extends OpMode {
+public class SwerveTestTeleOp extends OpMode {
     public final static double WHEEL_SERVO_GEAR_RATIO = 1 / 1;
     public final static int SERVO_MAX_ANGLE = 190;
     Servo servoFrontLeft;
