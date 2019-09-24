@@ -6,7 +6,9 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name = "ServoTester")
 public class ServoTester extends OpMode {
-    Servo mrServo;
+    private Servo mrServo;
+    private boolean isLastRightBumperPressed;
+    private boolean isLastLeftBumperPressed;
 
     @Override
     public void init() {
@@ -28,6 +30,17 @@ public class ServoTester extends OpMode {
             mrServo.setPosition(1.0);
 
         }
+        if (gamepad1.right_bumper && !isLastRightBumperPressed){
+            double newServoPosition = .05 + mrServo.getPosition();
+            mrServo.setPosition(newServoPosition);
+        }
+        if (gamepad1.left_bumper && !isLastLeftBumperPressed) {
+            double newServoPosition = -.05 + mrServo.getPosition();
+            mrServo.setPosition(newServoPosition);
+        }
+
+        isLastRightBumperPressed = gamepad1.right_bumper;
+        isLastLeftBumperPressed = gamepad1.left_bumper;
         telemetry.addData("CurrentPosition",mrServo.getPosition());
         telemetry.addData("Press X","goes to position 0");
         telemetry.addData("Press A","goes to position 0.33");
