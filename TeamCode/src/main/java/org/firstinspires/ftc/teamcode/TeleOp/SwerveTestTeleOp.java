@@ -3,18 +3,22 @@ package org.firstinspires.ftc.teamcode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 
 @TeleOp (name = "swerve test teleop")
-public class SwerveTestTeleop extends OpMode {
+public class SwerveTestTeleOp extends OpMode {
     public final static double WHEEL_SERVO_GEAR_RATIO = 1 / 1;
     public final static int SERVO_MAX_ANGLE = 190;
     Servo servoFrontLeft;
+    DcMotor frontLeft;
+
 
     @Override
     public void init() {
         servoFrontLeft = hardwareMap.servo.get("servoFrontLeft");
+        frontLeft = hardwareMap.dcMotor.get("frontLeft");
     }
 
     @Override
@@ -26,11 +30,13 @@ public class SwerveTestTeleop extends OpMode {
         double servoAngle = wheelServoAngle(wheelAngle);
         double servoPosition = servoAngleToPosition(servoAngle);
         servoFrontLeft.setPosition(servoPosition);
+        frontLeft.setPower(getPower(joystickPositionX, joystickPositionY));
 
         telemetry.addData("wheelAngle", wheelAngle);
         telemetry.addData("servoAngle", servoAngle);
         telemetry.addData("servoPosition", servoPosition);
         telemetry.addData("actual servo position", servoFrontLeft.getPosition());
+        telemetry.addData("power", getPower (joystickPositionX, joystickPositionY));
         telemetry.update();
     }
 
@@ -60,7 +66,10 @@ public class SwerveTestTeleop extends OpMode {
     public double standardizeAngle(double angle) {
         return (angle + 360) % 360;
 }
-
+    public double getPower(double x,double y) {
+        double power = Math.sqrt(Math.pow(x, 2)+ Math.pow(y, 2) );
+        return power;
+    }
 
 
 

@@ -29,7 +29,7 @@ public class SwerveTeleOp extends OpMode {
         double joystickPositionX = gamepad1.left_stick_x;
         double joystickPositionY = -gamepad1.left_stick_y;
 
-        if (gamepad1.right_stick_x>.1 || gamepad1.right_stick_x<.1 ){
+        if (gamepad1.right_stick_x>.1 || gamepad1.right_stick_x< -.1 ){
             swerveTurn(gamepad1.right_stick_x);
 
         }else{
