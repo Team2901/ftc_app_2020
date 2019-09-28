@@ -96,7 +96,7 @@ public class SwerveTeleOp extends OpMode {
     }
 
     public void swerveTurn(double joyStickRightPosX) {
-        if (joyStickRightPosX > 0) {
+
             double fRPos = 90 + TURN_ANGLE;
             double fLPos = 90 - TURN_ANGLE;
             double bLPos = 270 + TURN_ANGLE;
@@ -108,7 +108,7 @@ public class SwerveTeleOp extends OpMode {
             setPower(joyStickRightPosX, 0, Math.signum(joyStickRightPosX));
 
         }
-    }
+    
 
     public double joystickToServoPosition(double joystickPositionX, double joystickPositionY){
         double wheelAngle = joystickPositionToWheelAngle(joystickPositionX,joystickPositionY);
