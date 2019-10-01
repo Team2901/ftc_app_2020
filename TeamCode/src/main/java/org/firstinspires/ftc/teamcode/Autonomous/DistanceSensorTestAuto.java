@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -17,7 +18,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
 
-@TeleOp(name = "DistanceSensorTest")
+@Autonomous(name = "DistanceSensorTest")
 public class DistanceSensorTestAuto extends LinearOpMode {
     DcMotor leftDrive;
     DcMotor rightDrive;
@@ -72,14 +73,22 @@ public class DistanceSensorTestAuto extends LinearOpMode {
         while (distanceSensor.getDistance(DistanceUnit.INCH) > 10 && this.opModeIsActive()) {
             leftDrive.setPower(1);
             rightDrive.setPower(1);
+            telemetry.addData("state", "going straight");
+            double distanceValue = distanceSensor.getDistance(DistanceUnit.INCH);
+            telemetry.addData("distance", distanceValue);
+            telemetry.update();
         }
 
         // turn in place
         double targetAngle = -90;
 
-        while (getCurrentAngle() != targetAngle && this.opModeIsActive()) {
+        while (getCurrentAngle() <= targetAngle && this.opModeIsActive()) {
             rightDrive.setPower(-1);
             leftDrive.setPower(1);
+            telemetry.addData("state","Turning");
+            double rotationValue = getCurrentAngle();
+            telemetry.addData("current angle", rotationValue);
+            telemetry.update();
         }
     }
 

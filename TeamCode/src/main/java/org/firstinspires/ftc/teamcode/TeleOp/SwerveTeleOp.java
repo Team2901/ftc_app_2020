@@ -37,18 +37,30 @@ public class SwerveTeleOp extends OpMode {
             setPower(joystickPositionX,joystickPositionY , 1);
         }
 
+        telemetry.update();
     }
 
+    /* This is a helper function that is used in 2 other methods.  This class takes the goal angle
+    of "wheel angle" and shifts it to what the desired angle of the servo. This is the mathematical
+    reason for the gear ratio
+    */
     public double wheelAngleToServoAngle(double wheelAngle){
         double servoAngle = WHEEL_SERVO_GEAR_RATIO * wheelAngle;
         return servoAngle;
     }
 
+    /*This is the next step in the process and takes the desired servo angle and divide it by the
+    total servo angles so we can get a position between 0 and 1 for our desired location
+     */
     public double servoAngleToServoPosition(double servoAngle){
        double servoPosition = servoAngle/SERVO_MAX_ANGLE;
        return servoPosition;
     }
 
+    /*This method finds our desired angle based on the joysticks. We want out robot's wheels to
+    follow the position of our joystick, so we find the angle of our joysticks position like it is
+    a position on the coordinate plane
+     */
     public double joystickPositionToWheelAngle (double joystickPositionX, double joystickPositionY){
         double wheelAngleRad = Math.atan2(joystickPositionY,joystickPositionX);
         double wheelAngle = radiansDegreesTranslation(wheelAngleRad)-90;
@@ -79,6 +91,8 @@ public class SwerveTeleOp extends OpMode {
         robot.backLeft.setPower(power);
         robot.frontRight.setPower(power);
         robot.frontLeft.setPower(power);
+
+        telemetry.addData("Power" , power);
 
     }
 
