@@ -51,7 +51,7 @@ public class SwerveTeleOp extends OpMode {
 
     public double joystickPositionToWheelAngle (double joystickPositionX, double joystickPositionY){
         double wheelAngleRad = Math.atan2(joystickPositionY,joystickPositionX);
-        double wheelAngle = radiansDegreesTranslation(wheelAngleRad);
+        double wheelAngle = radiansDegreesTranslation(wheelAngleRad)-90;
         double wheelAngleStandarized = standardizedAngle(wheelAngle);
         return wheelAngleStandarized;
     }
@@ -88,8 +88,6 @@ public class SwerveTeleOp extends OpMode {
 
 
         telemetry.addData("servoPosition",servoPosition);
-        telemetry.addData("power" , getPower(joystickPositionX,joystickPositionY));
-        telemetry.update();
 
         setAllServos(servoPosition, servoPosition,servoPosition,servoPosition);
 
