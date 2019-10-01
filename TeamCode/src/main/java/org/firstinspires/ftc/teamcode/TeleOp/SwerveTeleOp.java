@@ -39,21 +39,21 @@ public class SwerveTeleOp extends OpMode {
 
     }
 
-    public double wheelServoAngle(double wheelAngle){
+    public double wheelAngleToServoAngle(double wheelAngle){
         double servoAngle = WHEEL_SERVO_GEAR_RATIO * wheelAngle;
         return servoAngle;
     }
 
-    public double servoAngleToPosition(double servoAngle){
+    public double servoAngleToServoPosition(double servoAngle){
        double servoPosition = servoAngle/SERVO_MAX_ANGLE;
        return servoPosition;
     }
 
     public double joystickPositionToWheelAngle (double joystickPositionX, double joystickPositionY){
-        double wheelAngle = Math.atan2(joystickPositionY,joystickPositionX);
-        wheelAngle = radiansDegreesTranslation(wheelAngle);
-        wheelAngle = standardizedAngle(wheelAngle);
-        return wheelAngle;
+        double wheelAngleRad = Math.atan2(joystickPositionY,joystickPositionX);
+        double wheelAngle = radiansDegreesTranslation(wheelAngleRad);
+        double wheelAngleStandarized = standardizedAngle(wheelAngle);
+        return wheelAngleStandarized;
     }
 
     public double radiansDegreesTranslation (double radians){
@@ -108,18 +108,18 @@ public class SwerveTeleOp extends OpMode {
             setPower(joyStickRightPosX, 0, Math.signum(joyStickRightPosX));
 
         }
-    
 
     public double joystickToServoPosition(double joystickPositionX, double joystickPositionY){
         double wheelAngle = joystickPositionToWheelAngle(joystickPositionX,joystickPositionY);
-        double servoAngle = wheelServoAngle(wheelAngle);
-        return servoAngleToPosition(servoAngle);
+        double servoAngle = wheelAngleToServoAngle(wheelAngle);
+        double servoPosition = servoAngleToServoPosition(servoAngle);
+        return servoPosition;
 
     }
 
     public double wheelAngleToServoPosition(double angle){
-        double servoAngle = wheelServoAngle(angle);
-        double servoPosition = servoAngleToPosition(servoAngle);
+        double servoAngle = wheelAngleToServoAngle(angle);
+        double servoPosition = servoAngleToServoPosition(servoAngle);
         return servoPosition;
     }
 

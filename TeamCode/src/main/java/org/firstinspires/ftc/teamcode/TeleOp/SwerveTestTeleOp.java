@@ -1,15 +1,14 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 
-@TeleOp (name = "swerve test teleop")
+@TeleOp(name = "swerve test teleop")
 public class SwerveTestTeleOp extends OpMode {
-    public final static double WHEEL_SERVO_GEAR_RATIO = 1 / 1;
+    public final static double WHEEL_SERVO_GEAR_RATIO = 1.0/ 1;
     public final static int SERVO_MAX_ANGLE = 190;
     Servo servoFrontLeft;
     DcMotor frontLeft;
@@ -27,8 +26,8 @@ public class SwerveTestTeleOp extends OpMode {
         double joystickPositionY = -gamepad1.left_stick_y;
 
         double wheelAngle = joystickPositionToWheelAngle(joystickPositionX, joystickPositionY);
-        double servoAngle = wheelServoAngle(wheelAngle);
-        double servoPosition = servoAngleToPosition(servoAngle);
+        double servoAngle = wheelAngleToServoAngle(wheelAngle);
+        double servoPosition = servoAngleToServoPosition(servoAngle);
         servoFrontLeft.setPosition(servoPosition);
         frontLeft.setPower(getPower(joystickPositionX, joystickPositionY));
 
@@ -36,16 +35,16 @@ public class SwerveTestTeleOp extends OpMode {
         telemetry.addData("servoAngle", servoAngle);
         telemetry.addData("servoPosition", servoPosition);
         telemetry.addData("actual servo position", servoFrontLeft.getPosition());
-        telemetry.addData("power", getPower (joystickPositionX, joystickPositionY));
+        telemetry.addData("power", getPower(joystickPositionX, joystickPositionY));
         telemetry.update();
     }
 
-    public double wheelServoAngle(double wheelAngle) {
+    public double wheelAngleToServoAngle(double wheelAngle) {
         double servoAngle = WHEEL_SERVO_GEAR_RATIO * wheelAngle;
         return servoAngle;
     }
 
-    public double servoAngleToPosition(double servoAngle) {
+    public double servoAngleToServoPosition(double servoAngle) {
         double servoPosition = servoAngle / SERVO_MAX_ANGLE;
         return servoPosition;
     }
@@ -65,19 +64,12 @@ public class SwerveTestTeleOp extends OpMode {
     // Converting -180 to 180, 0 to 360
     public double standardizeAngle(double angle) {
         return (angle + 360) % 360;
-}
-    public double getPower(double x,double y) {
-        double power = Math.sqrt(Math.pow(x, 2)+ Math.pow(y, 2) );
-        return power;
     }
 
-
-
-
-
-
-
-
+    public double getPower(double x, double y) {
+        double power = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+        return power;
+    }
 
 
 }
