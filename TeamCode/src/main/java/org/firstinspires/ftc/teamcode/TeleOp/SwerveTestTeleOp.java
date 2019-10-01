@@ -8,16 +8,17 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name = "swerve test teleop")
 public class SwerveTestTeleOp extends OpMode {
-    public final static double WHEEL_SERVO_GEAR_RATIO = 1.0/ 1;
+    public final static double WHEEL_SERVO_GEAR_RATIO = 1.0/4;
     public final static int SERVO_MAX_ANGLE = 190;
+    public final static double WHEEL_OFFSET = .17;
     Servo servoFrontLeft;
-    DcMotor frontLeft;
+   // DcMotor frontLeft;
 
 
     @Override
     public void init() {
         servoFrontLeft = hardwareMap.servo.get("servoFrontLeft");
-        frontLeft = hardwareMap.dcMotor.get("frontLeft");
+ //       frontLeft = hardwareMap.dcMotor.get("frontLeft");
     }
 
     @Override
@@ -29,7 +30,7 @@ public class SwerveTestTeleOp extends OpMode {
         double servoAngle = wheelAngleToServoAngle(wheelAngle);
         double servoPosition = servoAngleToServoPosition(servoAngle);
         servoFrontLeft.setPosition(servoPosition);
-        frontLeft.setPower(getPower(joystickPositionX, joystickPositionY));
+       // frontLeft.setPower(getPower(joystickPositionX, joystickPositionY));
 
         telemetry.addData("wheelAngle", wheelAngle);
         telemetry.addData("servoAngle", servoAngle);
@@ -45,13 +46,13 @@ public class SwerveTestTeleOp extends OpMode {
     }
 
     public double servoAngleToServoPosition(double servoAngle) {
-        double servoPosition = servoAngle / SERVO_MAX_ANGLE;
+        double servoPosition = (servoAngle / SERVO_MAX_ANGLE)+WHEEL_OFFSET;
         return servoPosition;
     }
 
     public double joystickPositionToWheelAngle(double joystickPositionX, double joystickPositionY) {
         double wheelAngle = Math.atan2(joystickPositionY, joystickPositionX);
-        wheelAngle = radiansDegreesTranslation(wheelAngle);
+        wheelAngle = radiansDegreesTranslation(wheelAngle)-90;
         wheelAngle = standardizeAngle(wheelAngle);
         return wheelAngle;
     }
