@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.BaseSampleCode;
 
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -27,7 +28,7 @@ with machanum wheels all 4 wheels need to be motorized
     public Servo tLeftPincer = null;
     public Servo tRightPincer = null;
     */
-    public Servo clawServo = null;
+    public CRServo clawServo = null;
 
     HardwareMap hwMap = null;
 
@@ -49,7 +50,7 @@ with machanum wheels all 4 wheels need to be motorized
         tLeftPincer = hwMap.servo.get("tLeftPincer");
         tRightPincer = hwMap.servo.get("tRightPincer");
        */
-        clawServo = hwMap.servo.get("clawServo");
+        clawServo = hwMap.crservo.get("clawServo");
 
         fLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         fRight.setDirection(DcMotorSimple.Direction.FORWARD);
@@ -68,7 +69,7 @@ with machanum wheels all 4 wheels need to be motorized
         bLeft.setPower(0);
         bRight.setPower(0);
         //lift.setPower(0);
-        clawServo.setPosition(0);
+        clawServo.setPower(0);
 
 
         fLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

@@ -21,11 +21,14 @@ public class Programmer_MechanumRobot extends OpMode {
 
         if(gamepad1.right_trigger>0)
         {
-            robot.clawServo.setPosition(0.0);
+            robot.clawServo.setPower(-0.5);
         }
         else if (gamepad1.right_bumper)
         {
-            robot.clawServo.setPosition(0.5);
+            robot.clawServo.setPower(0.5);
+        }
+        else {
+            robot.clawServo.setPower(0);
         }
         
 
@@ -62,6 +65,8 @@ public class Programmer_MechanumRobot extends OpMode {
         telemetry.addData("front right motor: ",wheelPower[1]);
         telemetry.addData("back left motor: ",wheelPower[2]);
         telemetry.addData("back right motor: ",wheelPower[3]);
+        telemetry.addData("right trigger", gamepad1.right_trigger);
+        telemetry.addData("right bumber", gamepad1.right_bumper);
         telemetry.update();
     }
 
