@@ -20,14 +20,11 @@ public class Programmer_MechanumRobot extends OpMode {
 
         if(gamepad1.right_trigger>0)
         {
-            robot.clawServo.setPower(-0.5);
+            robot.clawServo.setPosition(.5);
         }
         else if (gamepad1.right_bumper)
         {
-            robot.clawServo.setPower(0.5);
-        }
-        else {
-            robot.clawServo.setPower(0);
+            robot.clawServo.setPosition(1);
         }
         
 
@@ -50,6 +47,8 @@ public class Programmer_MechanumRobot extends OpMode {
         double leftX= Math.abs(gamepad1.left_stick_x) > 0.3? gamepad1.left_stick_x: 0 ;
 
         double rightX= Math.abs(gamepad1.right_stick_x) > 0.3? gamepad1.right_stick_x: 0;
+
+        // double rihgtY=Math.abs(gamepad1.right_stick_y) > 0.3? -gamepad1.right_stick_y: 0;
 
         double[] wheelPower = wheelPower(leftX, leftY, rightX);
         robot.fLeft.setPower(wheelPower[0]);
