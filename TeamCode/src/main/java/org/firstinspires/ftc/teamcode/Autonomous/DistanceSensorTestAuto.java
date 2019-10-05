@@ -34,7 +34,8 @@ public class DistanceSensorTestAuto extends LinearOpMode {
 
         this.waitForStart();
 
-        while (this.opModeIsActive()) {
+
+        while (opModeIsActive()){
             doTheThing();
         }
     }
@@ -79,17 +80,27 @@ public class DistanceSensorTestAuto extends LinearOpMode {
             telemetry.update();
         }
 
-        // turn in place
-        double targetAngle = -90;
+        leftDrive.setPower(0);
+        rightDrive.setPower(0);
 
-        while (getCurrentAngle() <= targetAngle && this.opModeIsActive()) {
+        telemetry.addData("changing","");
+        telemetry.update();
+
+        // turn in place
+        double targetAngle = getCurrentAngle() -90;
+
+        while (getCurrentAngle() >= targetAngle && this.opModeIsActive()) {
             rightDrive.setPower(-1);
             leftDrive.setPower(1);
             telemetry.addData("state","Turning");
             double rotationValue = getCurrentAngle();
             telemetry.addData("current angle", rotationValue);
+            telemetry.addData("target angle", targetAngle);
             telemetry.update();
         }
+
+        leftDrive.setPower(0);
+        rightDrive.setPower(0);
     }
 
     public double getCurrentAngle() {
