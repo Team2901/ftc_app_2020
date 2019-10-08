@@ -85,22 +85,25 @@ public class DistanceSensorTestAuto extends LinearOpMode {
 
         telemetry.addData("changing","");
         telemetry.update();
-
+        double targetAngle = getCurrentAngle() - 90;
         // turn in place
-        double targetAngle = getCurrentAngle() -90;
-
-        while (getCurrentAngle() >= targetAngle && this.opModeIsActive()) {
-            rightDrive.setPower(-1);
-            leftDrive.setPower(1);
+        double deltaAngle = ((getCurrentAngle() - targetAngle + 360 + 180) % 360) - 180;
+        while (Math.abs(deltaAngle) > 10 && this.opModeIsActive()) {
+            rightDrive.setPower(-.5);
+            leftDrive.setPower(.5);
             telemetry.addData("state","Turning");
             double rotationValue = getCurrentAngle();
             telemetry.addData("current angle", rotationValue);
             telemetry.addData("target angle", targetAngle);
+            telemetry.addData("delta angle", deltaAngle);
             telemetry.update();
+            deltaAngle = ((getCurrentAngle() - targetAngle + 360 + 180) % 360) - 180;
         }
 
         leftDrive.setPower(0);
         rightDrive.setPower(0);
+
+
     }
 
     public double getCurrentAngle() {
