@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 @TeleOp (name = "Swerve Teleop")
 public class SwerveTeleOp extends OpMode {
-    public final static double WHEEL_SERVO_GEAR_RATIO = 1 / 1;
+    public final static double WHEEL_SERVO_GEAR_RATIO = 1.0 / 4.0;
     public final static double WIDTH_OF_ROBOT = 18;
     public final static double LENGTH_OF_ROBOT = 18;
     //This is the angle Phi that we defined in the math done before this
@@ -90,22 +90,23 @@ public class SwerveTeleOp extends OpMode {
     total servo angles so we can get a position between 0 and 1 for our desired location
      */
     public double servoAngleToServoPositionFL(double servoAngle) {
-        double servoPosition = (servoAngle / SERVO_MAX_ANGLE);
+        double servoPosition = (servoAngle / SERVO_MAX_ANGLE) +FRONT_LEFT_OFFSET;
         return servoPosition;
     }
 
     public double servoAngleToServoPositionFR(double servoAngle) {
-        double servoPosition = servoAngle / SERVO_MAX_ANGLE;
+        double servoPosition = (servoAngle / SERVO_MAX_ANGLE) +FRONT_RIGHT_OFFSET;
         return servoPosition;
     }
 
     public double servoAngleToServoPositionBL(double servoAngle) {
-        double servoPosition = servoAngle / SERVO_MAX_ANGLE;
+        double servoPosition = (servoAngle / SERVO_MAX_ANGLE) +BACK_LEFT_OFFSET;
         return servoPosition;
     }
 
     public double servoAngleToServoPositionBR(double servoAngle) {
-        double servoPosition = servoAngle / SERVO_MAX_ANGLE;
+        double servoPosition = (servoAngle / SERVO_MAX_ANGLE)+BACK_RIGHT_OFFSET;
+
         return servoPosition;
     }
 
