@@ -12,6 +12,14 @@ public class SwerveTestTeleOp extends OpMode {
     public final static int SERVO_MAX_ANGLE = 190;
     public final static double WHEEL_OFFSET = .17;
     Servo servoFrontLeft;
+    Servo servoFrontRight;
+    Servo servoBackLeft;
+    Servo servoBackRight;
+
+    boolean frontRight;
+    boolean frontLeft;
+    boolean backRight;
+    boolean backLeft;
    // DcMotor frontLeft;
 
 
@@ -19,6 +27,12 @@ public class SwerveTestTeleOp extends OpMode {
     public void init() {
         servoFrontLeft = hardwareMap.servo.get("servoFrontLeft");
  //       frontLeft = hardwareMap.dcMotor.get("frontLeft");
+        servoFrontRight = hardwareMap.servo.get ("servoFrontRight");
+        servoBackLeft = hardwareMap.servo.get ("servoBackLeft");
+        servoBackRight = hardwareMap.servo.get ("servoBackRight");
+
+
+
     }
 
     @Override
@@ -29,14 +43,50 @@ public class SwerveTestTeleOp extends OpMode {
         double wheelAngle = joystickPositionToWheelAngle(joystickPositionX, joystickPositionY);
         double servoAngle = wheelAngleToServoAngle(wheelAngle);
         double servoPosition = servoAngleToServoPosition(servoAngle);
-        servoFrontLeft.setPosition(servoPosition);
-       // frontLeft.setPower(getPower(joystickPositionX, joystickPositionY));
+
+        if (gamepad1.a) {
+            frontRight = true;
+            frontLeft = false;
+            backLeft = false;
+            backRight = false;
+        }else if (gamepad1.b){
+            frontRight = false;
+            frontLeft = true;
+            backLeft = false;
+            backRight = false;
+        }else  if (gamepad1.x){
+            frontRight = false;
+            frontLeft = false;
+            backLeft = true;
+            backRight = false;
+        }else  if (gamepad1.y){
+            frontRight = false;
+            frontLeft = false;
+            backLeft = false;
+            backRight = true;
+        }
+
+        if (frontLeft) {
+            servoFrontLeft.setPosition(servoPosition);
+            // frontLeft.setPower(getPower(joystickPositionX, joystickPositionY));
+        }else if (frontRight){
+            servoFrontRight.setPosition (servoPosition);
+        }else if (backLeft){
+            servoBackLeft.setPosition (servoPosition);
+        }else if (backRight){
+            servoBackRight.setPosition (servoPosition);
+        }
+
 
         telemetry.addData("wheelAngle", wheelAngle);
         telemetry.addData("servoAngle", servoAngle);
         telemetry.addData("servoPosition", servoPosition);
         telemetry.addData("actual servo position", servoFrontLeft.getPosition());
         telemetry.addData("power", getPower(joystickPositionX, joystickPositionY));
+        telemetry.addData ("frontRight", frontRight);
+        telemetry.addData ("frontLeft", frontLeft);
+        telemetry.addData ("backRight", backRight);
+        telemetry.addData ("backLeft", backLeft);
         telemetry.update();
     }
 
