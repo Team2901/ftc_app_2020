@@ -42,6 +42,7 @@ public class SwerveTeleOp extends OpMode {
     @Override
     public void init() {
         robot.init(hardwareMap);
+        setDriveServoPosition(0,0);
     }
 
     @Override
