@@ -139,6 +139,9 @@ public class SwerveTeleOp extends OpMode {
 
     public double getPower(double x, double y) {
         double power = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+        if (gamepad1.left_bumper){
+            power = 0;
+        }
         return power;
     }
 
