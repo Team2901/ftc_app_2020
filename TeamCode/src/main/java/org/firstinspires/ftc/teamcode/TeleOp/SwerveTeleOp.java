@@ -12,8 +12,8 @@ import java.util.ArrayList;
 @TeleOp (name = "Swerve Teleop")
 public class SwerveTeleOp extends OpMode {
     public final static double WHEEL_SERVO_GEAR_RATIO = 1.0 / 4.0;
-    public final static double WIDTH_OF_ROBOT = 18;
-    public final static double LENGTH_OF_ROBOT = 18;
+    public final static double WIDTH_OF_ROBOT = 13.5;
+    public final static double LENGTH_OF_ROBOT = 12.75;
     //This is the angle Phi that we defined in the math done before this
     public final static double TURN_ANGLE = Math.atan((.5 * WIDTH_OF_ROBOT) / (.5 * LENGTH_OF_ROBOT));
     public final static int SERVO_MAX_ANGLE = 190;
@@ -56,8 +56,6 @@ public class SwerveTeleOp extends OpMode {
             setDriveServoPosition(joystickPositionX, joystickPositionY);
             setPower(joystickPositionX, joystickPositionY, 1);
         }
-
-
 
         telemetry.update();
 
