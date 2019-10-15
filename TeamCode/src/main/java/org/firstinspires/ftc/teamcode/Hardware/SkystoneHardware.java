@@ -42,7 +42,7 @@ public class SkystoneHardware {
         servoBackLeft =  hardwareMap.servo.get("servoBackLeft");
         servoBackRight =  hardwareMap.servo.get("servoBackRight");
 
-        setAllSteeringServos(0);
+        //setAllSteeringServos(0);
 
        // setting up the gyroscope
         imu = hardwareMap.get(BNO055IMU.class, "imu");
