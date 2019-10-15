@@ -57,7 +57,11 @@ public class SwerveTeleOp extends OpMode {
             setPower(joystickPositionX, joystickPositionY, 1);
         }
 
+
+
         telemetry.update();
+
+
     }
 
     /* This is a helper function that is used in 2 other methods.  This class takes the goal angle
@@ -66,6 +70,7 @@ public class SwerveTeleOp extends OpMode {
     */
     public double wheelAngleToServoAngle(double wheelAngle) {
         double servoAngle = WHEEL_SERVO_GEAR_RATIO * wheelAngle;
+        telemetry.addData("Goal Angle" , wheelAngle);
         return servoAngle;
     }
 
@@ -200,5 +205,10 @@ public class SwerveTeleOp extends OpMode {
         robot.servoBackRight.setPosition(bRPos);
         robot.servoFrontLeft.setPosition(fLPos);
         robot.servoBackLeft.setPosition(bLPos);
+
+        telemetry.addData("Front Left Position" , fLPos);
+        telemetry.addData("Front Right Position" , fRPos);
+        telemetry.addData("Back Right Position" , bRPos);
+        telemetry.addData(" Back Left Position" , bLPos);
     }
 }
