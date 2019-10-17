@@ -22,6 +22,8 @@ public class SwerveTeleOp extends OpMode {
     public final static double FRONT_RIGHT_OFFSET = 0;
     public final static double BACK_RIGHT_OFFSET = 0;
     Servo servoFrontLeft;
+    public double currentGoal = 0;
+
 
 
     enum WheelPosition {
@@ -54,7 +56,8 @@ public class SwerveTeleOp extends OpMode {
             swerveTurn(gamepad1.right_stick_x);
 
         } else {
-            setDriveServoPosition(joystickPositionX, joystickPositionY);
+            currentGoal  = joystickPositionToWheelAngle(joystickPositionX, joystickPositionY);
+            setDriveServoPosition(currentGoal);
             setPower(joystickPositionX, joystickPositionY, 1);
         }
 
@@ -72,7 +75,6 @@ public class SwerveTeleOp extends OpMode {
         telemetry.addData("Goal Angle" , wheelAngle);
         return servoAngle;
     }
-
 
     public double servoAngleToServoPosition(double servoAngle, WheelPosition wheelPosition) {
         switch (wheelPosition) {
@@ -120,6 +122,13 @@ public class SwerveTeleOp extends OpMode {
      */
     public double joystickPositionToWheelAngle(double joystickPositionX, double joystickPositionY) {
         double wheelAngleRad = Math.atan2(joystickPositionY, joystickPositionX);
+        double wheelAngle = radiansDegreesTranslation(wheelAngleRad) - 90;
+        double wheelAngleStandarized = standardizedAngle(wheelAngle);
+        return wheelAngleStandarized;
+    }
+
+    public double joystickPositionToWheelAngle(double currentGoal) {
+        double wheelAngleRad = currentGoal;
         double wheelAngle = radiansDegreesTranslation(wheelAngleRad) - 90;
         double wheelAngleStandarized = standardizedAngle(wheelAngle);
         return wheelAngleStandarized;
@@ -173,6 +182,20 @@ public class SwerveTeleOp extends OpMode {
 
     }
 
+    public void setDriveServoPosition(double currentGoal) {
+        double servoPositionfL = joystickToServoPosition(currentGoal ,
+                WheelPosition.FRONT_LEFT);
+        double servoPositionfR = joystickToServoPosition(currentGoal ,
+                WheelPosition.FRONT_RIGHT);
+        double servoPositionbL = joystickToServoPosition(currentGoal,
+                WheelPosition.BACK_LEFT);
+        double servoPositionbR = joystickToServoPosition(currentGoal ,
+                WheelPosition.FRONT_RIGHT);
+
+
+        setAllServos(servoPositionfL,servoPositionfR , servoPositionbL, servoPositionbR);
+    }
+
     public void swerveTurn(double joyStickRightPosX) {
 
         double fRPos = 90 + TURN_ANGLE;
@@ -189,6 +212,15 @@ public class SwerveTeleOp extends OpMode {
 
     public double joystickToServoPosition(double joystickPositionX, double joystickPositionY, WheelPosition wheelPosition) {
         double wheelAngle = joystickPositionToWheelAngle(joystickPositionX, joystickPositionY);
+        double servoAngle = wheelAngleToServoAngle(wheelAngle);
+        double servoPosition = servoAngleToServoPosition(servoAngle , wheelPosition);
+
+        return servoPosition;
+
+    }
+
+    public double joystickToServoPosition(double currentGoal, WheelPosition wheelPosition) {
+        double wheelAngle = joystickPositionToWheelAngle(currentGoal);
         double servoAngle = wheelAngleToServoAngle(wheelAngle);
         double servoPosition = servoAngleToServoPosition(servoAngle , wheelPosition);
 
