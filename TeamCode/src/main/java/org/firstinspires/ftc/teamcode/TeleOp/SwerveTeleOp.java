@@ -52,13 +52,17 @@ public class SwerveTeleOp extends OpMode {
         double joystickPositionX = gamepad1.left_stick_x;
         double joystickPositionY = -gamepad1.left_stick_y;
 
+        double radius = Math.sqrt(Math.pow(joystickPositionX,2) + Math.pow(joystickPositionY,2));
+
         if (gamepad1.right_stick_x > .1 || gamepad1.right_stick_x < -.1) {
             swerveTurn(gamepad1.right_stick_x);
 
-        } else {
+        } else if(radius > .2){
             currentGoal  = joystickPositionToWheelAngle(joystickPositionX, joystickPositionY);
             setDriveServoPosition(currentGoal);
             setPower(joystickPositionX, joystickPositionY, 1);
+        }else{
+            setPower(0,0,1);
         }
 
         telemetry.update();
