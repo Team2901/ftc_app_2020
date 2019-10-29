@@ -16,7 +16,8 @@ public class SwerveTeleOp extends OpMode {
     public final static double LENGTH_OF_ROBOT = 12.75;
     //This is the angle Phi that we defined in the math done before this
     public final static double TURN_ANGLE = Math.atan((.5 * WIDTH_OF_ROBOT) / (.5 * LENGTH_OF_ROBOT));
-    public final static int SERVO_MAX_ANGLE = 190;
+    public final static int SERVO_MAX_ANGLE = 360;
+    public final static int SERVO_MIN_ANGLE = 0;
     public final static double FRONT_LEFT_OFFSET = 0;
     public final static double BACK_LEFT_OFFSET = 0;
     public final static double FRONT_RIGHT_OFFSET = 0;
@@ -252,5 +253,21 @@ public class SwerveTeleOp extends OpMode {
         telemetry.addData("Front Right Position" , fRPos);
         telemetry.addData("Back Right Position" , bRPos);
         telemetry.addData(" Back Left Position" , bLPos);
+    }
+
+    public double normalizeAngle (double angle){
+        return ((angle + 180) %360)-180;
+    }
+
+    public double angleCheck (double start, double goal){
+        goal = normalizeAngle(goal)
+
+        double dAngleForward = ((goal - normalizeAngle(start)+180)%360)-180;
+        double targetAngleForward = dAngleForward + start;
+        boolean forward =(targetAngleForward < SERVO_MAX_ANGLE && targetAngleForward > SERVO_MIN_ANGLE);
+
+        double dAngleBackward = ((goal - normalizeAngle(start))%360)-180;
+        double targetAngleBackward = dAngleBackward + start;
+        boolean backward =(targetAngleBackward < SERVO_MAX_ANGLE && targetAngleBackward > SERVO_MIN_ANGLE);
     }
 }
