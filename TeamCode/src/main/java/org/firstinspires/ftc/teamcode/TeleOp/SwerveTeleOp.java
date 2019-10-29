@@ -64,7 +64,7 @@ public class SwerveTeleOp extends OpMode {
 
         } else if(radius > .2){
             currentGoal  = joystickPositionToWheelAngle(joystickPositionX, joystickPositionY);
-            setDriveServoPosition(joystickPositionX, joystickPositionY);
+            setDriveServoPosition(joystickPositionX,joystickPositionY);
             setPower(joystickPositionX, joystickPositionY, 1);
         }else{
             setPower(0,0,1);
@@ -260,7 +260,7 @@ public class SwerveTeleOp extends OpMode {
     }
 
     public double angleCheck (double start, double goal){
-        goal = normalizeAngle(goal)
+        goal = normalizeAngle(goal);
 
         double dAngleForward = ((goal - normalizeAngle(start)+180)%360)-180;
         double targetAngleForward = dAngleForward + start;
@@ -269,5 +269,7 @@ public class SwerveTeleOp extends OpMode {
         double dAngleBackward = ((goal - normalizeAngle(start))%360)-180;
         double targetAngleBackward = dAngleBackward + start;
         boolean backward =(targetAngleBackward < SERVO_MAX_ANGLE && targetAngleBackward > SERVO_MIN_ANGLE);
+        //////////////////THIS IS INCORRECTHIS IS INCORRECTHIS IS INCORRECTHIS IS INCORRECTHIS IS INCORRECTHIS IS INCORRECTHIS IS INCORRECTHIS IS INCORRECT
+        return 1;
     }
 }
