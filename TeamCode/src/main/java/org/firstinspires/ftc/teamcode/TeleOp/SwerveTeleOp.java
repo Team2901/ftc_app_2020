@@ -264,12 +264,25 @@ public class SwerveTeleOp extends OpMode {
 
         double dAngleForward = ((goal - normalizeAngle(start)+180)%360)-180;
         double targetAngleForward = dAngleForward + start;
-        boolean forward =(targetAngleForward < SERVO_MAX_ANGLE && targetAngleForward > SERVO_MIN_ANGLE);
+        boolean forwardPossible =(targetAngleForward < SERVO_MAX_ANGLE && targetAngleForward > SERVO_MIN_ANGLE);
 
         double dAngleBackward = ((goal - normalizeAngle(start))%360)-180;
         double targetAngleBackward = dAngleBackward + start;
-        boolean backward =(targetAngleBackward < SERVO_MAX_ANGLE && targetAngleBackward > SERVO_MIN_ANGLE);
-        //////////////////THIS IS INCORRECTHIS IS INCORRECTHIS IS INCORRECTHIS IS INCORRECTHIS IS INCORRECTHIS IS INCORRECTHIS IS INCORRECTHIS IS INCORRECT
-        return 1;
+        boolean backwardPossible =(targetAngleBackward < SERVO_MAX_ANGLE && targetAngleBackward > SERVO_MIN_ANGLE);
+        //////////////////(This is actually correct though :)   )THIS IS INCORRECTHIS IS INCORRECTHIS IS INCORRECTHIS IS INCORRECTHIS IS INCORRECTHIS IS INCORRECTHIS IS INCORRECTHIS IS INCORRECT
+
+        boolean goForward = true;
+
+        if(forwardPossible && backwardPossible ){
+            if(Math.abs(dAngleForward) < Math.abs(dAngleBackward)){
+                goForward = true;
+            }else{
+                goForward = false;
+            }
+        }else if(forwardPossible){
+            goForward = true;
+        }else{
+            goForward = false;
+        }
     }
 }
