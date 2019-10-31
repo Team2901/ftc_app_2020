@@ -284,5 +284,11 @@ public class SwerveTeleOp extends OpMode {
         }else{
             goForward = false;
         }
+
+        if(goForward){
+            return targetAngleForward;
+        }else{
+            return targetAngleBackward;
+        }
     }
 }
