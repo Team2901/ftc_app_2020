@@ -6,9 +6,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware;
 
-import java.lang.reflect.Array;
-import java.util.ArrayList;
-
 @TeleOp (name = "Swerve Teleop")
 public class SwerveTeleOp extends OpMode {
     public final static double WHEEL_SERVO_GEAR_RATIO = 1.0 / 4.0;
@@ -23,7 +20,7 @@ public class SwerveTeleOp extends OpMode {
     public final static double FRONT_RIGHT_OFFSET = 0;
     public final static double BACK_RIGHT_OFFSET = 0;
     Servo servoFrontLeft;
-    public double currentGoal = 0;
+    public double currentAngle = 0;
 
 
 
@@ -45,7 +42,8 @@ public class SwerveTeleOp extends OpMode {
     @Override
     public void init() {
         robot.init(hardwareMap);
-        setDriveServoPosition(0,0);
+        //
+        setDriveServoPosition(0,-1);
     }
 
     @Override
@@ -63,7 +61,7 @@ public class SwerveTeleOp extends OpMode {
             swerveTurn(gamepad1.right_stick_x);
 
         } else if(radius > .2){
-            currentGoal  = joystickPositionToWheelAngle(joystickPositionX, joystickPositionY);
+            currentAngle = joystickPositionToWheelAngle(joystickPositionX, joystickPositionY);
             setDriveServoPosition(joystickPositionX,joystickPositionY);
             setPower(joystickPositionX, joystickPositionY, 1);
         }else{
@@ -262,14 +260,13 @@ public class SwerveTeleOp extends OpMode {
     public double angleCheck (double start, double goal){
         goal = normalizeAngle(goal);
 
-        double dAngleForward = ((goal - normalizeAngle(start)+180)%360)-180;
+        double dAngleForward = ((goal - start+180)%360)-180;
         double targetAngleForward = dAngleForward + start;
         boolean forwardPossible =(targetAngleForward < SERVO_MAX_ANGLE && targetAngleForward > SERVO_MIN_ANGLE);
 
-        double dAngleBackward = ((goal - normalizeAngle(start))%360)-180;
+        double dAngleBackward = ((goal - start)%360)-180;
         double targetAngleBackward = dAngleBackward + start;
         boolean backwardPossible =(targetAngleBackward < SERVO_MAX_ANGLE && targetAngleBackward > SERVO_MIN_ANGLE);
-        //////////////////(This is actually correct though :)   )THIS IS INCORRECTHIS IS INCORRECTHIS IS INCORRECTHIS IS INCORRECTHIS IS INCORRECTHIS IS INCORRECTHIS IS INCORRECTHIS IS INCORRECT
 
         boolean goForward = true;
 
