@@ -13,7 +13,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
 import java.util.List;
 @TeleOp (name = "testing tensor flow with webcam")
-public class TestingTensorFlowW_Webcam extends LinearOpMode {
+public class TestingTensorFlowWebcam extends LinearOpMode {
 
 
     private static final String TFOD_MODEL_ASSET = "Skystone.tflite";
@@ -93,7 +93,14 @@ public class TestingTensorFlowW_Webcam extends LinearOpMode {
                                     recognition.getLeft(), recognition.getTop());
                             telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
                                     recognition.getRight(), recognition.getBottom());
-
+                            int centerFrame = recognition.getImageWidth()/2;
+                            float centerStone = (recognition.getRight() + recognition.getLeft()) / 2;
+                            telemetry.addData("Center Frame", centerFrame);
+                            telemetry.addData("Center Stone", centerStone);
+                            float centerDifference = centerStone - centerFrame;
+                            telemetry.addData("Difference", centerDifference);
+                            float centerPercentDifference = (centerDifference / centerFrame) * 100;
+                            telemetry.addData("Percent Difference", centerPercentDifference);
                         }
                         telemetry.update();
                     }
