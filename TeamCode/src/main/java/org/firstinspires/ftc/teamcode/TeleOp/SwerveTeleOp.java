@@ -181,6 +181,7 @@ public class SwerveTeleOp extends OpMode {
 
         telemetry.addData("current angle:", currentAngle);
 
+        /*
         double servoPositionfL = wheelAngleToServoPosition(wheelAngle,
                 WheelPosition.FRONT_LEFT);
         double servoPositionfR = wheelAngleToServoPosition(wheelAngle,
@@ -188,6 +189,17 @@ public class SwerveTeleOp extends OpMode {
         double servoPositionbL = wheelAngleToServoPosition(wheelAngle,
                 WheelPosition.BACK_LEFT);
         double servoPositionbR = wheelAngleToServoPosition(wheelAngle,
+                WheelPosition.FRONT_RIGHT);
+
+        */
+
+        double servoPositionfL = joystickToServoPosition(joystickPositionX, joystickPositionY ,
+                WheelPosition.FRONT_LEFT);
+        double servoPositionfR = joystickToServoPosition(joystickPositionX, joystickPositionY ,
+                WheelPosition.FRONT_RIGHT);
+        double servoPositionbL = joystickToServoPosition(joystickPositionX, joystickPositionY ,
+                WheelPosition.BACK_LEFT);
+        double servoPositionbR = joystickToServoPosition(joystickPositionX, joystickPositionY ,
                 WheelPosition.FRONT_RIGHT);
 
 
