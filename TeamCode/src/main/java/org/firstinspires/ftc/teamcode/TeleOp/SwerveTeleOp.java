@@ -202,6 +202,11 @@ public class SwerveTeleOp extends OpMode {
         double servoPositionbR = joystickToServoPosition(joystickPositionX, joystickPositionY ,
                 WheelPosition.FRONT_RIGHT);
 
+        telemetry.addData("servoPotionFl:", servoPositionfL);
+        telemetry.addData("servoPositionfR:", servoPositionfR);
+        telemetry.addData("servoPositionbL:", servoPositionbL);
+        telemetry.addData("servoPositionbR:", servoPositionbR );
+
 
         setAllServos(servoPositionfL, servoPositionfR, servoPositionbL, servoPositionbR);
 
