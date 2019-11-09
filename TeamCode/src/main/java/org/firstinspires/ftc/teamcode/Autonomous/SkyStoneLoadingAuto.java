@@ -21,7 +21,7 @@ public class SkyStoneLoadingAuto extends LinearOpMode {
             Move to waffle, place block
          7.) Place Capstone on block
          */
-        
+
         /*
         1.) Move waffle to the middle position
             Move forward, grab, drag back
