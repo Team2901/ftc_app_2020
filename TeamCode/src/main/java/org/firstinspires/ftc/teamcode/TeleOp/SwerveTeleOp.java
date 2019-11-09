@@ -193,14 +193,10 @@ public class SwerveTeleOp extends OpMode {
 
         */
 
-        double servoPositionfL = joystickToServoPosition(joystickPositionX, joystickPositionY ,
-                WheelPosition.FRONT_LEFT);
-        double servoPositionfR = joystickToServoPosition(joystickPositionX, joystickPositionY ,
-                WheelPosition.FRONT_RIGHT);
-        double servoPositionbL = joystickToServoPosition(joystickPositionX, joystickPositionY ,
-                WheelPosition.BACK_LEFT);
-        double servoPositionbR = joystickToServoPosition(joystickPositionX, joystickPositionY ,
-                WheelPosition.FRONT_RIGHT);
+        double servoPositionfL = joystickToServoPosition(wheelAngle, WheelPosition.FRONT_LEFT);
+        double servoPositionfR = joystickToServoPosition(wheelAngle, WheelPosition.FRONT_RIGHT);
+        double servoPositionbL = joystickToServoPosition(wheelAngle, WheelPosition.BACK_LEFT);
+        double servoPositionbR = joystickToServoPosition(wheelAngle, WheelPosition.FRONT_RIGHT);
 
         telemetry.addData("servoPotionFl:", servoPositionfL);
         telemetry.addData("servoPositionfR:", servoPositionfR);
@@ -240,23 +236,23 @@ public class SwerveTeleOp extends OpMode {
 
     }
 
-    public double joystickToServoPosition(double joystickPositionX, double joystickPositionY, WheelPosition wheelPosition) {
-        double wheelAngle = joystickPositionToWheelAngle(joystickPositionX, joystickPositionY);
+    public double joystickToServoPosition(double wheelAngle, WheelPosition wheelPosition) {
+       // double wheelAngle = joystickPositionToWheelAngle(joystickPositionX, joystickPositionY);
         double servoAngle = wheelAngleToServoAngle(wheelAngle);
         double servoPosition = servoAngleToServoPosition(servoAngle, wheelPosition);
 
         return servoPosition;
 
     }
-
-    public double joystickToServoPosition(double currentGoal, WheelPosition wheelPosition) {
+//bad one
+   /* public double joystickToServoPosition(double currentGoal, WheelPosition wheelPosition) {
         double wheelAngle = joystickPositionToWheelAngle(currentGoal);
         double servoAngle = wheelAngleToServoAngle(wheelAngle);
         double servoPosition = servoAngleToServoPosition(servoAngle, wheelPosition);
 
         return servoPosition;
 
-    }
+    }*/
 
     public double wheelAngleToServoPosition(double angle, WheelPosition wheelPosition) {
         double servoAngle = wheelAngleToServoAngle(angle);
