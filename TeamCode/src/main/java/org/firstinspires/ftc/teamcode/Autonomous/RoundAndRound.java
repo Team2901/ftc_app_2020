@@ -41,16 +41,17 @@ public class RoundAndRound extends LinearOpMode {
 
         initVuforia();
 
+        if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
+            initTfod();
+        } else {
+            telemetry.addData("Sorry!", "This device is not compatible with TFOD");
+        }
+
         if (tfod != null) {
             tfod.activate();
         }
 
         this.waitForStart();
-
-
-
-        goForward(1);
-
 
 
         while (opModeIsActive()){
@@ -74,7 +75,15 @@ public class RoundAndRound extends LinearOpMode {
                 telemetry.addData("Center Stone", centerStone);
                 telemetry.addData("Difference", centerDifference);
                 telemetry.addData("Percent Difference", centerPercentDifference);
+
+                goForward((int) centerDifference);
+
+                telemetry.update();
             }
+        }
+
+        if (tfod != null) {
+            tfod.shutdown();
         }
     }
 
@@ -103,9 +112,7 @@ public class RoundAndRound extends LinearOpMode {
         while (leftDrive.isBusy()&& rightDrive.isBusy()){
 
         }
-
     }
-
 
     public Recognition getFirstRecognition() {
         if (tfod != null) {
