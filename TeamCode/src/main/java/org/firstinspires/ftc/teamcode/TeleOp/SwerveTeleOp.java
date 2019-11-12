@@ -8,17 +8,17 @@ import org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware;
 
 @TeleOp (name = "Swerve Teleop")
 public class SwerveTeleOp extends OpMode {
-    public final static double WHEEL_SERVO_GEAR_RATIO = 1.0 / 4.0;
+    public final static double WHEEL_SERVO_GEAR_RATIO = 24 / 80;
     public final static double WIDTH_OF_ROBOT = 13.5;
     public final static double LENGTH_OF_ROBOT = 12.75;
     //This is the angle Phi that we defined in the math done before this
     public final static double TURN_ANGLE = Math.atan((.5 * WIDTH_OF_ROBOT) / (.5 * LENGTH_OF_ROBOT));
-    public final static int SERVO_MAX_ANGLE = 190;
+    public final static int SERVO_MAX_ANGLE = 245;
     public final static int SERVO_MIN_ANGLE = 0;
-    public final static double FRONT_LEFT_OFFSET = 0;
-    public final static double BACK_LEFT_OFFSET = 0;
-    public final static double FRONT_RIGHT_OFFSET = 0;
-    public final static double BACK_RIGHT_OFFSET = 0;
+    public final static double FRONT_LEFT_OFFSET = .1;
+    public final static double BACK_LEFT_OFFSET = .1;
+    public final static double FRONT_RIGHT_OFFSET = .08;
+    public final static double BACK_RIGHT_OFFSET = .1;
     Servo servoFrontLeft;
     public double currentAngle = 0;
 
@@ -86,6 +86,7 @@ public class SwerveTeleOp extends OpMode {
         double servoPositionbR = servoAngleToServoPosition(servoAngle, WheelPosition.FRONT_RIGHT);
 
         telemetry.addData("servoPotionFl:", servoPositionfL);
+
         //telemetry.addData("servoPositionfR:", servoPositionfR);
         //telemetry.addData("servoPositionbL:", servoPositionbL);
         //telemetry.addData("servoPositionbR:", servoPositionbR );
