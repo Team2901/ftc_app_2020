@@ -52,10 +52,6 @@ public class SwerveTeleOp extends OpMode {
 
         double radius = Math.sqrt(Math.pow(joystickPositionX, 2) + Math.pow(joystickPositionY, 2));
 
-        telemetry.addData("X", joystickPositionX);
-        telemetry.addData("Y", joystickPositionY);
-
-
         if (gamepad1.right_stick_x > .1 || gamepad1.right_stick_x < -.1) {
             swerveTurn(gamepad1.right_stick_x);
 
@@ -72,13 +68,49 @@ public class SwerveTeleOp extends OpMode {
 
     }
 
+    public void setDriveServoPosition(double joystickPositionX, double joystickPositionY) {
+
+        double wheelAngle = joystickPositionToWheelAngle(joystickPositionX, joystickPositionY);
+        double servoAngle = wheelAngleToServoAngle(wheelAngle);
+
+        this.currentAngle = wheelAngle;
+
+        telemetry.addData("joystickPositionX", joystickPositionX);
+        telemetry.addData("joystickPositionY", joystickPositionY);
+        telemetry.addData("wheelAngle:", wheelAngle);
+        telemetry.addData("servoAngle:", servoAngle);
+
+        double servoPositionfL = servoAngleToServoPosition(servoAngle, WheelPosition.FRONT_LEFT);
+        double servoPositionfR = servoAngleToServoPosition(servoAngle, WheelPosition.FRONT_RIGHT);
+        double servoPositionbL = servoAngleToServoPosition(servoAngle, WheelPosition.BACK_LEFT);
+        double servoPositionbR = servoAngleToServoPosition(servoAngle, WheelPosition.FRONT_RIGHT);
+
+        telemetry.addData("servoPotionFl:", servoPositionfL);
+        //telemetry.addData("servoPositionfR:", servoPositionfR);
+        //telemetry.addData("servoPositionbL:", servoPositionbL);
+        //telemetry.addData("servoPositionbR:", servoPositionbR );
+
+        setAllServos(servoPositionfL, servoPositionfR, servoPositionbL, servoPositionbR);
+
+    }
+
+    /*This method finds our desired angle based on the joysticks. We want out robot's wheels to
+follow the position of our joystick, so we find the angle of our joysticks position like it is
+a position on the coordinate plane
+ */
+    public double joystickPositionToWheelAngle(double joystickPositionX, double joystickPositionY) {
+        double wheelAngleRad = Math.atan2(joystickPositionY, joystickPositionX);
+        double wheelAngle = radiansDegreesTranslation(wheelAngleRad) - 90;
+        double wheelAngleStandarized = standardizedAngle(wheelAngle);
+        return wheelAngleStandarized;
+    }
+
     /* This is a helper function that is used in 2 other methods.  This class takes the goal angle
     of "wheel angle" and shifts it to what the desired angle of the servo. This is the mathematical
     reason for the gear ratio
     */
     public double wheelAngleToServoAngle(double wheelAngle) {
         double servoAngle = WHEEL_SERVO_GEAR_RATIO * wheelAngle;
-        telemetry.addData("Goal Angle", wheelAngle);
         return servoAngle;
     }
 
@@ -123,24 +155,6 @@ public class SwerveTeleOp extends OpMode {
         return servoPosition;
     }
 
-    /*This method finds our desired angle based on the joysticks. We want out robot's wheels to
-    follow the position of our joystick, so we find the angle of our joysticks position like it is
-    a position on the coordinate plane
-     */
-    public double joystickPositionToWheelAngle(double joystickPositionX, double joystickPositionY) {
-        double wheelAngleRad = Math.atan2(joystickPositionY, joystickPositionX);
-        double wheelAngle = radiansDegreesTranslation(wheelAngleRad) - 90;
-        double wheelAngleStandarized = standardizedAngle(wheelAngle);
-        return wheelAngleStandarized;
-    }
-
-    public double joystickPositionToWheelAngle(double currentGoal) {
-        double wheelAngleRad = currentGoal;
-        double wheelAngle = radiansDegreesTranslation(wheelAngleRad) - 90;
-        double wheelAngleStandarized = standardizedAngle(wheelAngle);
-        return wheelAngleStandarized;
-    }
-
     public double radiansDegreesTranslation(double radians) {
         double degrees = radians * 180 / Math.PI;
         return degrees;
@@ -173,55 +187,6 @@ public class SwerveTeleOp extends OpMode {
 
     }
 
-    public void setDriveServoPosition(double joystickPositionX, double joystickPositionY) {
-//happy with this. It's doing what its supposed to
-        double wheelAngle = joystickPositionToWheelAngle(joystickPositionX, joystickPositionY);
-
-        this.currentAngle = wheelAngle;
-
-        telemetry.addData("current angle:", currentAngle);
-
-        /*
-        double servoPositionfL = wheelAngleToServoPosition(wheelAngle,
-                WheelPosition.FRONT_LEFT);
-        double servoPositionfR = wheelAngleToServoPosition(wheelAngle,
-                WheelPosition.FRONT_RIGHT);
-        double servoPositionbL = wheelAngleToServoPosition(wheelAngle,
-                WheelPosition.BACK_LEFT);
-        double servoPositionbR = wheelAngleToServoPosition(wheelAngle,
-                WheelPosition.FRONT_RIGHT);
-
-        */
-
-        double servoPositionfL = joystickToServoPosition(wheelAngle, WheelPosition.FRONT_LEFT);
-        double servoPositionfR = joystickToServoPosition(wheelAngle, WheelPosition.FRONT_RIGHT);
-        double servoPositionbL = joystickToServoPosition(wheelAngle, WheelPosition.BACK_LEFT);
-        double servoPositionbR = joystickToServoPosition(wheelAngle, WheelPosition.FRONT_RIGHT);
-
-        telemetry.addData("servoPotionFl:", servoPositionfL);
-        telemetry.addData("servoPositionfR:", servoPositionfR);
-        telemetry.addData("servoPositionbL:", servoPositionbL);
-        telemetry.addData("servoPositionbR:", servoPositionbR );
-
-
-        setAllServos(servoPositionfL, servoPositionfR, servoPositionbL, servoPositionbR);
-
-    }
-
-    public void setDriveServoPosition(double currentGoal) {
-        double servoPositionfL = joystickToServoPosition(currentGoal,
-                WheelPosition.FRONT_LEFT);
-        double servoPositionfR = joystickToServoPosition(currentGoal,
-                WheelPosition.FRONT_RIGHT);
-        double servoPositionbL = joystickToServoPosition(currentGoal,
-                WheelPosition.BACK_LEFT);
-        double servoPositionbR = joystickToServoPosition(currentGoal,
-                WheelPosition.FRONT_RIGHT);
-
-
-        setAllServos(servoPositionfL, servoPositionfR, servoPositionbL, servoPositionbR);
-    }
-
     public void swerveTurn(double joyStickRightPosX) {
 
         double fRPos = 90 + TURN_ANGLE;
@@ -229,35 +194,18 @@ public class SwerveTeleOp extends OpMode {
         double bLPos = 270 + TURN_ANGLE;
         double bRPos = 270 - TURN_ANGLE;
 
-        setAllServos(wheelAngleToServoPosition(fRPos, WheelPosition.FRONT_RIGHT), wheelAngleToServoPosition(fLPos, WheelPosition.FRONT_LEFT),
-                wheelAngleToServoPosition(bLPos, WheelPosition.BACK_LEFT), wheelAngleToServoPosition(bRPos, WheelPosition.BACK_RIGHT));
+        double fRAngle = wheelAngleToServoAngle(fRPos);
+        double fLAngle = wheelAngleToServoAngle(fLPos);
+        double blAngle = wheelAngleToServoAngle(bLPos);
+        double bRAngle = wheelAngleToServoAngle(bRPos);
+
+        setAllServos(servoAngleToServoPosition(fRAngle, WheelPosition.FRONT_RIGHT),
+                servoAngleToServoPosition(fLAngle, WheelPosition.FRONT_LEFT),
+                servoAngleToServoPosition(blAngle, WheelPosition.BACK_LEFT),
+                servoAngleToServoPosition(bRAngle, WheelPosition.BACK_RIGHT));
 
         setPower(joyStickRightPosX, 0, Math.signum(joyStickRightPosX));
 
-    }
-
-    public double joystickToServoPosition(double wheelAngle, WheelPosition wheelPosition) {
-       // double wheelAngle = joystickPositionToWheelAngle(joystickPositionX, joystickPositionY);
-        double servoAngle = wheelAngleToServoAngle(wheelAngle);
-        double servoPosition = servoAngleToServoPosition(servoAngle, wheelPosition);
-
-        return servoPosition;
-
-    }
-//bad one
-   /* public double joystickToServoPosition(double currentGoal, WheelPosition wheelPosition) {
-        double wheelAngle = joystickPositionToWheelAngle(currentGoal);
-        double servoAngle = wheelAngleToServoAngle(wheelAngle);
-        double servoPosition = servoAngleToServoPosition(servoAngle, wheelPosition);
-
-        return servoPosition;
-
-    }*/
-
-    public double wheelAngleToServoPosition(double angle, WheelPosition wheelPosition) {
-        double servoAngle = wheelAngleToServoAngle(angle);
-        double servoPosition = servoAngleToServoPosition(servoAngle, wheelPosition);
-        return servoPosition;
     }
 
     public void setAllServos(double fLPos, double fRPos, double bLPos, double bRPos) {
@@ -265,11 +213,6 @@ public class SwerveTeleOp extends OpMode {
         robot.servoBackRight.setPosition(bRPos);
         robot.servoFrontLeft.setPosition(fLPos);
         robot.servoBackLeft.setPosition(bLPos);
-
-        telemetry.addData("Front Left Position", fLPos);
-        telemetry.addData("Front Right Position", fRPos);
-        telemetry.addData("Back Right Position", bRPos);
-        telemetry.addData(" Back Left Position", bLPos);
     }
 
     public double normalizeAngle(double angle) {
