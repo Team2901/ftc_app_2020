@@ -22,6 +22,10 @@ public class SwerveTeleOp extends OpMode {
     Servo servoFrontLeft;
     public double currentAngle = 0;
 
+    private boolean isLastRightBumperPressed;
+    private boolean isLastLeftBumperPressed;
+    private boolean isLastRightTriggerPressed;
+    private boolean isLastLeftTriggerPressed;
 
     enum WheelPosition {
         FRONT_LEFT(0),
@@ -42,7 +46,7 @@ public class SwerveTeleOp extends OpMode {
     public void init() {
         robot.init(hardwareMap);
         //The y position is -1 to correct the joystick directions
-        setDriveServoPosition(0, -1);
+        setDriveServoPosition(0);
     }
 
     @Override
@@ -52,31 +56,56 @@ public class SwerveTeleOp extends OpMode {
 
         double radius = Math.sqrt(Math.pow(joystickPositionX, 2) + Math.pow(joystickPositionY, 2));
 
+        Double wheelAngle = null;
+
         if (gamepad1.right_stick_x > .1 || gamepad1.right_stick_x < -.1) {
             swerveTurn(gamepad1.right_stick_x);
-
         } else if (radius > .2) {
-            currentAngle = joystickPositionToWheelAngle(joystickPositionX, joystickPositionY);
-            setDriveServoPosition(joystickPositionX, joystickPositionY);
+            wheelAngle = joystickPositionToWheelAngle(joystickPositionX, joystickPositionY);
             setPower(joystickPositionX, joystickPositionY, 1);
         } else {
             setPower(0, 0, 1);
         }
 
+        if (gamepad2.y) {
+            wheelAngle = 0d;
+        } else if (gamepad2.x) {
+            wheelAngle = 90d;
+        } else if (gamepad2.a) {
+            wheelAngle = 180d;
+        } else if (gamepad2.b) {
+            wheelAngle = 270d;
+        } else if (gamepad2.right_bumper && !isLastRightBumperPressed){
+            wheelAngle = currentAngle + 90;
+        }
+        if (gamepad2.left_bumper && !isLastLeftBumperPressed) {
+            wheelAngle = currentAngle - 90;
+        }
+        if (gamepad2.right_trigger > 0.01 && !isLastRightTriggerPressed){
+            wheelAngle = currentAngle + 5;
+        }
+        if (gamepad2.left_trigger > 0.01 && !isLastLeftTriggerPressed) {
+            wheelAngle = currentAngle - 5;
+        }
+
+        if (wheelAngle != null) {
+            setDriveServoPosition(wheelAngle);
+        }
+
+        isLastRightBumperPressed = gamepad2.right_bumper;
+        isLastLeftBumperPressed = gamepad2.left_bumper;
+        isLastRightTriggerPressed = gamepad2.right_trigger > 0.01;
+        isLastLeftTriggerPressed = gamepad2.left_trigger > 0.01;
+
         telemetry.update();
-
-
     }
 
-    public void setDriveServoPosition(double joystickPositionX, double joystickPositionY) {
+    public void setDriveServoPosition(double wheelAngle) {
 
-        double wheelAngle = joystickPositionToWheelAngle(joystickPositionX, joystickPositionY);
         double servoAngle = wheelAngleToServoAngle(wheelAngle);
 
         this.currentAngle = wheelAngle;
 
-        telemetry.addData("joystickPositionX", joystickPositionX);
-        telemetry.addData("joystickPositionY", joystickPositionY);
         telemetry.addData("wheelAngle:", wheelAngle);
         telemetry.addData("servoAngle:", servoAngle);
 
@@ -86,13 +115,11 @@ public class SwerveTeleOp extends OpMode {
         double servoPositionbR = servoAngleToServoPosition(servoAngle, WheelPosition.FRONT_RIGHT);
 
         telemetry.addData("servoPotionFl:", servoPositionfL);
-
-        //telemetry.addData("servoPositionfR:", servoPositionfR);
-        //telemetry.addData("servoPositionbL:", servoPositionbL);
-        //telemetry.addData("servoPositionbR:", servoPositionbR );
+        telemetry.addData("servoPositionfR:", servoPositionfR);
+        telemetry.addData("servoPositionbL:", servoPositionbL);
+        telemetry.addData("servoPositionbR:", servoPositionbR );
 
         setAllServos(servoPositionfL, servoPositionfR, servoPositionbL, servoPositionbR);
-
     }
 
     /*This method finds our desired angle based on the joysticks. We want out robot's wheels to
@@ -168,6 +195,7 @@ a position on the coordinate plane
     }
 
     public double getPower(double x, double y) {
+
         double power = Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
         if (gamepad1.left_bumper) {
             power = 0;
