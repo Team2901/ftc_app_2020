@@ -8,19 +8,16 @@ import com.qualcomm.robotcore.hardware.Servo;
 @TeleOp(name = "MotorAndServoTester")
 public class MotorAndServoTester extends OpMode {
     Servo mrServo;
-    Servo mrServo2;
 
     DcMotor motor;
 
     @Override
     public void init() {
         mrServo = hardwareMap.servo.get("servo");
-        mrServo2 = hardwareMap.servo.get("servo_2");
         motor = this.hardwareMap.dcMotor.get("motor");
 
         motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         mrServo.setPosition(0);
-        mrServo2.setPosition(0);
     }
 
     @Override
