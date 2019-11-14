@@ -18,6 +18,10 @@ public class SkyStoneLoadingAuto extends LinearOpMode {
     private static final String LABEL_SKY_BUTTER = "Skystone";
     private int skyStonePosition;
     private double skyStoneGridLocation;
+    private static final double BLOCK_OFFSET = 30.0;
+    public static final int LEFT_POSITION = 3;
+    public static final int RIGHT_POSITION = 1;
+    public static final int CENTER_POSITION = 2;
 
     private static final String VUFORIA_KEY ="AYhwTMH/////AAABmR7oFvU9lEJTryl5O3jDSusAPmWSAx5CHlcB/" +
             "IUoT+t7S1pJqTo7n3OwM4f2vVULA0T1uZVl9i61kWldhVqxK2+kyBNI4Uld8cYgHaNIQFsL/NsyBrb3Zl+1ZFBR" +
@@ -69,7 +73,12 @@ public class SkyStoneLoadingAuto extends LinearOpMode {
 
         //Step 2 Get Skystone
 
-
+        moveForward(BLOCK_OFFSET);
+        if(skyStonePosition == LEFT_POSITION){
+            moveLeft(5.0);
+        }else if(skyStonePosition == RIGHT_POSITION){
+            moveRight(5.0);
+        }
 
         /*
         1.) Move waffle to the middle position
@@ -129,5 +138,11 @@ public class SkyStoneLoadingAuto extends LinearOpMode {
 
     private void moveForward (double inches){
         telemetry.addData("Moved to a position in front of oneself", inches);
+    }
+    private void moveLeft (double inches) {
+        telemetry.addData("Moved to a position to the left of oneself", inches);
+    }
+    private void moveRight (double inches) {
+        telemetry.addData("Moved to a position to the right of oneself", inches);
     }
 }
