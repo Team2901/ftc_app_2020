@@ -45,7 +45,7 @@ public class SwerveTeleOp extends OpMode {
         } else {
             robot.setPower(0, 0, 1 ,gamepad1.left_bumper );
         }
-
+/*
         if (gamepad2.y) {
             wheelAngle = 0d;
         } else if (gamepad2.x) {
@@ -76,7 +76,7 @@ public class SwerveTeleOp extends OpMode {
         isLastRightTriggerPressed = gamepad2.right_trigger > 0.01;
         isLastLeftTriggerPressed = gamepad2.left_trigger > 0.01;
 
-
+*/
 
         telemetry.update();
     }
