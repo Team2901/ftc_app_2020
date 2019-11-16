@@ -2,15 +2,19 @@ package org.firstinspires.ftc.teamcode.Hardware;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 import org.firstinspires.ftc.teamcode.TeleOp.SwerveTeleOp;
 
 public class SkystoneHardware {
+
+    final static double TICKS_PER_INCH = 2240 / (3 * Math.PI);
 
     public HardwareMap hardwareMap;
 
@@ -210,7 +214,13 @@ a position on the coordinate plane
 
     public void setPower(double joystickPositionX, double joystickPositionY, double modifier, boolean leftBumper) {
 
+
         double power = modifier * getPower(joystickPositionX, joystickPositionY, leftBumper);
+        setPower(power);
+    }
+
+    public void setPower(double power) {
+
 
         backRight.setPower(power);
         backLeft.setPower(power);
@@ -224,7 +234,7 @@ a position on the coordinate plane
 
         //Math mod????????
 
-        double fRPos =  TURN_ANGLE;
+        double fRPos = TURN_ANGLE;
         double fLPos = 90 + TURN_ANGLE;
         double bLPos = 180 + TURN_ANGLE;
         double bRPos = 270 + TURN_ANGLE;
@@ -283,6 +293,51 @@ a position on the coordinate plane
             return targetAngleForward;
         } else {
             return targetAngleBackward;
+        }
+    }
+
+    public void setMode(DcMotor.RunMode runMode) {
+        backLeft.setMode(runMode);
+        backRight.setMode(runMode);
+        frontLeft.setMode(runMode);
+        frontRight.setMode(runMode);
+    }
+
+    public boolean wheelsAreBusy() {
+        return frontRight.isBusy() || frontLeft.isBusy() || backLeft.isBusy() || backRight.isBusy();
+
+    }
+
+    public void goToPosition(double distanceInch, LinearOpMode opMode) {
+        int distanceTicks = (int) (TICKS_PER_INCH * distanceInch);
+
+        setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        // stop and reset encoder mode
+
+        frontRight.setTargetPosition(distanceTicks);
+        frontLeft.setTargetPosition(distanceTicks);
+        backRight.setTargetPosition(distanceTicks);
+        backLeft.setTargetPosition(distanceTicks);
+        // set motors' targetPosition
+
+        setPower(.7);
+        // set motors' power
+        while (opMode.opModeIsActive() && wheelsAreBusy()) {
+
+        }
+
+        setPower(0);
+        setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        // wait while motors are busy
+
+    }
+
+    public void wait(int milliseconds, LinearOpMode opMode) {
+        ElapsedTime timer = new ElapsedTime();
+        while (opMode.opModeIsActive() && timer.milliseconds() < milliseconds) {
+
         }
     }
 }

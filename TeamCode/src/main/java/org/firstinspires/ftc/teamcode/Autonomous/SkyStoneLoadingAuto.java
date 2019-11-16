@@ -6,8 +6,11 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.NewProgrammers.TestingTensorFlowWebcam;
+
+import java.util.List;
 
 @Autonomous(name = "SkyStoneLoadingAuto")
 
@@ -16,7 +19,7 @@ public class SkyStoneLoadingAuto extends LinearOpMode {
     private static final String TFOD_MODEL_ASSET = "Skystone.tflite";
     private static final String LABEL_BUTTER = "Stone";
     private static final String LABEL_SKY_BUTTER = "Skystone";
-    private int skyStonePosition;
+    private float skyStonePosition;
     private double skyStoneGridLocation;
     private static final double BLOCK_OFFSET = 30.0;
     public static final int LEFT_POSITION = 3;
@@ -128,8 +131,36 @@ public class SkyStoneLoadingAuto extends LinearOpMode {
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_BUTTER, LABEL_SKY_BUTTER);
     }
 
-    private int findSkyStone() {
-        return 1;
+    private float findSkyStone() {
+
+        float centerPercentDifference = 0;
+
+        List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+        if (updatedRecognitions != null) {
+            telemetry.addData("# Object Detected", updatedRecognitions.size());
+            // step through the list of recognitions and display boundary info.
+            int i = 0;
+            for (Recognition recognition : updatedRecognitions) {
+                //If x > 380, the skystone is in position three. (Three away from the edge) If x > 620 it is at position 2, and if x > 350 it is in position 1
+                telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
+                telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f",
+                        recognition.getLeft(), recognition.getTop());
+                telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
+                        recognition.getRight(), recognition.getBottom());
+                int centerFrame = recognition.getImageWidth()/2;
+                float centerStone = (recognition.getRight() + recognition.getLeft()) / 2;
+                telemetry.addData("Center Frame", centerFrame);
+                telemetry.addData("Center Stone", centerStone);
+                float centerDifference = centerStone - centerFrame;
+                telemetry.addData("Difference", centerDifference);
+                centerPercentDifference = (centerDifference / centerFrame) * 100;
+                telemetry.addData("Percent Difference", centerPercentDifference);
+                if (recognition.getLabel().equals(LABEL_SKY_BUTTER))
+                    break;
+            }
+            telemetry.update();
+        }
+        return centerPercentDifference;
     }
 
     private double convertPositionToGridOffset (int position){
