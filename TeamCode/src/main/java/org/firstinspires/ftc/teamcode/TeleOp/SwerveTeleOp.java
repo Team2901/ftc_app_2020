@@ -66,17 +66,17 @@ public class SwerveTeleOp extends OpMode {
         if (gamepad2.left_trigger > 0.01 && !isLastLeftTriggerPressed) {
             wheelAngle = robot.currentAngle - 5;
         }
-
+*/
         if (wheelAngle != null) {
             robot.setDriveServoPosition(wheelAngle);
         }
-
+/*
         isLastRightBumperPressed = gamepad2.right_bumper;
         isLastLeftBumperPressed = gamepad2.left_bumper;
         isLastRightTriggerPressed = gamepad2.right_trigger > 0.01;
         isLastLeftTriggerPressed = gamepad2.left_trigger > 0.01;
-
 */
+
 
         telemetry.update();
     }
