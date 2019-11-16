@@ -20,11 +20,16 @@ public class SkystoneHardware {
     public DcMotor backLeft;
     public DcMotor backRight;
 
+    public DcMotor lift;
+
+
    //Steering servo for their respective motor
     public Servo servoFrontLeft;
     public Servo servoFrontRight;
     public Servo servoBackLeft;
     public Servo servoBackRight;
+
+    public Servo  planeBreaker;
 
     //Sensors and Things
     public BNO055IMU imu;
@@ -66,11 +71,15 @@ public class SkystoneHardware {
         backLeft = hardwareMap.dcMotor.get("backLeft");
         backRight = hardwareMap.dcMotor.get("backRight");
 
+        lift = hardwareMap.dcMotor.get("lift");
+
         //Initialize all servos
         servoFrontLeft = hardwareMap.servo.get("servoFrontLeft");
         servoFrontRight =  hardwareMap.servo.get("servoFrontRight");
         servoBackLeft =  hardwareMap.servo.get("servoBackLeft");
         servoBackRight =  hardwareMap.servo.get("servoBackRight");
+
+        planeBreaker = hardwareMap.servo.get("planeBreaker");
 
         //setAllSteeringServos(0);
 
