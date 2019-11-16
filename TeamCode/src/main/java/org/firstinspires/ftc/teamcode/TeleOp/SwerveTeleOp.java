@@ -33,9 +33,14 @@ public class SwerveTeleOp extends OpMode {
         double joystickPositionX = gamepad1.left_stick_x;
         double joystickPositionY = -gamepad1.left_stick_y;
 
+        //lift motors below
+
+
+        //swerve code below
         double radius = Math.sqrt(Math.pow(joystickPositionX, 2) + Math.pow(joystickPositionY, 2));
 
         Double wheelAngle = null;
+
 
         if (gamepad1.right_stick_x > .1 || gamepad1.right_stick_x < -.1) {
             robot.swerveTurn(gamepad1.right_stick_x , gamepad1.left_bumper);

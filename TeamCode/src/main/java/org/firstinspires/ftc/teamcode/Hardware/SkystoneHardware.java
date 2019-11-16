@@ -23,13 +23,16 @@ public class SkystoneHardware {
     public DcMotor lift;
 
 
-   //Steering servo for their respective motor
+    //Steering servo for their respective motor
     public Servo servoFrontLeft;
     public Servo servoFrontRight;
     public Servo servoBackLeft;
     public Servo servoBackRight;
 
-    public Servo  planeBreaker;
+    public Servo bridgeTickler;
+    public Servo crane;
+    public Servo jaw;
+    public Servo wrist;
 
     //Sensors and Things
     public BNO055IMU imu;
@@ -62,7 +65,7 @@ public class SkystoneHardware {
         }
     }
 
-    public void init(HardwareMap hwMap){
+    public void init(HardwareMap hwMap) {
         hardwareMap = hwMap;
 
         //Inititialize all Motors
@@ -75,15 +78,18 @@ public class SkystoneHardware {
 
         //Initialize all servos
         servoFrontLeft = hardwareMap.servo.get("servoFrontLeft");
-        servoFrontRight =  hardwareMap.servo.get("servoFrontRight");
-        servoBackLeft =  hardwareMap.servo.get("servoBackLeft");
-        servoBackRight =  hardwareMap.servo.get("servoBackRight");
+        servoFrontRight = hardwareMap.servo.get("servoFrontRight");
+        servoBackLeft = hardwareMap.servo.get("servoBackLeft");
+        servoBackRight = hardwareMap.servo.get("servoBackRight");
 
-        planeBreaker = hardwareMap.servo.get("planeBreaker");
+        bridgeTickler = hardwareMap.servo.get("bridgeTickler");
+        crane = hardwareMap.servo.get("crane");
+        jaw = hardwareMap.servo.get("jaw");
+        wrist = hardwareMap.servo.get("wrist");
 
         //setAllSteeringServos(0);
 
-       // setting up the gyroscope
+        // setting up the gyroscope
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         gyroscope = (IntegratingGyroscope) imu;
 
@@ -99,13 +105,11 @@ public class SkystoneHardware {
         imu.initialize(parameters);
     }
 
-    public void setAllSteeringServos(double position){
+    public void setAllSteeringServos(double position) {
         servoBackRight.setPosition(position);
         servoBackLeft.setPosition(position);
         servoFrontLeft.setPosition(position);
         servoFrontRight.setPosition(position);
-
-
     }
 
     public void setDriveServoPosition(double wheelAngle) {
@@ -118,7 +122,6 @@ public class SkystoneHardware {
         double servoPositionfR = servoAngleToServoPosition(servoAngle, SkystoneHardware.WheelPosition.FRONT_RIGHT);
         double servoPositionbL = servoAngleToServoPosition(servoAngle, SkystoneHardware.WheelPosition.BACK_LEFT);
         double servoPositionbR = servoAngleToServoPosition(servoAngle, SkystoneHardware.WheelPosition.FRONT_RIGHT);
-
 
 
         setAllServos(servoPositionfL, servoPositionfR, servoPositionbL, servoPositionbR);
@@ -140,7 +143,7 @@ a position on the coordinate plane
     reason for the gear ratio
     */
     public double wheelAngleToServoAngle(double wheelAngle) {
-        double servoAngle = wheelAngle/WHEEL_SERVO_GEAR_RATIO;
+        double servoAngle = wheelAngle / WHEEL_SERVO_GEAR_RATIO;
         return servoAngle;
     }
 
@@ -205,9 +208,9 @@ a position on the coordinate plane
         return power;
     }
 
-    public void setPower(double joystickPositionX, double joystickPositionY, double modifier , boolean leftBumper) {
+    public void setPower(double joystickPositionX, double joystickPositionY, double modifier, boolean leftBumper) {
 
-        double power = modifier * getPower(joystickPositionX, joystickPositionY,leftBumper);
+        double power = modifier * getPower(joystickPositionX, joystickPositionY, leftBumper);
 
         backRight.setPower(power);
         backLeft.setPower(power);
@@ -217,24 +220,26 @@ a position on the coordinate plane
 
     }
 
-    public void swerveTurn(double joyStickRightPosX , boolean leftBumper) {
+    public void swerveTurn(double joyStickRightPosX, boolean leftBumper) {
 
-        double fRPos = 90 + TURN_ANGLE;
-        double fLPos = 90 - TURN_ANGLE;
-        double bLPos = 270 + TURN_ANGLE;
-        double bRPos = 270 - TURN_ANGLE;
+        //Math mod????????
+
+        double fRPos =  TURN_ANGLE;
+        double fLPos = 90 + TURN_ANGLE;
+        double bLPos = 180 + TURN_ANGLE;
+        double bRPos = 270 + TURN_ANGLE;
 
         double fRAngle = wheelAngleToServoAngle(fRPos);
         double fLAngle = wheelAngleToServoAngle(fLPos);
         double blAngle = wheelAngleToServoAngle(bLPos);
         double bRAngle = wheelAngleToServoAngle(bRPos);
 
-        setAllServos(servoAngleToServoPosition(fRAngle, SkystoneHardware.WheelPosition.FRONT_RIGHT),
-                servoAngleToServoPosition(fLAngle, SkystoneHardware.WheelPosition.FRONT_LEFT),
+        setAllServos(servoAngleToServoPosition(fLAngle, SkystoneHardware.WheelPosition.FRONT_LEFT),
+                servoAngleToServoPosition(fRAngle, SkystoneHardware.WheelPosition.FRONT_RIGHT),
                 servoAngleToServoPosition(blAngle, SkystoneHardware.WheelPosition.BACK_LEFT),
                 servoAngleToServoPosition(bRAngle, SkystoneHardware.WheelPosition.BACK_RIGHT));
 
-        setPower(joyStickRightPosX, 0, Math.signum(joyStickRightPosX) , leftBumper);
+        setPower(joyStickRightPosX, 0, -Math.signum(joyStickRightPosX), leftBumper);
 
     }
 
