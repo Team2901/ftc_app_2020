@@ -126,8 +126,6 @@ public class KristenServos extends OpMode{
         leftGrabber.setPosition (leftGrabberOffset);
 
         // Send telemetry message to signify robot running;
-        telemetry.addData("left",  "%.2f", left);
-        telemetry.addData("right", "%.2f", right);
         telemetry.addData ("grabber", "%.2f",leftGrabberOffset);
 
     }
