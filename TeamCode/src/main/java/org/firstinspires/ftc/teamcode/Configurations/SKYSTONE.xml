@@ -12,5 +12,13 @@
             <Servo name="servoBackRight" port="3" />
             <LynxEmbeddedIMU name="imu" port="0" bus="0" />
         </LynxModule>
+        <LynxModule name="Expansion Hub 2" port="2">
+            <NeveRest60Gearmotor name="lift" port="2" />
+            <Servo name="jaw" port="0" />
+            <Servo name="crane" port="1" />
+            <Servo name="wrist" port="2" />
+            <Servo name="bridgeTickler" port="3" />
+            <LynxEmbeddedIMU name="imu 1" port="0" bus="0" />
+        </LynxModule>
     </LynxUsbDevice>
 </Robot>

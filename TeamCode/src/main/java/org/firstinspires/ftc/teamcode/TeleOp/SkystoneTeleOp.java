@@ -6,8 +6,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware;
 
-@TeleOp (name = "CoolSwerve")
-public class CoolSwerve extends OpMode {
+@TeleOp (name = "SKYSTONE TELEOP" ,group = "competition")
+public class SkystoneTeleOp extends OpMode {
     public final static double WHEEL_SERVO_GEAR_RATIO = .3;
     public final static double WIDTH_OF_ROBOT = 13.5;
     public final static double LENGTH_OF_ROBOT = 13.5;

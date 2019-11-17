@@ -120,6 +120,8 @@ public class SkystoneHardware {
 
     public void setDriveServoPosition(double wheelAngle) {
 
+        wheelAngle = standardizedAngle(wheelAngle-90);
+
         double servoAngle = wheelAngleToServoAngle(wheelAngle);
 
         this.currentAngle = wheelAngle;
@@ -149,7 +151,7 @@ a position on the coordinate plane
     reason for the gear ratio
     */
     public double wheelAngleToServoAngle(double wheelAngle) {
-        double servoAngle = wheelAngle * WHEEL_SERVO_GEAR_RATIO;
+        double servoAngle = wheelAngle / WHEEL_SERVO_GEAR_RATIO;
         return servoAngle;
     }
 
@@ -224,10 +226,10 @@ a position on the coordinate plane
     public void setPower(double power) {
 
 
-        backRight.setPower(power);
+        backRight.setPower(-power);
         backLeft.setPower(power);
         frontRight.setPower(power);
-        frontLeft.setPower(power);
+        frontLeft.setPower(-power);
 
 
     }
