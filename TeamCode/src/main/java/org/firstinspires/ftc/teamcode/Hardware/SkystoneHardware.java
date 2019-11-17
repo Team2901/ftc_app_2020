@@ -48,15 +48,15 @@ public class SkystoneHardware {
     public final static double LENGTH_OF_ROBOT = 12.75;
     //This is the angle Phi that we defined in the math done before this
     public final static double TURN_ANGLE = Math.atan((.5 * WIDTH_OF_ROBOT) / (.5 * LENGTH_OF_ROBOT));
-    public final static int SERVO_MAX_ANGLE = 2727;
+    public final static int SERVO_MAX_ANGLE = 245;
     public final static int SERVO_MIN_ANGLE = 0;
     public final static double FRONT_LEFT_OFFSET = .1;
     public final static double BACK_LEFT_OFFSET = .1;
-    public final static double FRONT_RIGHT_OFFSET = .08;
+    public final static double FRONT_RIGHT_OFFSET = .1;
     public final static double BACK_RIGHT_OFFSET = .1;
     public double currentAngle = 0;
 
-    enum WheelPosition {
+    public enum WheelPosition {
         FRONT_LEFT(0),
         FRONT_RIGHT(1),
         BACK_LEFT(2),
@@ -90,6 +90,8 @@ public class SkystoneHardware {
         crane = hardwareMap.servo.get("crane");
         jaw = hardwareMap.servo.get("jaw");
         wrist = hardwareMap.servo.get("wrist");
+
+        crane.setPosition(0);
 
         //setAllSteeringServos(0);
 
@@ -147,7 +149,7 @@ a position on the coordinate plane
     reason for the gear ratio
     */
     public double wheelAngleToServoAngle(double wheelAngle) {
-        double servoAngle = wheelAngle / WHEEL_SERVO_GEAR_RATIO;
+        double servoAngle = wheelAngle * WHEEL_SERVO_GEAR_RATIO;
         return servoAngle;
     }
 

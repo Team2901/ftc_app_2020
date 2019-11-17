@@ -71,7 +71,7 @@ public class SkyStoneLoadingAuto extends LinearOpMode {
 
         skyStonePosition = findSkyStone();
 
-        skyStoneGridLocation = convertPositionToGridOffset(skyStonePosition);
+       // skyStoneGridLocation = convertPositionToGridOffset(skyStonePosition);
 
 
         //Step 2 Get Skystone

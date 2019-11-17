@@ -28,7 +28,7 @@ public class ParkCloseLeftYB extends LinearOpMode {
             robot.setDriveServoPosition(0);
             //moves to position closer to the nuetral bridge
             robot.goToPosition(12, this);
-            robot.planeBreaker.setPosition(1);
+            robot.bridgeTickler.setPosition(1);
 
 
         }

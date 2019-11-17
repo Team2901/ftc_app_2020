@@ -23,7 +23,7 @@ public class ParkCloseRightYB extends LinearOpMode {
         robot.wait(1000, this);
         robot.setDriveServoPosition(0);
         robot.goToPosition(12, this);
-        robot.planeBreaker.setPosition(1);
+        robot.bridgeTickler.setPosition(1);
 
 
 
