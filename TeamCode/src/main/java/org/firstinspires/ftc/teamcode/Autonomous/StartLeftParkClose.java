@@ -10,13 +10,12 @@ public class StartLeftParkClose extends LinearOpMode {
     final static double TICKS_PER_INCH = 2240/(3*Math.PI);
 
     public final SkystoneHardware robot = new SkystoneHardware();
-    @Override
-    public void waitForStart(){
 
-    }
     @Override
     public void runOpMode() throws InterruptedException {
         robot.init(hardwareMap);
+
+        waitForStart();
 
         robot.goToPosition(22 , this);
         robot.bridgeTickler.setPosition(1);

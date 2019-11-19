@@ -75,9 +75,9 @@ public class SkystoneTeleOp extends OpMode {
             robot.lift.setPower(0);
         }
 
-        if(gamepad2.right_bumper){
+        if(gamepad2.left_stick_x>.2){
             robot.crane.setPosition(robot.crane.getPosition() + .01);
-        }else if (gamepad2.left_bumper){
+        }else if (gamepad2.left_stick_x<-.2){
             robot.crane.setPosition(robot.crane.getPosition() - .01);
         }
 

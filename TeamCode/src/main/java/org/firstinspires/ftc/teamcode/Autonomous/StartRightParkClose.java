@@ -13,15 +13,11 @@ public class StartRightParkClose extends LinearOpMode {
 
     public final SkystoneHardware robot = new SkystoneHardware();
 
-
-    @Override
-    public void waitForStart()
-    {
-
-    }
     @Override
     public void runOpMode() throws InterruptedException {
         robot.init(hardwareMap);
+
+        waitForStart();
 
         robot.goToPosition(22 , this);
         robot.bridgeTickler.setPosition(1);
