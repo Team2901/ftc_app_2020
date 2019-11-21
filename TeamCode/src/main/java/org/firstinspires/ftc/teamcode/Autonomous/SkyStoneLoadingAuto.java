@@ -22,9 +22,9 @@ public class SkyStoneLoadingAuto extends LinearOpMode {
     private float skyStonePosition;
     private double skyStoneGridLocation;
     private static final double BLOCK_OFFSET = 30.0;
-    public static final int LEFT_POSITION = 3;
-    public static final int RIGHT_POSITION = 1;
-    public static final int CENTER_POSITION = 2;
+    public static final int LEFT_POSITION = 33;
+    public static final int RIGHT_POSITION = 66;
+    public static final int CENTER_POSITION = 50;
 
     private static final String VUFORIA_KEY ="AYhwTMH/////AAABmR7oFvU9lEJTryl5O3jDSusAPmWSAx5CHlcB/" +
             "IUoT+t7S1pJqTo7n3OwM4f2vVULA0T1uZVl9i61kWldhVqxK2+kyBNI4Uld8cYgHaNIQFsL/NsyBrb3Zl+1ZFBR" +
@@ -77,10 +77,14 @@ public class SkyStoneLoadingAuto extends LinearOpMode {
         //Step 2 Get Skystone
 
         moveForward(BLOCK_OFFSET);
-        if(skyStonePosition == LEFT_POSITION){
+        if(skyStonePosition <= LEFT_POSITION){
+            telemetry.addData("stone is ", "to the left");
             moveLeft(5.0);
-        }else if(skyStonePosition == RIGHT_POSITION){
+        }else if(skyStonePosition >= RIGHT_POSITION){
+            telemetry.addData("stone is ", "to the right");
             moveRight(5.0);
+        }else{
+            telemetry.addData("stone is ", "in the center");
         }
 
         /*
@@ -99,7 +103,7 @@ public class SkyStoneLoadingAuto extends LinearOpMode {
             Go left, forward, and then left, turn 180 degrees
         10.) Go to step 3
          */
-
+        while (opModeIsActive()){}
     }
     /**
      * Initialize the Vuforia localization engine.
@@ -134,7 +138,7 @@ public class SkyStoneLoadingAuto extends LinearOpMode {
     private float findSkyStone() {
 
         float centerPercentDifference = 0;
-
+        float stonePercentLocation = 0;
         List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
         if (updatedRecognitions != null) {
             telemetry.addData("# Object Detected", updatedRecognitions.size());
@@ -155,12 +159,13 @@ public class SkyStoneLoadingAuto extends LinearOpMode {
                 telemetry.addData("Difference", centerDifference);
                 centerPercentDifference = (centerDifference / centerFrame) * 100;
                 telemetry.addData("Percent Difference", centerPercentDifference);
+                stonePercentLocation = (centerStone / recognition.getImageWidth() * 100);
                 if (recognition.getLabel().equals(LABEL_SKY_BUTTER))
                     break;
             }
             telemetry.update();
         }
-        return centerPercentDifference;
+        return stonePercentLocation;
     }
 
     private double convertPositionToGridOffset (int position){
