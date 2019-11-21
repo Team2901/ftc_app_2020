@@ -1,5 +1,6 @@
-package org.firstinspires.ftc.teamcode.TeleOp;
+package org.firstinspires.ftc.teamcode.ToBeDeleted;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.Range;
@@ -9,6 +10,7 @@ import org.firstinspires.ftc.teamcode.Hardware.ClawbotHardware;
 /**
  * Created by Kearneyg20428 on 2/7/2017.
  */
+@Disabled
 @TeleOp(name="Clawbot", group="TeleOp")
 public class ClawbotTeleOp extends OpMode {
 

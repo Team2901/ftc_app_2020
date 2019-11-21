@@ -1,8 +1,11 @@
-package org.firstinspires.ftc.teamcode.TeleOp;
+package org.firstinspires.ftc.teamcode.ToBeDeleted;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+
+@Disabled
 @TeleOp(name = "encoder test count")
 public class EncoderTestTeleOp extends OpMode {
     public DcMotor motor;

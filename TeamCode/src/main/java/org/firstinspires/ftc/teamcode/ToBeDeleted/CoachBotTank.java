@@ -27,14 +27,17 @@
  * OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-package org.firstinspires.ftc.teamcode.NewProgrammers;
+package org.firstinspires.ftc.teamcode.ToBeDeleted;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
+
+import org.firstinspires.ftc.robotcontroller.external.samples.HardwarePushbot;
 
 /**
  * This file provides basic Telop driving for a Pushbot robot.
@@ -51,14 +54,13 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="KristenServos: Teleop Tank", group="Kristen")
-public class KristenServos extends OpMode{
+@Disabled
+@TeleOp(name="CoachBot: Teleop Tank", group="CoachBot")
+public class CoachBotTank extends OpMode{
   public DcMotor leftDrive;
   public DcMotor rightDrive;
-  public Servo leftGrabber;
-  public Servo rightGrabber;
-  public double leftGrabberOffset = 1;
-  public double rightGrabberOffset = 0;
+  public Servo grabber;
+  public double grabberOffset = 0;
   public double GRABBER_SPEED = 0.01;
     @Override
     public void init() {
@@ -68,9 +70,7 @@ public class KristenServos extends OpMode{
         leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
         leftDrive .setDirection(DcMotorSimple.Direction.REVERSE);
         rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
-        leftGrabber = hardwareMap.get(Servo.class, "Left_grabber");
-        rightGrabber = hardwareMap.get(Servo.class, "Right_grabber");
-
+        grabber = hardwareMap.get(Servo.class, "grabber");
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello Driver");    //
@@ -106,30 +106,18 @@ public class KristenServos extends OpMode{
         rightDrive.setPower(right);
 
         if (gamepad1.right_bumper)
-            rightGrabberOffset += GRABBER_SPEED;
+            grabberOffset += GRABBER_SPEED;
         else if (gamepad1.right_trigger > 0)
-            rightGrabberOffset -= GRABBER_SPEED;
-        rightGrabberOffset = Range.clip(rightGrabberOffset, 0, 1.0);
-        rightGrabber.setPosition (rightGrabberOffset);
+            grabberOffset -= GRABBER_SPEED;
+        grabberOffset = Range.clip(grabberOffset, 0, 1.0);
+        grabber.setPosition (grabberOffset);
 
         // Send telemetry message to signify robot running;
         telemetry.addData("left",  "%.2f", left);
         telemetry.addData("right", "%.2f", right);
-        telemetry.addData ("grabber", "%.2f",rightGrabberOffset);
-
-
-        if (gamepad1.left_bumper)
-            leftGrabberOffset -= GRABBER_SPEED;
-        else if (gamepad1.left_trigger > 0)
-            leftGrabberOffset += GRABBER_SPEED;
-        leftGrabberOffset = Range.clip(leftGrabberOffset, 0, 1.0);
-        leftGrabber.setPosition (leftGrabberOffset);
-
-        // Send telemetry message to signify robot running;
-        telemetry.addData ("grabber", "%.2f",leftGrabberOffset);
+        telemetry.addData ("grabber", "%.2f",grabberOffset);
 
     }
-
 
     /*
      * Code to run ONCE after the driver hits STOP

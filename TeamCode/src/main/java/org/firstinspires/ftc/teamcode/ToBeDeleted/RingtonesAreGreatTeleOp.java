@@ -1,15 +1,17 @@
-package org.firstinspires.ftc.teamcode.TeleOp;
+package org.firstinspires.ftc.teamcode.ToBeDeleted;
 
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
+@Disabled
 @TeleOp(name = "RingtonesAreGreatTeleOp")
 
 public class RingtonesAreGreatTeleOp extends OpMode {
