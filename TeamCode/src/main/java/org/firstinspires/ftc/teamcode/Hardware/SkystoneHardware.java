@@ -9,9 +9,6 @@ import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-
-import org.firstinspires.ftc.teamcode.TeleOp.SwerveTeleOp;
-
 public class SkystoneHardware {
 
     final static double TICKS_PER_INCH = 2240 / (3 * Math.PI);
