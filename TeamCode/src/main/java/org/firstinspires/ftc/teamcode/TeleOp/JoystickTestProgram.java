@@ -1,16 +1,14 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware;
-
+@TeleOp(name = "JoystickTestProgram")
 public class JoystickTestProgram extends OpMode {
-
-    final SkystoneHardware robot = new SkystoneHardware();
 
     @Override
     public void init() {
-        robot.init(hardwareMap);
     }
 
     @Override
@@ -31,10 +29,10 @@ public class JoystickTestProgram extends OpMode {
         if(gamepad1.y){
             telemetry.addLine("button y is pressed");
         }
-        if(gamepad1.left_bumper==true){
+        if(gamepad1.left_bumper){
             telemetry.addLine("left bumper is pressed");
         }
-        if(gamepad1.right_bumper==true){
+        if(gamepad1.right_bumper){
             telemetry.addLine("right bumper is pressed");
         }
         if(gamepad1.left_trigger>.25){
