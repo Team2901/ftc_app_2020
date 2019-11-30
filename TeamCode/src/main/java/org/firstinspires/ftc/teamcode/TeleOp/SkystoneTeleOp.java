@@ -91,7 +91,9 @@ public class SkystoneTeleOp extends OpMode {
     public void init() {
         robot.init(hardwareMap);
         //The y position is -1 to correct the joystick directions
-        setDriveServoPosition(0, -1);
+        setDriveServoPosition(0, 1);
+
+
 
     }
 
@@ -114,7 +116,7 @@ public class SkystoneTeleOp extends OpMode {
         } else if (radius > .2) {
             currentAngle = setDriveServoPosition(joystickPositionX, joystickPositionY);
             double power = getPower(joystickPositionX, joystickPositionY);
-            setPower(power);
+           setPower(power);
         } else {
             setPower(0);
         }
@@ -273,9 +275,15 @@ public class SkystoneTeleOp extends OpMode {
 //happy with this. It's doing what its supposed to
 
         double joyWheelAngle = joystickPositionToWheelAngle(joystickPositionX, joystickPositionY);
+
+        telemetry.addData("before angle Check" , joyWheelAngle);
+
         angleCheck(joyWheelAngle);
 
+
         double wheelAngle = swerveWheels.frontLeftMotor.targetAngle;
+
+        telemetry.addData("after Angle Check" , wheelAngle);
 
         telemetry.addData("wheelAngle", wheelAngle);
 
@@ -348,16 +356,28 @@ public class SkystoneTeleOp extends OpMode {
 
     public void angleCheck (double goal){
         double start = this.swerveWheels.frontLeftMotor.targetAngle;
+        telemetry.addData("start" , start);
+        telemetry.addData("UnNormalized Goal" , goal);
 
         goal = normalizeAngle(goal);
 
-        double dAngleForward = ((goal - start + 180) % 360) - 180;
-        double targetAngleForward = dAngleForward + start;
-        boolean forwardPossible = (targetAngleForward < SERVO_MAX_ANGLE && targetAngleForward > SERVO_MIN_ANGLE);
+        telemetry.addData("Normalized Goal" , goal);
 
-        double dAngleBackward = ((goal - start) % 360) - 180;
+        double dAngleForward = ((((goal - start + 180) % 360)+360)%360) - 180;
+        double targetAngleForward = dAngleForward + start;
+        boolean forwardPossible = (targetAngleForward <= SERVO_MAX_ANGLE*.3 && targetAngleForward >= SERVO_MIN_ANGLE);
+
+        telemetry.addData("dAngleForward" , dAngleForward);
+        telemetry.addData("targetAngleForward" , targetAngleForward);
+        telemetry.addData("forward Possible",  forwardPossible);
+
+        double dAngleBackward = ((((goal - start) % 360) + 360) % 360) - 180;
         double targetAngleBackward = dAngleBackward + start;
-        boolean backwardPossible = (targetAngleBackward < SERVO_MAX_ANGLE && targetAngleBackward > SERVO_MIN_ANGLE);
+        boolean backwardPossible = (targetAngleBackward <= SERVO_MAX_ANGLE*.3 && targetAngleBackward >= SERVO_MIN_ANGLE);
+
+        telemetry.addData("dAngleBackward" , dAngleBackward);
+        telemetry.addData("targetAngleBackward" , targetAngleBackward);
+        telemetry.addData("back Possible",  backwardPossible);
 
         boolean goForward = true;
 
@@ -376,16 +396,19 @@ public class SkystoneTeleOp extends OpMode {
             goForward = false;
         }
 
+        telemetry.addData("goForward" , goForward);
+
+
         if (goForward) {
             targetAngle = targetAngleForward;
             modifier = 1;
-
 
         } else {
             targetAngle = targetAngleBackward;
             modifier = -1;
         }
 
+        telemetry.addData("modifier"  ,modifier);
         this.swerveWheels.setTargetAndModifier(targetAngle, modifier);
     }
 
