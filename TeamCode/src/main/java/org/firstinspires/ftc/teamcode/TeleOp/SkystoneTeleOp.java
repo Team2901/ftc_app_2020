@@ -10,7 +10,7 @@ import static org.firstinspires.ftc.teamcode.Utility.AngleUtilities.getNormalize
 
 @TeleOp(name = "SKYSTONE TELEOP", group = "competition")
 public class SkystoneTeleOp extends OpMode {
-    
+
     public final static double WHEEL_SERVO_GEAR_RATIO = .3;
     public final static double WIDTH_OF_ROBOT = 13.5;
     public final static double LENGTH_OF_ROBOT = 13.5;
@@ -111,10 +111,10 @@ public class SkystoneTeleOp extends OpMode {
             robot.lift.setPower(0);
         }
 
-        if (gamepad2.left_stick_x > .2) {
-            robot.crane.setPosition(robot.crane.getPosition() + .01);
-        } else if (gamepad2.left_stick_x < -.2) {
-            robot.crane.setPosition(robot.crane.getPosition() - .01);
+        if (gamepad2.right_bumper) {
+            robot.crane.setPosition(robot.crane.getPosition() + .005);
+        } else if (gamepad2.left_bumper) {
+            robot.crane.setPosition(robot.crane.getPosition() - .005);
         }
 
         if (gamepad2.x) {
