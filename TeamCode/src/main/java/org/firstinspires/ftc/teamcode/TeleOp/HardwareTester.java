@@ -3,11 +3,12 @@ package org.firstinspires.ftc.teamcode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware;
-import org.firstinspires.ftc.teamcode.TeleOp.SkystoneTeleOp;
+
+import java.util.ArrayList;
+
 @TeleOp(name = "HardwareTester")
 public class HardwareTester extends OpMode {
 
@@ -16,29 +17,60 @@ public class HardwareTester extends OpMode {
     DcMotor  motor1;
     Servo servo1;
 
-    DcMotor[] motors = {robot.frontLeft,robot.frontRight,robot.backLeft,robot.backRight,robot.lift};
-    int motorindex;
+    String[] motorNames = {"frontLeft","frontRight","backLeft","backRight","lift"};
+    String[] servoNames = {"servoFrontLeft","servoFrontRight","servoBackLeft","servoBackRight"};
+
+    int motorIndex;
+
+    Servo[] servos = {robot.servoFrontLeft,robot.servoFrontRight,robot.servoBackLeft,robot.servoBackRight};
+    int servoIndex;
+
+    ArrayList<DcMotor> motorArrayList;
+    ArrayList<Servo>servoArrayList;
 
     @Override
     public void init() {
         robot.init(hardwareMap);
+        for(int i = 0; i < motorNames.length; i++){
+            String motorName = motorNames[motorIndex];
+            DcMotor motor = hardwareMap.dcMotor.get(motorName);
+            motorArrayList.add(motor);
+        }
+        for(int i = 0; i < servoNames.length; i++){
+            String servoName = servoNames[servoIndex];
+            Servo servo = hardwareMap.servo.get(servoName);
+            servoArrayList.add(servo);
+        }
     }
 
     @Override
     public void loop() {
         if(this.gamepad1.dpad_up){
-            motorindex ++;
-            if(motorindex >= motors.length){
-                motorindex = 0;
+            motorIndex++;
+            if(motorIndex >= motorArrayList.size()){
+                motorIndex = 0;
             }
         } else if(this.gamepad1.dpad_down) {
-            motorindex --;
-            if(motorindex < 0){
-                motorindex = motors.length - 1;
+            motorIndex--;
+            if(motorIndex < 0){
+                motorIndex = motorArrayList.size() - 1;
             }
         }
-        motor1 = robot.frontLeft;
-        servo1 = robot.servoFrontLeft;
+        motor1 = motorArrayList.get(motorIndex);
+
+        if(this.gamepad1.dpad_right){
+            servoIndex++;
+            if(servoIndex >= servoArrayList.size()){
+                servoIndex = 0;
+            }
+        } else if(this.gamepad1.dpad_left) {
+            servoIndex--;
+            if(servoIndex < 0){
+                servoIndex = servoArrayList.size() - 1;
+            }
+        }
+
+        servo1 = servoArrayList.get(servoIndex);
 
         if(motor1 != null){
             if(Math.abs(this.gamepad1.left_stick_x) > 0.25 ){
@@ -56,7 +88,10 @@ public class HardwareTester extends OpMode {
             telemetry.addData("A","Resetting encoders");
             telemetry.addData("Current position", motor1.getCurrentPosition());
             telemetry.addData("Power", motor1.getPower());
+            telemetry.addData("Motor name", motorNames[motorIndex]);
         }
+
+        telemetry.addData("D Pad Up/Down", "Increment/decrement motors");
 
         if(servo1 != null){
             if(this.gamepad1.left_bumper){
@@ -74,7 +109,10 @@ public class HardwareTester extends OpMode {
             telemetry.addData("Left trigger","+0.2");
             telemetry.addData("Right trigger","-0.2");
             telemetry.addData("Position", servo1.getPosition());
+            telemetry.addData("Servo name",servoNames[servoIndex]);
         }
+
+        telemetry.addData("D Pad Right/Left", "Increment/decrement servos");
 
 
         telemetry.update();
