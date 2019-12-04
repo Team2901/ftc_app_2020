@@ -36,6 +36,11 @@ public class HardwareTester extends OpMode {
             DcMotor motor = hardwareMap.dcMotor.get(motorName);
             motorArrayList.add(motor);
         }
+        for(int i = 0; i < servoNames.length; i++){
+            String servoName = servoNames[servoIndex];
+            Servo servo = hardwareMap.servo.get(servoName);
+            servoArrayList.add(servo);
+        }
     }
 
     @Override
@@ -59,7 +64,7 @@ public class HardwareTester extends OpMode {
             if(servoIndex >= servoArrayList.size()){
                 servoIndex = 0;
             }
-        } else if(this.gamepad1.dpad_down) {
+        } else if(this.gamepad1.dpad_left) {
             servoIndex--;
             if(servoIndex < 0){
                 servoIndex = servoArrayList.size() - 1;
@@ -79,8 +84,6 @@ public class HardwareTester extends OpMode {
                 motor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 motor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             }
-
-            String motorName;
 
             telemetry.addData("Left X Stick", "Set Power");
             telemetry.addData("A","Resetting encoders");
