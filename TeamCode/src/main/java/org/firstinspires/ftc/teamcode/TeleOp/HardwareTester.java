@@ -24,8 +24,9 @@ public class HardwareTester extends OpMode {
 
     Servo[] servos = {robot.servoFrontLeft,robot.servoFrontRight,robot.servoBackLeft,robot.servoBackRight};
     int servoIndex;
-    
+
     ArrayList<DcMotor> motorArrayList;
+    ArrayList<Servo>servoArrayList;
 
     @Override
     public void init() {
@@ -55,17 +56,17 @@ public class HardwareTester extends OpMode {
 
         if(this.gamepad1.dpad_right){
             servoIndex++;
-            if(servoIndex >= servos.length){
+            if(servoIndex >= servoArrayList.size()){
                 servoIndex = 0;
             }
         } else if(this.gamepad1.dpad_down) {
             servoIndex--;
             if(servoIndex < 0){
-                servoIndex = servos.length - 1;
+                servoIndex = servoArrayList.size() - 1;
             }
         }
 
-        servo1 = servos[servoIndex];
+        servo1 = servoArrayList.get(servoIndex);
 
         if(motor1 != null){
             if(Math.abs(this.gamepad1.left_stick_x) > 0.25 ){
