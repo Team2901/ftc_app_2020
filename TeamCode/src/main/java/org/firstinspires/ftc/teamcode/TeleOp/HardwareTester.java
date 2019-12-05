@@ -9,13 +9,13 @@ import org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware;
 
 import java.util.ArrayList;
 
-@TeleOp(name = "HardwareTester")
+@TeleOp(name = "HardwareTester2")
 public class HardwareTester extends OpMode {
 
     SkystoneHardware robot = new SkystoneHardware();
 
-    DcMotor  motor1;
-    Servo servo1;
+    DcMotor  motorUnderTest;
+    Servo servoUnderTest;
 
     String[] motorNames = {"frontLeft","frontRight","backLeft","backRight","lift"};
     String[] servoNames = {"servoFrontLeft","servoFrontRight","servoBackLeft","servoBackRight"};
@@ -25,22 +25,27 @@ public class HardwareTester extends OpMode {
     Servo[] servos = {robot.servoFrontLeft,robot.servoFrontRight,robot.servoBackLeft,robot.servoBackRight};
     int servoIndex;
 
-    ArrayList<DcMotor> motorArrayList;
-    ArrayList<Servo>servoArrayList;
+    ArrayList<DcMotor> motorArrayList = new ArrayList<>();
+    ArrayList<Servo> servoArrayList = new ArrayList<>();
 
     @Override
     public void init() {
         robot.init(hardwareMap);
         for(int i = 0; i < motorNames.length; i++){
-            String motorName = motorNames[motorIndex];
+            String motorName = motorNames[i];
             DcMotor motor = hardwareMap.dcMotor.get(motorName);
             motorArrayList.add(motor);
+            telemetry.addData("Motor"+i,motorName,motor);
         }
         for(int i = 0; i < servoNames.length; i++){
             String servoName = servoNames[servoIndex];
             Servo servo = hardwareMap.servo.get(servoName);
             servoArrayList.add(servo);
         }
+        for(int i = 0; i < motorArrayList.size(); i++){
+            telemetry.addData("Motor"+i,motorArrayList.get(i));
+        }
+        telemetry.update();
     }
 
     @Override
@@ -57,7 +62,7 @@ public class HardwareTester extends OpMode {
                 motorIndex = motorArrayList.size() - 1;
             }
         }
-        motor1 = motorArrayList.get(motorIndex);
+        motorUnderTest = motorArrayList.get(motorIndex);
 
         if(this.gamepad1.dpad_right){
             servoIndex++;
@@ -71,45 +76,46 @@ public class HardwareTester extends OpMode {
             }
         }
 
-        servo1 = servoArrayList.get(servoIndex);
+        servoUnderTest = servoArrayList.get(servoIndex);
 
-        if(motor1 != null){
+        if(motorUnderTest != null){
             if(Math.abs(this.gamepad1.left_stick_x) > 0.25 ){
-                motor1.setPower(this.gamepad1.left_stick_x);
+                motorUnderTest.setPower(this.gamepad1.left_stick_x);
             } else {
-                motor1.setPower(0);
+                motorUnderTest.setPower(0);
             }
 
             if(this.gamepad1.a){
-                motor1.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                motor1.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                motorUnderTest.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                motorUnderTest.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             }
 
             telemetry.addData("Left X Stick", "Set Power");
             telemetry.addData("A","Resetting encoders");
-            telemetry.addData("Current position", motor1.getCurrentPosition());
-            telemetry.addData("Power", motor1.getPower());
+            telemetry.addData("Current position", motorUnderTest.getCurrentPosition());
+            telemetry.addData("Power", motorUnderTest.getPower());
             telemetry.addData("Motor name", motorNames[motorIndex]);
+            telemetry.addData("Motor object",motorUnderTest);
         }
 
         telemetry.addData("D Pad Up/Down", "Increment/decrement motors");
 
-        if(servo1 != null){
+        if(servoUnderTest != null){
             if(this.gamepad1.left_bumper){
-                servo1.setPosition(servo1.getPosition()+0.1);
+                servoUnderTest.setPosition(servoUnderTest.getPosition()-0.1);
             } else if(this.gamepad1.right_bumper){
-                servo1.setPosition(servo1.getPosition()-0.1);
+                servoUnderTest.setPosition(servoUnderTest.getPosition()+0.1);
             } else if(this.gamepad1.left_trigger > 0.25){
-                servo1.setPosition(servo1.getPosition()+0.2);
+                servoUnderTest.setPosition(servoUnderTest.getPosition()-0.2);
             } else if(this.gamepad1.right_trigger > 0.25) {
-                servo1.setPosition(servo1.getPosition() - 0.2);
+                servoUnderTest.setPosition(servoUnderTest.getPosition()+0.2);
             }
 
-            telemetry.addData("Left bumper","+0.1");
-            telemetry.addData("Right bumper","-0.1");
-            telemetry.addData("Left trigger","+0.2");
-            telemetry.addData("Right trigger","-0.2");
-            telemetry.addData("Position", servo1.getPosition());
+            telemetry.addData("Left bumper","-0.1");
+            telemetry.addData("Right bumper","+0.1");
+            telemetry.addData("Left trigger","-0.2");
+            telemetry.addData("Right trigger","+0.2");
+            telemetry.addData("Position", servoUnderTest.getPosition());
             telemetry.addData("Servo name",servoNames[servoIndex]);
         }
 
