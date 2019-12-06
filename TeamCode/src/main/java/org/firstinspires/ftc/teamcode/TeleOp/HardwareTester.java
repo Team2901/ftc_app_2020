@@ -50,7 +50,6 @@ public class HardwareTester extends OpMode {
 
     @Override
     public void loop() {
-
         if(this.gamepad1.dpad_up){
             motorIndex++;
             if(motorIndex >= motorArrayList.size()){
