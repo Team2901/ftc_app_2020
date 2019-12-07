@@ -76,13 +76,6 @@ public class WillsTeleop extends OpMode {
     @Override
     public void loop(){
 
-
-
-        skyStonePosition = findSkyStone();
-
-       // skyStoneGridLocation = convertPositionToGridOffset(skyStonePosition);
-
-
         //Step 2 Get Skystone
 
         moveForward(BLOCK_OFFSET);
@@ -104,38 +97,11 @@ public class WillsTeleop extends OpMode {
 
         leftDrive.setPower(left);
         rightDrive.setPower(right);
-
-        if (gamepad1.right_bumper)
-            rightGrabberOffset += GRABBER_SPEED;
-        else if (gamepad1.right_trigger > 0)
-            rightGrabberOffset -= GRABBER_SPEED;
-        rightGrabberOffset = Range.clip(rightGrabberOffset, 0, 1.0);
-        rightGrabber.setPosition (rightGrabberOffset);
-
-        // Send telemetry message to signify robot running;
-        telemetry.addData("left",  "%.2f", left);
-        telemetry.addData("right", "%.2f", right);
-        telemetry.addData ("grabber", "%.2f",rightGrabberOffset);
-
-
-        if (gamepad1.left_bumper)
-            leftGrabberOffset -= GRABBER_SPEED;
-        else if (gamepad1.left_trigger > 0)
-            leftGrabberOffset += GRABBER_SPEED;
-        leftGrabberOffset = Range.clip(leftGrabberOffset, 0, 1.0);
-        leftGrabber.setPosition (leftGrabberOffset);
-
-        // Send telemetry message to signify robot running;
-        telemetry.addData ("grabber", "%.2f",leftGrabberOffset);
+        skyStonePosition = findSkyStone();
+        telemetry.update();
 
     }
 
-
-    /*
-     * Code to run ONCE after the driver hits STOP
-     */
-    @Override
-    public void stop() {}
     /**
      * Initialize the Vuforia localization engine.
      */
@@ -161,7 +127,7 @@ public class WillsTeleop extends OpMode {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfodParameters.minimumConfidence = 0.8;
+        tfodParameters.minimumConfidence = 0.5;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_BUTTER, LABEL_SKY_BUTTER);
     }
@@ -170,31 +136,42 @@ public class WillsTeleop extends OpMode {
 
         float centerPercentDifference = 0;
         float stonePercentLocation = 0;
-        List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
+        List<Recognition> updatedRecognitions = tfod.getRecognitions();
         if (updatedRecognitions != null) {
+
+            Recognition highestConfidence = null;
             telemetry.addData("# Object Detected", updatedRecognitions.size());
             // step through the list of recognitions and display boundary info.
             int i = 0;
             for (Recognition recognition : updatedRecognitions) {
+                if (recognition.getLabel().equals(LABEL_SKY_BUTTER)) {
+                    if(highestConfidence == null || highestConfidence.getConfidence() < recognition.getConfidence()){
+                        highestConfidence = recognition;
+                    }
+                }
+            }
+            if(highestConfidence != null) {
                 //If x > 380, the skystone is in position three. (Three away from the edge) If x > 620 it is at position 2, and if x > 350 it is in position 1
-                telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
+                telemetry.addData(String.format("label (%d)", i), highestConfidence.getLabel());
                 telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f",
-                        recognition.getLeft(), recognition.getTop());
+                        highestConfidence.getLeft(), highestConfidence.getTop());
                 telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
-                        recognition.getRight(), recognition.getBottom());
-                int centerFrame = recognition.getImageWidth()/2;
-                float centerStone = (recognition.getRight() + recognition.getLeft()) / 2;
+                        highestConfidence.getRight(), highestConfidence.getBottom());
+                int centerFrame = highestConfidence.getImageWidth() / 2;
+                float centerStone = (highestConfidence.getRight() + highestConfidence.getLeft()) / 2;
                 telemetry.addData("Center Frame", centerFrame);
                 telemetry.addData("Center Stone", centerStone);
                 float centerDifference = centerStone - centerFrame;
                 telemetry.addData("Difference", centerDifference);
                 centerPercentDifference = (centerDifference / centerFrame) * 100;
                 telemetry.addData("Percent Difference", centerPercentDifference);
-                stonePercentLocation = (centerStone / recognition.getImageWidth() * 100);
-                if (recognition.getLabel().equals(LABEL_SKY_BUTTER))
-                    break;
+                stonePercentLocation = (centerStone / highestConfidence.getImageWidth() * 100);
+                telemetry.addData("percent location", stonePercentLocation);
+            }else{
+                telemetry.addData("we didn't find anything", ""); 
             }
-            telemetry.update();
+        } else{
+            telemetry.addData("# Object Detected", 0);
         }
         return stonePercentLocation;
     }
@@ -204,12 +181,12 @@ public class WillsTeleop extends OpMode {
     }
 
     private void moveForward (double inches){
-        telemetry.addData("Moved to a position in front of oneself", inches);
+        //telemetry.addData("Moved to a position in front of oneself", inches);
     }
     private void moveLeft (double inches) {
-        telemetry.addData("Moved to a position to the left of oneself", inches);
+        //telemetry.addData("Moved to a position to the left of oneself", inches);
     }
     private void moveRight (double inches) {
-        telemetry.addData("Moved to a position to the right of oneself", inches);
+        //telemetry.addData("Moved to a position to the right of oneself", inches);
     }
 }
