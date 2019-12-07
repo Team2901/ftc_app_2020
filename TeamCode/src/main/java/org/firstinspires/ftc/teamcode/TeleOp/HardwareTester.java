@@ -38,13 +38,12 @@ public class HardwareTester extends OpMode {
             telemetry.addData("Motor"+i,motorName,motor);
         }
         for(int i = 0; i < servoNames.length; i++){
-            String servoName = servoNames[servoIndex];
+            String servoName = servoNames[i];
             Servo servo = hardwareMap.servo.get(servoName);
             servoArrayList.add(servo);
+            telemetry.addData("Servo"+i,servoArrayList.get(i));
         }
-        for(int i = 0; i < motorArrayList.size(); i++){
-            telemetry.addData("Motor"+i,motorArrayList.get(i));
-        }
+
         telemetry.update();
     }
 
