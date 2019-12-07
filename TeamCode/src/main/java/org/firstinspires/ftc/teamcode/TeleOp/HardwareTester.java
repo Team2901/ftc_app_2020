@@ -45,7 +45,7 @@ public class HardwareTester extends OpMode {
             Servo servo = hardwareMap.servo.get(servoName);
             servoArrayList.add(servo);
             telemetry.addData("Servo"+i,servoArrayList.get(i));
-           
+
         }
 
         telemetry.update();
