@@ -52,14 +52,16 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="KristenServos: Teleop Tank", group="Kristen")
+@TeleOp(name="KristenServos V4 : Teleop Tank", group="Kristen")
 public class KristenServos extends OpMode{
   public DcMotor leftDrive;
   public DcMotor rightDrive;
   public Servo leftGrabber;
   public Servo rightGrabber;
-  public double leftGrabberOffset = 1;
-  public double rightGrabberOffset = 0;
+  public static final double LEFT_GRABBER_MAX = 0.75;
+  public static final double RIGHT_GRABBER_MIN = 0.25;
+  public double leftGrabberOffset = 0;
+  public double rightGrabberOffset = 1;
   public double GRABBER_SPEED = 0.01;
     @Override
     public void init() {
@@ -110,24 +112,24 @@ public class KristenServos extends OpMode{
             rightGrabberOffset += GRABBER_SPEED;
         else if (gamepad1.right_trigger > 0)
             rightGrabberOffset -= GRABBER_SPEED;
-        rightGrabberOffset = Range.clip(rightGrabberOffset, 0, 1.0);
+        rightGrabberOffset = Range.clip(rightGrabberOffset, RIGHT_GRABBER_MIN, 1.0);
         rightGrabber.setPosition (rightGrabberOffset);
 
         // Send telemetry message to signify robot running;
         telemetry.addData("left",  "%.2f", left);
         telemetry.addData("right", "%.2f", right);
-        telemetry.addData ("grabber", "%.2f",rightGrabberOffset);
+        telemetry.addData ("Right Grabber", "%.2f",rightGrabberOffset);
 
 
         if (gamepad1.left_bumper)
             leftGrabberOffset -= GRABBER_SPEED;
         else if (gamepad1.left_trigger > 0)
             leftGrabberOffset += GRABBER_SPEED;
-        leftGrabberOffset = Range.clip(leftGrabberOffset, 0, 1.0);
+        leftGrabberOffset = Range.clip(leftGrabberOffset, 0, LEFT_GRABBER_MAX);
         leftGrabber.setPosition (leftGrabberOffset);
 
         // Send telemetry message to signify robot running;
-        telemetry.addData ("grabber", "%.2f",leftGrabberOffset);
+        telemetry.addData ("Left Grabber", "%.2f",leftGrabberOffset);
 
     }
 
