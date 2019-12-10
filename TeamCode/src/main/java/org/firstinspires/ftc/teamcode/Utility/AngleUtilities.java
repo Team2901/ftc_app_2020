@@ -19,6 +19,11 @@ public class AngleUtilities {
         return AngleUnit.normalizeDegrees(angle);
     }
 
+    public static double radiansDegreesTranslation(double radians) {
+        double degrees = radians * 180 / Math.PI;
+        return degrees;
+    }
+
     /**
      * Normalizes an angle to be between 0 and 359 degrees
      *
