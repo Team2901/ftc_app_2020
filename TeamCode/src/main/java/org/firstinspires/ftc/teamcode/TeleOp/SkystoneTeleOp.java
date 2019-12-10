@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
 
 import static org.firstinspires.ftc.teamcode.Utility.AngleUtilities.getNormalizedAngle;
 
-@TeleOp(name = "SKYSTONE TELEOP", group = "competition")
+@TeleOp(name = "SKYSTONE TELEOP 2", group = "competition")
 public class SkystoneTeleOp extends OpMode {
 
     public final static double WHEEL_SERVO_GEAR_RATIO = .3;
@@ -193,10 +193,10 @@ public class SkystoneTeleOp extends OpMode {
 
         double power = modifier * getPower(joystickPositionX, joystickPositionY);
 
-        robot.backRight.setPower(-power);
-        robot.backLeft.setPower(power);
-        robot.frontRight.setPower(power);
-        robot.frontLeft.setPower(-power);
+        robot.backRight.setPower(power);
+        robot.backLeft.setPower(-power);
+        robot.frontRight.setPower(-power);
+        robot.frontLeft.setPower(power);
 
         telemetry.addData("Power", power);
 
