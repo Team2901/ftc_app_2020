@@ -233,12 +233,20 @@ public class SkystoneTeleOp extends OpMode {
         double servoPositionbL = this.swerveWheels.backLeftMotor.wheelAngleToServoPosition();
         double servoPositionbR = this.swerveWheels.backRightMotor.wheelAngleToServoPosition();
 
+        /*
+         * TODO GILLIAN - you are printing this info out twice, once here and then again in SetAllServos
+         */
         telemetry.addData("servoPotionFl:", servoPositionfL);
         telemetry.addData("servoPositionfR:", servoPositionfR);
         telemetry.addData("servoPositionbL:", servoPositionbL);
         telemetry.addData("servoPositionbR:", servoPositionbR);
 
         setAllServos(servoPositionfL, servoPositionfR, servoPositionbL, servoPositionbR);
+
+        /*
+         * TODO GILLIAN - this is the wrong SetPower method, you should use setPower(double)
+         *  Then you can also get rid of setPower(double, double, double) as it isn't use else where
+         */
         setPower(power, 0, -Math.signum(power));
     }
 
@@ -262,6 +270,13 @@ public class SkystoneTeleOp extends OpMode {
     }
 
     public void angleCheck(double goal, SwerveWheel swerveWheel) {
+        /*
+         * TODO GILLIAN we are calling this method 4 times which is putting a lot of confusing/hard to follow data in the telemetery
+         *  Since we are closer to having this working, combine the important telemetry to one or two lines by using String.format(String, *args)
+         *  almost all of your variables are doubles which will use %f.
+         *  You may also want to add a String name variable to SwerveWheel that you can include it in the telemetery
+         */
+
         double start = swerveWheel.targetAngle;
         telemetry.addData("start", start);
         telemetry.addData("UnNormalized Goal", goal);
@@ -269,6 +284,11 @@ public class SkystoneTeleOp extends OpMode {
         goal = getNormalizedAngle(goal);
 
         telemetry.addData("Normalized Goal", goal);
+
+        /*
+        * TODO GILLIAN - the modifier is reversed because this should be just goal - start.
+        * goal - start + 180 is effectively reversing targetAngleForward and targetAngleBackward
+        */
 
         double dAngleForward = getNormalizedAngle(goal - start + 180);
         double targetAngleForward = dAngleForward + start;

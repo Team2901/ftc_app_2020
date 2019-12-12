@@ -1,26 +1,22 @@
-package org.firstinspires.ftc.teamcode.NewProgrammers;
+package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+import org.firstinspires.ftc.teamcode.NewProgrammers.TestingTensorFlowWebcam;
 
 import java.util.List;
 
-@TeleOp(name = "WillsTeleopV2")
+@Autonomous(name = "CrawlToSkystone")
 
-
-public class WillsTeleop extends OpMode {
+public class CrawlToSkystone extends LinearOpMode {
 
     private static final String TFOD_MODEL_ASSET = "Skystone.tflite";
     private static final String LABEL_BUTTER = "Stone";
@@ -33,11 +29,6 @@ public class WillsTeleop extends OpMode {
     public static final int CENTER_POSITION = 50;
     public DcMotor leftDrive;
     public DcMotor rightDrive;
-    public Servo leftGrabber;
-    public Servo rightGrabber;
-    public double leftGrabberOffset = 1;
-    public double rightGrabberOffset = 0;
-    public double GRABBER_SPEED = 0.01;
 
     private static final String VUFORIA_KEY ="AYhwTMH/////AAABmR7oFvU9lEJTryl5O3jDSusAPmWSAx5CHlcB/" +
             "IUoT+t7S1pJqTo7n3OwM4f2vVULA0T1uZVl9i61kWldhVqxK2+kyBNI4Uld8cYgHaNIQFsL/NsyBrb3Zl+1ZFBR" +
@@ -48,13 +39,28 @@ public class WillsTeleop extends OpMode {
     private VuforiaLocalizer vuforia;
 
     private TFObjectDetector tfod;
+
     @Override
-    public void init() {
+    public void runOpMode() throws InterruptedException {
         leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
         rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
-        leftDrive .setDirection(DcMotorSimple.Direction.REVERSE);
-        leftGrabber = hardwareMap.get(Servo.class, "Left_grabber");
-        rightGrabber = hardwareMap.get(Servo.class, "Right_grabber");
+        leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        leftDrive.setDirection(DcMotorSimple.Direction.FORWARD);
+        rightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        /*
+        1.) Find skystone
+        2.) Get skystone
+            Move forward, activate intake
+        3.) Move right forward direction
+        4.) Turn 90 degrees counterclockwise
+            Find the waffle using the camera
+        5.) If the waffle is not in the corner, put it in the corner
+        6.) If the waffle is already in the corner
+            Move to waffle, place block
+         7.) Place Capstone on block
+         */
+        // Step 1 Find Skystone
 
         initVuforia();
 
@@ -71,37 +77,52 @@ public class WillsTeleop extends OpMode {
         }
         telemetry.addData(">", "Press Play to start op mode");
         telemetry.update();
-    }
+        waitForStart();
 
-    @Override
-    public void loop(){
+        skyStonePosition = findSkyStone();
+
+        // skyStoneGridLocation = convertPositionToGridOffset(skyStonePosition);
+
 
         //Step 2 Get Skystone
 
-        moveForward(BLOCK_OFFSET);
-        if(skyStonePosition <= LEFT_POSITION){
-            telemetry.addData("stone is ", "to the left");
-            moveLeft(5.0);
-        }else if(skyStonePosition >= RIGHT_POSITION){
-            telemetry.addData("stone is ", "to the right");
-            moveRight(5.0);
-        }else{
-            telemetry.addData("stone is ", "in the center");
+        while(skyStonePosition < 40){
+           leftDrive.setPower(.2);
+           rightDrive.setPower(.2);
+
+            leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            leftDrive.setTargetPosition(50);
+            rightDrive.setTargetPosition(50);
         }
-        double left;
-        double right;
+        leftDrive.setPower(0);
+        rightDrive.setPower(0);
 
-        // Run wheels in tank mode (note: The joystick goes negative when pushed forwards, so negate it)
-        left = -gamepad1.left_stick_y;
-        right = -gamepad1.right_stick_y;
 
-        leftDrive.setPower(left);
-        rightDrive.setPower(right);
-        skyStonePosition = findSkyStone();
-        telemetry.update();
 
+        while(leftDrive.isBusy()){
+
+        }
+
+        /*
+        1.) Move waffle to the middle position
+            Move forward, grab, drag back
+        2.) Move right
+            To go underneath the bridge
+        3.) Find skystone
+            Identify if there are three stones, if not, go to next location
+        4.) Get skystone
+        5.) Move right forward direction
+        6.) Turn 180 degrees clockwise
+        7.) Place block
+        8.) Place Capstone on block
+        9.) Return to starting position
+            Go left, forward, and then left, turn 180 degrees
+        10.) Go to step 3
+         */
+        while (opModeIsActive()){}
     }
-
     /**
      * Initialize the Vuforia localization engine.
      */
@@ -127,7 +148,7 @@ public class WillsTeleop extends OpMode {
         int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
                 "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
         TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfodParameters.minimumConfidence = 0.5;
+        tfodParameters.minimumConfidence = 0.8;
         tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_BUTTER, LABEL_SKY_BUTTER);
     }
@@ -136,42 +157,31 @@ public class WillsTeleop extends OpMode {
 
         float centerPercentDifference = 0;
         float stonePercentLocation = 0;
-        List<Recognition> updatedRecognitions = tfod.getRecognitions();
+        List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
         if (updatedRecognitions != null) {
-
-            Recognition highestConfidence = null;
             telemetry.addData("# Object Detected", updatedRecognitions.size());
             // step through the list of recognitions and display boundary info.
             int i = 0;
             for (Recognition recognition : updatedRecognitions) {
-                if (recognition.getLabel().equals(LABEL_SKY_BUTTER)) {
-                    if(highestConfidence == null || highestConfidence.getConfidence() < recognition.getConfidence()){
-                        highestConfidence = recognition;
-                    }
-                }
-            }
-            if(highestConfidence != null) {
                 //If x > 380, the skystone is in position three. (Three away from the edge) If x > 620 it is at position 2, and if x > 350 it is in position 1
-                telemetry.addData(String.format("label (%d)", i), highestConfidence.getLabel());
+                telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
                 telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f",
-                        highestConfidence.getLeft(), highestConfidence.getTop());
+                        recognition.getLeft(), recognition.getTop());
                 telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
-                        highestConfidence.getRight(), highestConfidence.getBottom());
-                int centerFrame = highestConfidence.getImageWidth() / 2;
-                float centerStone = (highestConfidence.getRight() + highestConfidence.getLeft()) / 2;
+                        recognition.getRight(), recognition.getBottom());
+                int centerFrame = recognition.getImageWidth()/2;
+                float centerStone = (recognition.getRight() + recognition.getLeft()) / 2;
                 telemetry.addData("Center Frame", centerFrame);
                 telemetry.addData("Center Stone", centerStone);
                 float centerDifference = centerStone - centerFrame;
                 telemetry.addData("Difference", centerDifference);
                 centerPercentDifference = (centerDifference / centerFrame) * 100;
                 telemetry.addData("Percent Difference", centerPercentDifference);
-                stonePercentLocation = (centerStone / highestConfidence.getImageWidth() * 100);
-                telemetry.addData("percent location", stonePercentLocation);
-            }else{
-                telemetry.addData("we didn't find anything", "");
+                stonePercentLocation = (centerStone / recognition.getImageWidth() * 100);
+                if (recognition.getLabel().equals(LABEL_SKY_BUTTER))
+                    break;
             }
-        } else{
-            telemetry.addData("# Object Detected", 0);
+            telemetry.update();
         }
         return stonePercentLocation;
     }
@@ -181,12 +191,12 @@ public class WillsTeleop extends OpMode {
     }
 
     private void moveForward (double inches){
-        //telemetry.addData("Moved to a position in front of oneself", inches);
+        telemetry.addData("Moved to a position in front of oneself", inches);
     }
     private void moveLeft (double inches) {
-        //telemetry.addData("Moved to a position to the left of oneself", inches);
+        telemetry.addData("Moved to a position to the left of oneself", inches);
     }
     private void moveRight (double inches) {
-        //telemetry.addData("Moved to a position to the right of oneself", inches);
+        telemetry.addData("Moved to a position to the right of oneself", inches);
     }
 }

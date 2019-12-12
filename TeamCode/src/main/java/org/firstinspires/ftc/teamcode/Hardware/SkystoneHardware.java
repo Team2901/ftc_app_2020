@@ -9,6 +9,12 @@ import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
+
 public class SkystoneHardware {
 
     final static double TICKS_PER_INCH = 2240 / (3 * Math.PI);
@@ -52,6 +58,7 @@ public class SkystoneHardware {
     public final static double FRONT_RIGHT_OFFSET = .1;
     public final static double BACK_RIGHT_OFFSET = .1;
     public double currentAngle = 0;
+    public double offset = 0;
 
     public enum WheelPosition {
         FRONT_LEFT(0),
@@ -198,6 +205,25 @@ a position on the coordinate plane
         return degrees;
 
     }
+
+    public double getRawAngle() {
+        Orientation orientation = gyroscope.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        return AngleUtilities.getNormalizedAngle(orientation.firstAngle);
+    }
+
+    public double getAngle() {
+        return AngleUtilities.getNormalizedAngle(getRawAngle() + offset);
+    }
+
+    public void turn(double power) {
+        frontLeft.setPower(power);
+        frontRight.setPower(power);
+        backLeft.setPower(power);
+        backRight.setPower(power);
+    }
+
+
+
 
     //Converting -180 to 180 to 0 to 360
     public double standardizedAngle(double angle) {
