@@ -11,14 +11,16 @@ public class TurnTester extends LinearOpMode {
 
     public final SkystoneHardware robot = new SkystoneHardware();
 
-    public double joystickPositionToWheelAngle(double joystickPositionX, double joystickPositionY) {
+   /* public double joystickPositionToWheelAngle(double joystickPositionX, double joystickPositionY) {
         double wheelAngleRad = Math.atan2(joystickPositionY, joystickPositionX);
         double wheelAngle = AngleUtilities.radiansDegreesTranslation(wheelAngleRad) - 90;
         double wheelAngleStandarized = AngleUtilities.getPositiveNormalizedAngle(wheelAngle);
         return wheelAngleStandarized;
     }
+    
+    */
 
-    public void swerveTurn(double joyStickRightPosX) {
+    /*public void swerveTurn(double joyStickRightPosX) {
 
         //Math mod????????
         double hardCodeThis = Math.sqrt(2) / 2;
@@ -29,6 +31,8 @@ public class TurnTester extends LinearOpMode {
 
         //swerveMove(fLAngle, fRAngle, bLAngle, bRAngle, joyStickRightPosX);
     }
+
+     */
 
 
     @Override
