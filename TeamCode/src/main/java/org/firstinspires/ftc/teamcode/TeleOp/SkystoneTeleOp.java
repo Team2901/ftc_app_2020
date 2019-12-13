@@ -243,11 +243,8 @@ public class SkystoneTeleOp extends OpMode {
 
         setAllServos(servoPositionfL, servoPositionfR, servoPositionbL, servoPositionbR);
 
-        /*
-         * TODO GILLIAN - this is the wrong SetPower method, you should use setPower(double)
-         *  Then you can also get rid of setPower(double, double, double) as it isn't use else where
-         */
-        setPower(power, 0, -Math.signum(power));
+
+        setPower(power);
     }
 
     public void setAllServos(double fLPos, double fRPos, double bLPos, double bRPos) {
@@ -284,13 +281,7 @@ public class SkystoneTeleOp extends OpMode {
         goal = getNormalizedAngle(goal);
 
         telemetry.addData("Normalized Goal", goal);
-
-        /*
-        * TODO GILLIAN - the modifier is reversed because this should be just goal - start.
-        * goal - start + 180 is effectively reversing targetAngleForward and targetAngleBackward
-        */
-
-        double dAngleForward = getNormalizedAngle(goal - start + 180);
+        double dAngleForward = getNormalizedAngle(goal - start);
         double targetAngleForward = dAngleForward + start;
         boolean forwardPossible = (targetAngleForward <= WHEEL_MAX_ANGLE && targetAngleForward >= SERVO_MIN_ANGLE);
 
