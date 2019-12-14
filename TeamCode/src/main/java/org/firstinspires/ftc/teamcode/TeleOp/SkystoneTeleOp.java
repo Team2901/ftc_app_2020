@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
 
 import static org.firstinspires.ftc.teamcode.Utility.AngleUtilities.getNormalizedAngle;
 
-@TeleOp(name = "SKYSTONE TELEOP", group = "competition")
+@TeleOp(name = "SKYSTONE TELEOP 2", group = "competition")
 public class SkystoneTeleOp extends OpMode {
 
     public final static double WHEEL_SERVO_GEAR_RATIO = .3;
@@ -19,9 +19,9 @@ public class SkystoneTeleOp extends OpMode {
     public final static int SERVO_MAX_ANGLE = 2727;
     public final static int SERVO_MIN_ANGLE = 0;
     public final static double FRONT_LEFT_OFFSET = .11;
+    public final static double FRONT_RIGHT_OFFSET = .13;
     public final static double BACK_LEFT_OFFSET = .1;
-    public final static double FRONT_RIGHT_OFFSET = 0;
-    public final static double BACK_RIGHT_OFFSET = 0;
+    public final static double BACK_RIGHT_OFFSET = .11;
 
     public final static double WHEEL_MAX_ANGLE = SERVO_MAX_ANGLE * WHEEL_SERVO_GEAR_RATIO;
 
@@ -40,6 +40,11 @@ public class SkystoneTeleOp extends OpMode {
             double servoPosition = servoAngleToServoPosition(servoAngle);
 
             return servoPosition;
+
+        }
+        public double wheelAngleToServoPosition() {
+
+            return wheelAngleToServoPosition(targetAngle);
 
         }
 
@@ -79,11 +84,11 @@ public class SkystoneTeleOp extends OpMode {
     public void init() {
         robot.init(hardwareMap);
         //The y position is -1 to correct the joystick directions
-        setDriveServoPosition(0, 1);
+        swerveStraight(0, 1, 0);
     }
 
     @Override
-    public void loop() {
+    public void loop()  {
         double joystickPositionX = gamepad1.left_stick_x;
         double joystickPositionY = -gamepad1.left_stick_y;
 
@@ -96,8 +101,8 @@ public class SkystoneTeleOp extends OpMode {
             swerveTurn(gamepad1.right_stick_x);
 
         } else if (radius > .2) {
-            setDriveServoPosition(joystickPositionX, joystickPositionY);
             double power = getPower(joystickPositionX, joystickPositionY);
+            swerveStraight(joystickPositionX, joystickPositionY, power);
             setPower(power);
         } else {
             setPower(0);
@@ -188,60 +193,49 @@ public class SkystoneTeleOp extends OpMode {
 
         double power = modifier * getPower(joystickPositionX, joystickPositionY);
 
-        robot.backRight.setPower(-power);
-        robot.backLeft.setPower(power);
-        robot.frontRight.setPower(power);
-        robot.frontLeft.setPower(-power);
+        robot.backRight.setPower(power);
+        robot.backLeft.setPower(-power);
+        robot.frontRight.setPower(-power);
+        robot.frontLeft.setPower(power);
 
         telemetry.addData("Power", power);
 
     }
 
-    public double setDriveServoPosition(double joystickPositionX, double joystickPositionY) {
-//happy with this. It's doing what its supposed to
+    public void swerveStraight(double joystickPositionX, double joystickPositionY, double power) {
 
         double joyWheelAngle = joystickPositionToWheelAngle(joystickPositionX, joystickPositionY);
 
-        telemetry.addData("before angle Check", joyWheelAngle);
-
-        angleCheck(joyWheelAngle);
-
-        double wheelAngle = swerveWheels.frontLeftMotor.targetAngle;
-
-        telemetry.addData("after Angle Check", wheelAngle);
-
-        telemetry.addData("wheelAngle", wheelAngle);
-
-        double servoPositionfL = this.swerveWheels.frontLeftMotor.wheelAngleToServoPosition(wheelAngle);
-        double servoPositionfR = this.swerveWheels.frontRightMotor.wheelAngleToServoPosition(wheelAngle);
-        double servoPositionbL = this.swerveWheels.backLeftMotor.wheelAngleToServoPosition(wheelAngle);
-        double servoPositionbR = this.swerveWheels.backRightMotor.wheelAngleToServoPosition(wheelAngle);
-
-        telemetry.addData("servoPotionFl:", servoPositionfL);
-        telemetry.addData("servoPositionfR:", servoPositionfR);
-        telemetry.addData("servoPositionbL:", servoPositionbL);
-        telemetry.addData("servoPositionbR:", servoPositionbR);
-
-        setAllServos(servoPositionfL, servoPositionfR, servoPositionbL, servoPositionbR);
-
-        return wheelAngle;
-
+        swerveMove(joyWheelAngle, joyWheelAngle, joyWheelAngle, joyWheelAngle, power);
     }
 
     public void swerveTurn(double joyStickRightPosX) {
 
         //Math mod????????
         double hardCodeThis = Math.sqrt(2) / 2;
-        double fLPos = joystickPositionToWheelAngle(-hardCodeThis, -hardCodeThis);
-        double fRPos = joystickPositionToWheelAngle(-hardCodeThis, hardCodeThis);
-        double bLPos = joystickPositionToWheelAngle(hardCodeThis, -hardCodeThis);
-        double bRPos = joystickPositionToWheelAngle(hardCodeThis, hardCodeThis);
+        double fLAngle = joystickPositionToWheelAngle(-hardCodeThis, -hardCodeThis);
+        double fRAngle = joystickPositionToWheelAngle(-hardCodeThis, hardCodeThis);
+        double bLAngle = joystickPositionToWheelAngle(hardCodeThis, -hardCodeThis);
+        double bRAngle = joystickPositionToWheelAngle(hardCodeThis, hardCodeThis);
 
-        double servoPositionfL = this.swerveWheels.frontLeftMotor.wheelAngleToServoPosition(fLPos);
-        double servoPositionfR = this.swerveWheels.frontRightMotor.wheelAngleToServoPosition(fRPos);
-        double servoPositionbL = this.swerveWheels.backLeftMotor.wheelAngleToServoPosition(bLPos);
-        double servoPositionbR = this.swerveWheels.backRightMotor.wheelAngleToServoPosition(bRPos);
+        swerveMove(fLAngle, fRAngle, bLAngle, bRAngle, joyStickRightPosX);
+    }
 
+    public void swerveMove(double fLAngle, double fRAngle, double bLAngle, double bRAngle, double power) {
+
+        angleCheck(fLAngle, this.swerveWheels.frontLeftMotor);
+        angleCheck(fRAngle, this.swerveWheels.frontRightMotor);
+        angleCheck(bLAngle, this.swerveWheels.backLeftMotor);
+        angleCheck(bRAngle, this.swerveWheels.backRightMotor);
+
+        double servoPositionfL = this.swerveWheels.frontLeftMotor.wheelAngleToServoPosition();
+        double servoPositionfR = this.swerveWheels.frontRightMotor.wheelAngleToServoPosition();
+        double servoPositionbL = this.swerveWheels.backLeftMotor.wheelAngleToServoPosition();
+        double servoPositionbR = this.swerveWheels.backRightMotor.wheelAngleToServoPosition();
+
+        /*
+         * TODO GILLIAN - you are printing this info out twice, once here and then again in SetAllServos
+         */
         telemetry.addData("servoPotionFl:", servoPositionfL);
         telemetry.addData("servoPositionfR:", servoPositionfR);
         telemetry.addData("servoPositionbL:", servoPositionbL);
@@ -249,8 +243,8 @@ public class SkystoneTeleOp extends OpMode {
 
         setAllServos(servoPositionfL, servoPositionfR, servoPositionbL, servoPositionbR);
 
-        setPower(joyStickRightPosX, 0, -Math.signum(joyStickRightPosX));
 
+        setPower(power);
     }
 
     public void setAllServos(double fLPos, double fRPos, double bLPos, double bRPos) {
@@ -266,15 +260,28 @@ public class SkystoneTeleOp extends OpMode {
     }
 
     public void angleCheck(double goal) {
-        double start = this.swerveWheels.frontLeftMotor.targetAngle;
+        angleCheck(goal, this.swerveWheels.frontLeftMotor);
+        angleCheck(goal, this.swerveWheels.frontRightMotor);
+        angleCheck(goal, this.swerveWheels.backLeftMotor);
+        angleCheck(goal, this.swerveWheels.backRightMotor);
+    }
+
+    public void angleCheck(double goal, SwerveWheel swerveWheel) {
+        /*
+         * TODO GILLIAN we are calling this method 4 times which is putting a lot of confusing/hard to follow data in the telemetery
+         *  Since we are closer to having this working, combine the important telemetry to one or two lines by using String.format(String, *args)
+         *  almost all of your variables are doubles which will use %f.
+         *  You may also want to add a String name variable to SwerveWheel that you can include it in the telemetery
+         */
+
+        double start = swerveWheel.targetAngle;
         telemetry.addData("start", start);
         telemetry.addData("UnNormalized Goal", goal);
 
         goal = getNormalizedAngle(goal);
 
         telemetry.addData("Normalized Goal", goal);
-
-        double dAngleForward = getNormalizedAngle(goal - start + 180);
+        double dAngleForward = getNormalizedAngle(goal - start);
         double targetAngleForward = dAngleForward + start;
         boolean forwardPossible = (targetAngleForward <= WHEEL_MAX_ANGLE && targetAngleForward >= SERVO_MIN_ANGLE);
 
@@ -319,7 +326,7 @@ public class SkystoneTeleOp extends OpMode {
         }
 
         telemetry.addData("modifier", modifier);
-        this.swerveWheels.setTargetAndModifier(targetAngle, modifier);
+        swerveWheel.setTargetAndModifier(targetAngle, modifier);
     }
 }
 
