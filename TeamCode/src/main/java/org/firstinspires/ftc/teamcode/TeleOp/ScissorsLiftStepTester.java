@@ -24,14 +24,15 @@ public class ScissorsLiftStepTester extends OpMode {
     public void init() {
         robot.init(hardwareMap);
         DcMotor lift = this.hardwareMap.dcMotor.get("lift");
-        lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
 
     }
 
 
     @Override
     public void loop() {
-        
+
         if(this.gamepad2.y && !isYPressed){
             step = step+1;
             power= .5;
