@@ -62,7 +62,7 @@ public class TurnTester extends LinearOpMode {
             while (Math.abs(angleGoal - angleCurrent) > GO_TO_ANGLE_BUFFER && opModeIsActive()) {
                 angleCurrent = robot.getAngle();
                 double power = getPower(angleCurrent, angleGoal, angleStart);
-                robot.turn(-power);
+                robot.setWheelMotorPower(-power, -power, -power, -power);
 
                 telemetry.addData("Start Angle ", "%.1f", angleStart);
                 telemetry.addData("Goal Angle  ", "%.1f", angleGoal);
