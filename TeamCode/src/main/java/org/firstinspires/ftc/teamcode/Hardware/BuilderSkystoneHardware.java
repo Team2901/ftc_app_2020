@@ -15,7 +15,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
 
-public class SkystoneHardware {
+public class BuilderSkystoneHardware {
 
     public final static double WHEEL_SERVO_GEAR_RATIO = .3;
     public final static double WIDTH_OF_ROBOT = 13.5;
@@ -24,10 +24,10 @@ public class SkystoneHardware {
     public final static double TURN_ANGLE = Math.atan(WIDTH_OF_ROBOT/ LENGTH_OF_ROBOT);
     public final static int SERVO_MAX_ANGLE = 2727;
     public final static int SERVO_MIN_ANGLE = 0;
-    public final static double FRONT_LEFT_OFFSET = .11;
-    public final static double FRONT_RIGHT_OFFSET = .13;
-    public final static double BACK_LEFT_OFFSET = .1;
-    public final static double BACK_RIGHT_OFFSET = .11;
+    public final static double FRONT_LEFT_OFFSET = 0;//.11;
+    public final static double FRONT_RIGHT_OFFSET = 0;//.13;
+    public final static double BACK_LEFT_OFFSET = 0;//.1;
+    public final static double BACK_RIGHT_OFFSET = 0;//.11;
     public final static double WHEEL_MIN_ANGLE = 0;
     public final static double WHEEL_MAX_ANGLE = SERVO_MAX_ANGLE * WHEEL_SERVO_GEAR_RATIO;
 
@@ -78,18 +78,11 @@ public class SkystoneHardware {
     public DcMotor backLeft;
     public DcMotor backRight;
 
-    public DcMotor lift;
-
     //Steering servo for their respective motor
     public Servo servoFrontLeft;
     public Servo servoFrontRight;
     public Servo servoBackLeft;
     public Servo servoBackRight;
-
-    public Servo bridgeTickler;
-    public Servo crane;
-    public Servo jaw;
-    public Servo wrist;
 
     public SwerveWheels swerveWheels = new SwerveWheels();
 
@@ -108,22 +101,11 @@ public class SkystoneHardware {
         backLeft = hardwareMap.dcMotor.get("backLeft");
         backRight = hardwareMap.dcMotor.get("backRight");
 
-        lift = hardwareMap.dcMotor.get("lift");
-
         //Initialize all servos
         servoFrontLeft = hardwareMap.servo.get("servoFrontLeft");
         servoFrontRight = hardwareMap.servo.get("servoFrontRight");
         servoBackLeft = hardwareMap.servo.get("servoBackLeft");
         servoBackRight = hardwareMap.servo.get("servoBackRight");
-
-        bridgeTickler = hardwareMap.servo.get("bridgeTickler");
-        crane = hardwareMap.servo.get("crane");
-        jaw = hardwareMap.servo.get("jaw");
-        wrist = hardwareMap.servo.get("wrist");
-
-        crane.setPosition(0);
-
-        //setAllSteeringServos(0);
 
         // setting up the gyroscope
         imu = hardwareMap.get(BNO055IMU.class, "imu");

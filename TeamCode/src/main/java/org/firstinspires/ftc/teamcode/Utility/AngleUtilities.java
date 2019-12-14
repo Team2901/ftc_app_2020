@@ -33,4 +33,8 @@ public class AngleUtilities {
     public static double getPositiveNormalizedAngle(double angle) {
         return (getNormalizedAngle(angle) + 360) % 360;
     }
+
+    public static double getRadius(double x, double y) {
+       return Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2));
+    }
 }
