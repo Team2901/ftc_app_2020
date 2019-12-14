@@ -17,12 +17,13 @@ import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
 
 public class BuilderSkystoneHardware {
 
-    public final static double WHEEL_SERVO_GEAR_RATIO = .3;
+    public final static double MOTOR_POWER_RATIO = .25;
+    public final static double WHEEL_SERVO_GEAR_RATIO = 1.25;
     public final static double WIDTH_OF_ROBOT = 13.5;
     public final static double LENGTH_OF_ROBOT = 13.5;
     //This is the angle Phi that we defined in the math done before this
     public final static double TURN_ANGLE = Math.atan(WIDTH_OF_ROBOT/ LENGTH_OF_ROBOT);
-    public final static int SERVO_MAX_ANGLE = 2727;
+    public final static int SERVO_MAX_ANGLE = 280;
     public final static int SERVO_MIN_ANGLE = 0;
     public final static double FRONT_LEFT_OFFSET = 0;//.11;
     public final static double FRONT_RIGHT_OFFSET = 0;//.13;
@@ -133,10 +134,10 @@ public class BuilderSkystoneHardware {
     }
 
     public void setWheelMotorPower(double frontLeftPower, double frontRightPower, double backLeftPower, double backRightPower) {
-        backRight.setPower(-backRightPower);
-        backLeft.setPower(backLeftPower);
-        frontRight.setPower(frontRightPower);
-        frontLeft.setPower(-frontLeftPower);
+        backRight.setPower(-backRightPower * MOTOR_POWER_RATIO);
+        backLeft.setPower(backLeftPower * MOTOR_POWER_RATIO);
+        frontRight.setPower(frontRightPower * MOTOR_POWER_RATIO);
+        frontLeft.setPower(-frontLeftPower * MOTOR_POWER_RATIO);
     }
 
     public void setWheelServoPosition(double fLPos, double fRPos, double bLPos, double bRPos) {
