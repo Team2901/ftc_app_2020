@@ -5,19 +5,19 @@ import android.annotation.SuppressLint;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.Hardware.BuilderSkystoneHardware;
 import org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware;
 import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
 
-import static org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware.SERVO_MIN_ANGLE;
 import static org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware.WHEEL_MAX_ANGLE;
 import static org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware.WHEEL_MIN_ANGLE;
 import static org.firstinspires.ftc.teamcode.Utility.AngleUtilities.getNormalizedAngle;
 
 @SuppressLint("DefaultLocale")
-@TeleOp(name = "SKYSTONE TELEOP 2", group = "competition")
-public class SkystoneTeleOp extends OpMode {
+@TeleOp(name = "BUILDER SKYSTONE TELEOP", group = "competition")
+public class BuilderSkystoneTeleOp extends OpMode {
 
-    public SkystoneHardware robot = new SkystoneHardware();
+    public BuilderSkystoneHardware robot = new BuilderSkystoneHardware();
 
     @Override
     public void init() {
@@ -39,32 +39,6 @@ public class SkystoneTeleOp extends OpMode {
             swerveStraight(joyWheelAngle, power);
         } else {
             robot.setWheelMotorPower(0,0,0,0);
-        }
-
-        if (gamepad2.left_trigger > .2) {
-            robot.lift.setPower(-.5);
-        } else if (gamepad2.right_trigger > .2) {
-            robot.lift.setPower(1);
-        } else {
-            robot.lift.setPower(0);
-        }
-
-        if (gamepad2.right_bumper) {
-            robot.crane.setPosition(robot.crane.getPosition() + .005);
-        } else if (gamepad2.left_bumper) {
-            robot.crane.setPosition(robot.crane.getPosition() - .005);
-        }
-
-        if (gamepad2.x) {
-            robot.wrist.setPosition(robot.wrist.getPosition() + .01);
-        } else if (gamepad2.y) {
-            robot.wrist.setPosition(robot.wrist.getPosition() - .01);
-        }
-
-        if (gamepad2.a) {
-            robot.jaw.setPosition(robot.jaw.getPosition() + .01);
-        } else if (gamepad2.b) {
-            robot.jaw.setPosition(robot.jaw.getPosition() - .01);
         }
 
         telemetry.addData("FL", String.format("angle: %.2f, mod: %d, pos: %.2f",
@@ -129,7 +103,7 @@ public class SkystoneTeleOp extends OpMode {
         robot.setWheelMotorPower(frontLeftPower, frontRightPower, backLeftPower, backRightPower);
     }
 
-    public void angleCheck(double goal, SkystoneHardware.SwerveWheel swerveWheel) {
+    public void angleCheck(double goal, BuilderSkystoneHardware.SwerveWheel swerveWheel) {
 
         double start = swerveWheel.targetAngle;
 
