@@ -65,10 +65,12 @@ public class BrigitteScissorsLiftStepTester extends OpMode{
         int targetPosition = step*500;
 
         robot.lift.setTargetPosition(targetPosition);
+
+        robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.lift.setPower(power);
 
-        DcMotor lift = this.hardwareMap.dcMotor.get("lift");
-        lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //DcMotor lift = this.hardwareMap.dcMotor.get("lift");
+
         telemetry.update();
     }
     public int stepByOne (int step)
