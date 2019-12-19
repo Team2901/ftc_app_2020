@@ -135,8 +135,8 @@ public class BuilderSkystoneHardware {
 
     public void setWheelMotorPower(double frontLeftPower, double frontRightPower, double backLeftPower, double backRightPower) {
         backRight.setPower(-backRightPower * MOTOR_POWER_RATIO);
-        backLeft.setPower(backLeftPower * MOTOR_POWER_RATIO);
-        frontRight.setPower(frontRightPower * MOTOR_POWER_RATIO);
+        backLeft.setPower(-backLeftPower * MOTOR_POWER_RATIO);
+        frontRight.setPower(-frontRightPower * MOTOR_POWER_RATIO);
         frontLeft.setPower(-frontLeftPower * MOTOR_POWER_RATIO);
     }
 

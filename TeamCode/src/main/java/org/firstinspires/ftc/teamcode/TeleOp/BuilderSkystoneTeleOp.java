@@ -6,11 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Hardware.BuilderSkystoneHardware;
-import org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware;
 import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
 
-import static org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware.WHEEL_MAX_ANGLE;
-import static org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware.WHEEL_MIN_ANGLE;
 import static org.firstinspires.ftc.teamcode.Utility.AngleUtilities.getNormalizedAngle;
 
 @SuppressLint("DefaultLocale")
@@ -111,11 +108,11 @@ public class BuilderSkystoneTeleOp extends OpMode {
 
         double dAngleForward = getNormalizedAngle(goal - start);
         double targetAngleForward = dAngleForward + start;
-        boolean forwardPossible = (WHEEL_MIN_ANGLE <= targetAngleForward && targetAngleForward <= WHEEL_MAX_ANGLE);
+        boolean forwardPossible = (BuilderSkystoneHardware.WHEEL_MIN_ANGLE <= targetAngleForward && targetAngleForward <= BuilderSkystoneHardware.WHEEL_MAX_ANGLE);
 
         double dAngleBackward = getNormalizedAngle(dAngleForward + 180);
         double targetAngleBackward = dAngleBackward + start;
-        boolean backwardPossible = (WHEEL_MIN_ANGLE <= targetAngleBackward && targetAngleBackward <= WHEEL_MAX_ANGLE);
+        boolean backwardPossible = (BuilderSkystoneHardware.WHEEL_MIN_ANGLE <= targetAngleBackward && targetAngleBackward <= BuilderSkystoneHardware.WHEEL_MAX_ANGLE);
 
         boolean goForward;
 
