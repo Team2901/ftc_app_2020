@@ -62,6 +62,8 @@ public class BrigitteScissorsLiftStepTester extends OpMode{
         isBPressed = gamepad1.b;
         isAPressed = gamepad1.a;
 
+
+        DcMotor lift = this.hardwareMap.dcMotor.get("lift");
         int targetPosition = step*500;
 
         robot.lift.setTargetPosition(targetPosition);
@@ -69,7 +71,6 @@ public class BrigitteScissorsLiftStepTester extends OpMode{
         robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.lift.setPower(power);
 
-        //DcMotor lift = this.hardwareMap.dcMotor.get("lift");
 
         telemetry.update();
     }
