@@ -64,7 +64,7 @@ public class SkystoneHardware {
     }
 
     public class SwerveWheels {
-        public SwerveWheel afrontLeftMotor = new SwerveWheel(FRONT_LEFT_OFFSET);
+        public SwerveWheel frontLeftMotor = new SwerveWheel(FRONT_LEFT_OFFSET);
         public SwerveWheel frontRightMotor = new SwerveWheel(FRONT_RIGHT_OFFSET);
         public SwerveWheel backLeftMotor = new SwerveWheel(BACK_LEFT_OFFSET);
         public SwerveWheel backRightMotor = new SwerveWheel(BACK_RIGHT_OFFSET);
