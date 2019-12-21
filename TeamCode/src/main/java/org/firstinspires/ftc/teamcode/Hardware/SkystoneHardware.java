@@ -24,10 +24,10 @@ public class SkystoneHardware {
     public final static double TURN_ANGLE = Math.atan(WIDTH_OF_ROBOT/ LENGTH_OF_ROBOT);
     public final static int SERVO_MAX_ANGLE = 2727;
     public final static int SERVO_MIN_ANGLE = 0;
-    public final static double FRONT_LEFT_OFFSET = .11;
-    public final static double FRONT_RIGHT_OFFSET = .13;
-    public final static double BACK_LEFT_OFFSET = .1;
-    public final static double BACK_RIGHT_OFFSET = .11;
+    public final static double FRONT_LEFT_OFFSET = .0;
+    public final static double FRONT_RIGHT_OFFSET = .0;
+    public final static double BACK_LEFT_OFFSET = .0;
+    public final static double BACK_RIGHT_OFFSET = .0;
     public final static double WHEEL_MIN_ANGLE = 0;
     public final static double WHEEL_MAX_ANGLE = SERVO_MAX_ANGLE * WHEEL_SERVO_GEAR_RATIO;
 
@@ -64,7 +64,7 @@ public class SkystoneHardware {
     }
 
     public class SwerveWheels {
-        public SwerveWheel frontLeftMotor = new SwerveWheel(FRONT_LEFT_OFFSET);
+        public SwerveWheel afrontLeftMotor = new SwerveWheel(FRONT_LEFT_OFFSET);
         public SwerveWheel frontRightMotor = new SwerveWheel(FRONT_RIGHT_OFFSET);
         public SwerveWheel backLeftMotor = new SwerveWheel(BACK_LEFT_OFFSET);
         public SwerveWheel backRightMotor = new SwerveWheel(BACK_RIGHT_OFFSET);
