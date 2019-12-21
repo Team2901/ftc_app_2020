@@ -17,13 +17,19 @@ import static org.firstinspires.ftc.teamcode.Utility.AngleUtilities.getNormalize
 @TeleOp(name = "SKYSTONE TELEOP 2", group = "competition")
 public class SkystoneTeleOp extends OpMode {
 
+    double powerConstant = 4;
     public SkystoneHardware robot = new SkystoneHardware();
+
+
 
     @Override
     public void init() {
         robot.init(hardwareMap);
         swerveStraight(0, 0);
+
     }
+
+
 
     @Override
     public void loop()  {
@@ -31,10 +37,10 @@ public class SkystoneTeleOp extends OpMode {
         double joystickPositionY = -gamepad1.left_stick_y;
 
         if (Math.abs(gamepad1.right_stick_x) > .1) {
-            double power = getPower(gamepad1.right_stick_x, 0, gamepad1.left_bumper);
+            double power = getPower(gamepad1.right_stick_x, 0, gamepad1.left_bumper)/powerConstant;
             swerveTurn(power);
         } else if (AngleUtilities.getRadius(joystickPositionX, joystickPositionY) > .2) {
-            double power = getPower(joystickPositionX, joystickPositionY, gamepad1.left_bumper);
+            double power = getPower(joystickPositionX, joystickPositionY, gamepad1.left_bumper)/powerConstant;
             double joyWheelAngle = joystickPositionToWheelAngle(joystickPositionX, joystickPositionY);
             swerveStraight(joyWheelAngle, power);
         } else {
