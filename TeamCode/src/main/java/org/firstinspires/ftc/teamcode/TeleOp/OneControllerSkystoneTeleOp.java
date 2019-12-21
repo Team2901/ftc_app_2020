@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.TeleOp;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware;
 import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
@@ -22,6 +23,11 @@ public class OneControllerSkystoneTeleOp extends OpMode {
         public final static double FRONT_RIGHT_OFFSET = .13;
         public final static double BACK_LEFT_OFFSET = .1;
         public final static double BACK_RIGHT_OFFSET = .11;
+        private boolean isYPressed;
+        private boolean isXPressed;
+        private boolean isBPressed;
+        private boolean isAPressed;
+        double power=0;
         int step = 0;
         int topStep = 0;
 
@@ -109,42 +115,12 @@ public class OneControllerSkystoneTeleOp extends OpMode {
             } else {
                 setPower(0);
             }
-
-            if(gamepad1.left_bumper=true && gamepad1.y)
-            {
-                step = step+1;
-                //robot.lift.setPower(.5);
-                // go up by one step
+//makes lift go up by levels
+            if(gamepad1.left_bumper= true){
+                liftStepper();
             }
-            else if (gamepad1.right_bumper=true && gamepad1.a){
-                step = step-1;
-                if(step < 0){
-                    step = 0;
-                }
-                //robot.lift.setPower(-.5);
-                // go down by one step
-            }
-            else if (gamepad1.right_bumper==true && gamepad1.b) {
-                topStep = step;
-                step = 0;
-                //robot.lift.setPower(-.7);
-                //goes all the way to the bottom
-            }
-            else if (gamepad1.left_bumper==true && gamepad1.x){
-                step = topStep;
-                //robot.lift.setPower(.7);
-                // all the way to the top
-            }
-            telemetry.addLine("level: " + step);
 
 
-            /*if (gamepad1.left_bumper=true && gamepad1.y ) {
-                robot.lift.setPower(-.5);
-            } else if (gamepad2.right_trigger > .2) {
-                robot.lift.setPower(1);
-            } else {
-                robot.lift.setPower(0);
-            }*/
 
             if (gamepad2.right_bumper) {
                 robot.crane.setPosition(robot.crane.getPosition() + .005);
@@ -358,6 +334,59 @@ public class OneControllerSkystoneTeleOp extends OpMode {
             telemetry.addData("modifier", modifier);
             swerveWheel.setTargetAndModifier(targetAngle, modifier);
         }
+    public int liftStepper ()
+    {
+        if(this.gamepad1.y && !isYPressed){
+            step = step+1;
+            if(step> 5)
+            {
+                step=5;
+            }
+            power= .5;
+            //up by one
+        }
+        if(this.gamepad1.a && !isAPressed){
+            step = step-1;
+            if(step < 0){
+                step = 0;
+            }
+            power= .5;
+            //down by one
+        }
+
+        if(this.gamepad1.b && !isBPressed){
+            topStep = step;
+            step = 0;
+            power=.7;
+            //to bottom
+        }
+
+        if(this.gamepad1.x && !isXPressed){
+            step = topStep;
+            power= .7;
+            //to top
+        }
+        telemetry.addData("Step", step);
+        telemetry.addData("Top Step", topStep);
+        telemetry.update();
+
+        isYPressed = gamepad1.y;
+        isXPressed = gamepad1.x;
+        isBPressed = gamepad1.b;
+        isAPressed = gamepad1.a;
+
+
+        //DcMotor lift = this.hardwareMap.dcMotor.get("lift");
+        int targetPosition = step*750;
+
+        robot.lift.setTargetPosition(targetPosition);
+        robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.lift.setPower(power);
+
+        telemetry.update();
+        return step;
+
+    }
     }
 
 
