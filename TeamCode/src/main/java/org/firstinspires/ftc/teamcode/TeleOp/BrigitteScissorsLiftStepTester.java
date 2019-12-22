@@ -31,6 +31,10 @@ public class BrigitteScissorsLiftStepTester extends OpMode{
     public void loop() {
         if(this.gamepad1.y && !isYPressed){
             step = step+1;
+            if(step> 5)
+            {
+             step=5;
+            }
             power= .5;
             //up by one
         }
@@ -39,7 +43,7 @@ public class BrigitteScissorsLiftStepTester extends OpMode{
             if(step < 0){
                 step = 0;
             }
-            power= -.5;
+            power= .5;
             //down by one
         }
 
@@ -52,7 +56,7 @@ public class BrigitteScissorsLiftStepTester extends OpMode{
 
         if(this.gamepad1.x && !isXPressed){
             step = topStep;
-            power= -.7;
+            power= .7;
             //to top
         }
         telemetry.addData("Step", step);
@@ -66,7 +70,7 @@ public class BrigitteScissorsLiftStepTester extends OpMode{
 
 
         //DcMotor lift = this.hardwareMap.dcMotor.get("lift");
-        int targetPosition = step*500;
+        int targetPosition = step*750;
 
         robot.lift.setTargetPosition(targetPosition);
         robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -77,21 +81,5 @@ public class BrigitteScissorsLiftStepTester extends OpMode{
 
         telemetry.update();
     }
-    public int stepByOne (int step)
-    {
-        if(gamepad1.left_bumper=true && gamepad1.y)
-        {
-            step = step+1;
 
-        }
-        if (gamepad1.right_bumper=true && gamepad1.a){
-            step = step-1;
-            if(step < 0){
-                step = 0;
-            }
-        }
-        telemetry.addLine("level: " + step);
-        return step;
-
-    }
 }
