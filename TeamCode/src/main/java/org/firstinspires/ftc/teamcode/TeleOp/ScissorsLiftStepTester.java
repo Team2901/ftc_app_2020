@@ -24,17 +24,18 @@ public class ScissorsLiftStepTester extends OpMode {
     public void init() {
         robot.init(hardwareMap);
         DcMotor lift = this.hardwareMap.dcMotor.get("lift");
-        lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
 
     }
 
 
     @Override
     public void loop() {
-        
+
         if(this.gamepad2.y && !isYPressed){
             step = step+1;
-            power= .5;
+           // power= .5;
             //up by one
         }
         if(this.gamepad2.a && !isAPressed){
@@ -42,20 +43,20 @@ public class ScissorsLiftStepTester extends OpMode {
             if(step < 0){
                 step = 0;
             }
-            power= -.5;
+            //power= -.5;
             //down by one
         }
 
         if(this.gamepad2.b && !isBPressed){
             topStep = step;
             step = 0;
-            power=.7;
+           // power=.7;
             //to bottom
         }
 
         if(this.gamepad2.x && !isXPressed){
             step = topStep;
-            power= -.7;
+            //power= -.7;
             //to top
         }
         int targetPosition = step*500;
@@ -72,7 +73,7 @@ public class ScissorsLiftStepTester extends OpMode {
         isBPressed = gamepad2.b;
         isAPressed = gamepad2.a;
     }
-    public int stepByOne (int step)
+    /*public int stepByOne (int step)
     {
         if(gamepad1.left_bumper=true && gamepad1.y)
         {
@@ -87,6 +88,6 @@ public class ScissorsLiftStepTester extends OpMode {
         }
         telemetry.addLine("level: " + step);
         return step;
-    }
+    }*/
 
 }
