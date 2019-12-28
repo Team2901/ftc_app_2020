@@ -52,14 +52,14 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@TeleOp(name="KristenServos V4 : Teleop Tank", group="Kristen")
+@TeleOp(name="KristenServos V6 : Teleop Tank", group="Kristen")
 public class KristenServos extends OpMode{
-  public DcMotor leftDrive;
-  public DcMotor rightDrive;
+  //public DcMotor leftDrive;
+  //public DcMotor rightDrive;
   public Servo leftGrabber;
   public Servo rightGrabber;
-  public static final double LEFT_GRABBER_MAX = 0.75;
-  public static final double RIGHT_GRABBER_MIN = 0.25;
+  public static final double LEFT_GRABBER_MAX = 1.00;
+  public static final double RIGHT_GRABBER_MIN = 0;
   public double leftGrabberOffset = 0;
   public double rightGrabberOffset = 1;
   public double GRABBER_SPEED = 0.01;
@@ -68,9 +68,9 @@ public class KristenServos extends OpMode{
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
-        leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
-        leftDrive .setDirection(DcMotorSimple.Direction.REVERSE);
-        rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
+        //leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
+        //leftDrive .setDirection(DcMotorSimple.Direction.REVERSE);
+        //rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
         leftGrabber = hardwareMap.get(Servo.class, "Left_grabber");
         rightGrabber = hardwareMap.get(Servo.class, "Right_grabber");
 
@@ -105,8 +105,11 @@ public class KristenServos extends OpMode{
         left = -gamepad1.left_stick_y;
         right = -gamepad1.right_stick_y;
 
+        /*
         leftDrive.setPower(left);
         rightDrive.setPower(right);
+
+         */
 
         if (gamepad1.right_bumper)
             rightGrabberOffset += GRABBER_SPEED;
@@ -116,8 +119,8 @@ public class KristenServos extends OpMode{
         rightGrabber.setPosition (rightGrabberOffset);
 
         // Send telemetry message to signify robot running;
-        telemetry.addData("left",  "%.2f", left);
-        telemetry.addData("right", "%.2f", right);
+       // telemetry.addData("left",  "%.2f", left);
+        //telemetry.addData("right", "%.2f", right);
         telemetry.addData ("Right Grabber", "%.2f",rightGrabberOffset);
 
 
