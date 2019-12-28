@@ -60,8 +60,8 @@ public class KristenServos extends OpMode{
   public Servo rightGrabber;
   public static final double LEFT_GRABBER_MAX = 1.00;
   public static final double RIGHT_GRABBER_MIN = 0;
-  public double leftGrabberOffset = 0;
-  public double rightGrabberOffset = 1;
+  public double leftGrabberOffset = LEFT_GRABBER_MAX;
+  public double rightGrabberOffset = RIGHT_GRABBER_MIN;
   public double GRABBER_SPEED = 0.01;
     @Override
     public void init() {
@@ -74,6 +74,8 @@ public class KristenServos extends OpMode{
         leftGrabber = hardwareMap.get(Servo.class, "Left_grabber");
         rightGrabber = hardwareMap.get(Servo.class, "Right_grabber");
 
+        leftGrabber.setPosition(LEFT_GRABBER_MAX);
+        rightGrabber.setPosition(RIGHT_GRABBER_MIN);
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello Driver");    //
@@ -91,6 +93,7 @@ public class KristenServos extends OpMode{
      */
     @Override
     public void start() {
+
     }
 
     /*
@@ -115,7 +118,7 @@ public class KristenServos extends OpMode{
             rightGrabberOffset += GRABBER_SPEED;
         else if (gamepad1.right_trigger > 0)
             rightGrabberOffset -= GRABBER_SPEED;
-        rightGrabberOffset = Range.clip(rightGrabberOffset, RIGHT_GRABBER_MIN, 1.0);
+        rightGrabberOffset = Range.clip(rightGrabberOffset, RIGHT_GRABBER_MIN, 0.6);
         rightGrabber.setPosition (rightGrabberOffset);
 
         // Send telemetry message to signify robot running;
@@ -128,7 +131,7 @@ public class KristenServos extends OpMode{
             leftGrabberOffset -= GRABBER_SPEED;
         else if (gamepad1.left_trigger > 0)
             leftGrabberOffset += GRABBER_SPEED;
-        leftGrabberOffset = Range.clip(leftGrabberOffset, 0, LEFT_GRABBER_MAX);
+        leftGrabberOffset = Range.clip(leftGrabberOffset, 0.4, LEFT_GRABBER_MAX);
         leftGrabber.setPosition (leftGrabberOffset);
 
         // Send telemetry message to signify robot running;
