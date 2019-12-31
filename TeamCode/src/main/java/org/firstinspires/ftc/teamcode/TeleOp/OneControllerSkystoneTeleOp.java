@@ -126,7 +126,7 @@ public class OneControllerSkystoneTeleOp extends OpMode {
         }
 
         if(gamepad1.left_bumper == false) {
-           //GOT THIS OVERLOADED DONT FORGET
+            //GOT THIS OVERLOADED DONT FORGET
             if (gamepad1.right_bumper) {
                 robot.crane.setPosition(robot.crane.getPosition() + .005);
             } else if (gamepad1.left_bumper) {
@@ -141,10 +141,13 @@ public class OneControllerSkystoneTeleOp extends OpMode {
             }
             telemetry.addData("wrist Position:", robot.wrist.getPosition());
 
-            if (gamepad1.a) {
-                robot.jaw.setPosition(robot.jaw.getPosition() + .01);
-            } else if (gamepad1.b) {
-                robot.jaw.setPosition(robot.jaw.getPosition() - .01);
+            if (robot.isOkayToOpen() == true) {
+
+                if (gamepad1.a) {
+                    robot.jaw.setPosition(robot.jaw.getPosition() + .01);
+                } else if (gamepad1.b) {
+                    robot.jaw.setPosition(robot.jaw.getPosition() - .01);
+                }
             }
         }
         telemetry.addData("jaw Position: ", robot.jaw.getPosition());
@@ -345,35 +348,48 @@ public class OneControllerSkystoneTeleOp extends OpMode {
     }
 
     public int liftStepper() {
-        if (this.gamepad1.y && !isYPressed) {
-            step = step + 1;
-            if (step > 5) {
-                step = 5;
+        // WRIST > .25 DON'T MOVE LIFT
+        // CLAW >.25 DON'T MOVE LIFT
+        if(robot.wrist.getPosition()> .25)
+        {
+            if(robot.jaw.getPosition()> .25)
+            {
+                telemetry.addLine("I could self damage.");
             }
-            power = .5;
-            //up by one
         }
-        if (this.gamepad1.a && !isAPressed) {
-            step = step - 1;
-            if (step < 0) {
+        else{
+            if (this.gamepad1.y && !isYPressed) {
+                step = step + 1;
+                if (step > 5) {
+                    step = 5;
+                }
+                power = .5;
+                //up by one
+            }
+            if (this.gamepad1.a && !isAPressed) {
+                step = step - 1;
+                if (step < 0) {
+                    step = 0;
+                }
+                power = .5;
+                //down by one
+            }
+
+            if (this.gamepad1.b && !isBPressed) {
+                topStep = step;
                 step = 0;
+                power = .7;
+                //to bottom
             }
-            power = .5;
-            //down by one
+
+            if (this.gamepad1.x && !isXPressed) {
+                step = topStep;
+                power = .7;
+                //to top
+            }
+
         }
 
-        if (this.gamepad1.b && !isBPressed) {
-            topStep = step;
-            step = 0;
-            power = .7;
-            //to bottom
-        }
-
-        if (this.gamepad1.x && !isXPressed) {
-            step = topStep;
-            power = .7;
-            //to top
-        }
         telemetry.addData("Step", step);
         telemetry.addData("Top Step", topStep);
         telemetry.update();
@@ -395,6 +411,7 @@ public class OneControllerSkystoneTeleOp extends OpMode {
         return step;
 
     }
+
 }
 
 
