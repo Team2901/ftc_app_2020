@@ -144,11 +144,11 @@ public class SkystoneTeleOp extends OpMode {
 
         double dAngleForward = getNormalizedAngle(goal - start);
         double targetAngleForward = dAngleForward + start;
-        boolean forwardPossible = (WHEEL_MIN_ANGLE <= targetAngleForward && targetAngleForward <= WHEEL_MAX_ANGLE);
+        boolean forwardPossible = (swerveWheel.minWheelAngle <= targetAngleForward && targetAngleForward <= swerveWheel.maxWheelAngle);
 
         double dAngleBackward = getNormalizedAngle(dAngleForward + 180);
         double targetAngleBackward = dAngleBackward + start;
-        boolean backwardPossible = (WHEEL_MIN_ANGLE <= targetAngleBackward && targetAngleBackward <= WHEEL_MAX_ANGLE);
+        boolean backwardPossible = (swerveWheel.minWheelAngle <= targetAngleBackward && targetAngleBackward <= swerveWheel.maxWheelAngle);
 
         boolean goForward;
 
