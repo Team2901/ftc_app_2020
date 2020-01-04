@@ -1,16 +1,23 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.NewProgrammers.TestingTensorFlowWebcam;
+import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
 
 import java.util.List;
 
@@ -29,6 +36,9 @@ public class CrawlToSkystone extends LinearOpMode {
     public static final int CENTER_POSITION = 50;
     public DcMotor leftDrive;
     public DcMotor rightDrive;
+    public BNO055IMU imu;
+    public IntegratingGyroscope gyroscope;
+    public double offset = 0;
 
     private static final String VUFORIA_KEY ="AYhwTMH/////AAABmR7oFvU9lEJTryl5O3jDSusAPmWSAx5CHlcB/" +
             "IUoT+t7S1pJqTo7n3OwM4f2vVULA0T1uZVl9i61kWldhVqxK2+kyBNI4Uld8cYgHaNIQFsL/NsyBrb3Zl+1ZFBR" +
@@ -48,6 +58,8 @@ public class CrawlToSkystone extends LinearOpMode {
         rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         leftDrive.setDirection(DcMotorSimple.Direction.FORWARD);
         rightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        gyroscope = (IntegratingGyroscope) imu;
         /*
         1.) Find skystone
         2.) Get skystone
@@ -86,20 +98,34 @@ public class CrawlToSkystone extends LinearOpMode {
 
         //Step 2 Get Skystone
 
-        while(skyStonePosition < 40){
-           leftDrive.setPower(.2);
-           rightDrive.setPower(.2);
+        while(skyStonePosition < 1){
+            telemetry.addData("loop is running", "");
+            telemetry.update();
 
-            leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            leftDrive.setPower(-1);
+            rightDrive.setPower(-1);
 
-            leftDrive.setTargetPosition(50);
-            rightDrive.setTargetPosition(50);
+            skyStonePosition = findSkyStone();
+
+            //leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            //rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            //leftDrive.setTargetPosition(50);
+            //rightDrive.setTargetPosition(50);
         }
-        leftDrive.setPower(0);
-        rightDrive.setPower(0);
+        telemetry.addData("out of loop", "");
+        telemetry.update();
 
+        leftDrive.setPower(1);
+        rightDrive.setPower(1);
 
+        if(true) {
+            leftDrive.setPower(0);
+            rightDrive.setPower(0);
+        }
+
+        double currentAngle = getAngle();
+        double targetAngle = currentAngle + 90;
 
         while(leftDrive.isBusy()){
 
@@ -181,8 +207,9 @@ public class CrawlToSkystone extends LinearOpMode {
                 if (recognition.getLabel().equals(LABEL_SKY_BUTTER))
                     break;
             }
-            telemetry.update();
         }
+        telemetry.addData("Skystones Location Debugger", stonePercentLocation);
+        telemetry.update();
         return stonePercentLocation;
     }
 
@@ -198,5 +225,33 @@ public class CrawlToSkystone extends LinearOpMode {
     }
     private void moveRight (double inches) {
         telemetry.addData("Moved to a position to the right of oneself", inches);
+    }
+    public double getRawAngle() {
+        Orientation orientation = gyroscope.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        double angle =  AngleUtilities.getNormalizedAngle(orientation.firstAngle);
+        return angle;
+    }
+    public double getAngle() {
+        return AngleUtilities.getNormalizedAngle(getRawAngle() + offset);
+    }
+    public static final int GO_TO_ANGLE_BUFFER = 3;
+
+    public void goToAngle ( double angleStart, double angleGoal){
+
+        double angleCurrent = angleStart;
+
+        while (Math.abs(angleGoal - angleCurrent) > GO_TO_ANGLE_BUFFER && opModeIsActive()) {
+            angleCurrent = getAngle();
+            double power = 0; // getPower(angleCurrent, angleGoal, angleStart);
+            // robot.turn(-power);
+
+            telemetry.addData("Start Angle ", "%.1f", angleStart);
+            telemetry.addData("Goal Angle  ", "%.1f", angleGoal);
+            telemetry.addData("Cur Angle   ", "%.1f", angleCurrent);
+            telemetry.addData("Remain Angle", "%.1f", AngleUnit.normalizeDegrees(angleGoal - angleCurrent));
+            telemetry.addData("Power       ", "%.2f", power);
+            telemetry.update();
+            idle();
+        }
     }
 }
