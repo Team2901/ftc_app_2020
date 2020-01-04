@@ -17,19 +17,19 @@ import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
 
 public class SkystoneHardware {
 
-    public final static double WHEEL_SERVO_GEAR_RATIO = 84/60;
+    public final static double WHEEL_SERVO_GEAR_RATIO = .3;
     public final static double WIDTH_OF_ROBOT = 13.5;
     public final static double LENGTH_OF_ROBOT = 13.5;
     //This is the angle Phi that we defined in the math done before this
     public final static double TURN_ANGLE = Math.atan(WIDTH_OF_ROBOT/ LENGTH_OF_ROBOT);
-    public final static int SERVO_MAX_ANGLE = 280;
+    public final static int SERVO_MAX_ANGLE = 2727;
     public final static int SERVO_MIN_ANGLE = 0;
     public final static double FRONT_LEFT_OFFSET = .0;
-    public final static double FRONT_RIGHT_OFFSET = .18;
+    public final static double FRONT_RIGHT_OFFSET = .0;
     public final static double BACK_LEFT_OFFSET = .0;
     public final static double BACK_RIGHT_OFFSET = .0;
     public final static double WHEEL_MIN_ANGLE = 0;
-    public final static double WHEEL_MAX_ANGLE =  SERVO_MAX_ANGLE*WHEEL_SERVO_GEAR_RATIO;
+    public final static double WHEEL_MAX_ANGLE = SERVO_MAX_ANGLE * WHEEL_SERVO_GEAR_RATIO;
 
     public class SwerveWheel {
         public double targetAngle = 0;
