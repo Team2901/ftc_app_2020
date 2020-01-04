@@ -8,17 +8,17 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-@Autonomous (name = "Kristen V2 Autonomous")
+@Autonomous (name = "Kristen V3 Autonomous")
 public class KristenAutonomous extends LinearOpMode {
 
     //DcMotor leftMotor;
     //DcMotor rightMotor;
     public Servo leftGrabber;
     public Servo rightGrabber;
-    public static final double LEFT_GRABBER_MIN = 0.75;
-    public static final double RIGHT_GRABBER_MAX = 0.25;
-    public static final double LEFT_GRABBER_MAX = 0.25;
-    public static final double RIGHT_GRABBER_MIN =0.75;
+    public static final double LEFT_GRABBER_MIN = 1.0;
+    public static final double RIGHT_GRABBER_MAX = 0;
+    public static final double LEFT_GRABBER_MAX = 0.35;
+    public static final double RIGHT_GRABBER_MIN =0.65;
     public static final double WHEEL_CIRCUMFERENCE = 2 * Math.PI;
     public static final double GEAR_RATIO =  2;
     public static final double ENCODER_COUNTS_PER_MOTOR_REV = 1960 ;
@@ -39,8 +39,11 @@ public class KristenAutonomous extends LinearOpMode {
         leftGrabber = hardwareMap.get(Servo.class, "Left_grabber");
         rightGrabber = hardwareMap.get(Servo.class, "Right_grabber");
 
-        rightGrabber.setPosition (RIGHT_GRABBER_MIN);
-        leftGrabber.setPosition (LEFT_GRABBER_MAX);
+        rightGrabber.setPosition (RIGHT_GRABBER_MAX);//0.3
+        leftGrabber.setPosition (LEFT_GRABBER_MIN);//0.7
+        telemetry.addData("Right:" , rightGrabber.getPosition());
+        telemetry.addData("Left:" , leftGrabber.getPosition());
+        telemetry.update();
 
         /*leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -78,8 +81,11 @@ public class KristenAutonomous extends LinearOpMode {
 
         }
        */
-        rightGrabber.setPosition (RIGHT_GRABBER_MAX);
-        leftGrabber.setPosition (LEFT_GRABBER_MIN);
+        rightGrabber.setPosition (RIGHT_GRABBER_MIN);
+        leftGrabber.setPosition (LEFT_GRABBER_MAX);
+        telemetry.addData("Right:" , rightGrabber.getPosition());
+        telemetry.addData("Left:" , leftGrabber.getPosition());
+        telemetry.update();
 
         /*leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -89,13 +95,13 @@ public class KristenAutonomous extends LinearOpMode {
 
         leftMotor.setPower(.25);
         rightMotor.setPower(.25);
-
-        while (leftMotor.isBusy()){
+        */
+        while (this.opModeIsActive()){
 
             idle();
 
         }
-       */
+
     }
 
 }
