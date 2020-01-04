@@ -8,11 +8,14 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-@Autonomous (name = "Kristen V3 Autonomous")
+import org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware;
+
+@Autonomous (name = "Kristen V5 Autonomous")
 public class KristenAutonomous extends LinearOpMode {
 
     //DcMotor leftMotor;
     //DcMotor rightMotor;
+    public static SkystoneHardware robot = new SkystoneHardware();
     public Servo leftGrabber;
     public Servo rightGrabber;
     public static final double LEFT_GRABBER_MIN = 1.0;
@@ -22,6 +25,7 @@ public class KristenAutonomous extends LinearOpMode {
     public static final double WHEEL_CIRCUMFERENCE = 2 * Math.PI;
     public static final double GEAR_RATIO =  2;
     public static final double ENCODER_COUNTS_PER_MOTOR_REV = 1960 ;
+    public static final int TARGET_COUNT = 7747;
 
     public int  getTargetEncoderCounts(int distanceInches){
         return (int)(distanceInches/WHEEL_CIRCUMFERENCE * GEAR_RATIO * ENCODER_COUNTS_PER_MOTOR_REV);
@@ -30,10 +34,6 @@ public class KristenAutonomous extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-
-
-        //leftMotor = hardwareMap.dcMotor.get("left_drive");
-        //leftMotor = hardwareMap.get(DcMotor.class, "left_drive");
 
         //rightMotor = hardwareMap.dcMotor.get("right_drive");
         leftGrabber = hardwareMap.get(Servo.class, "Left_grabber");
@@ -44,43 +44,17 @@ public class KristenAutonomous extends LinearOpMode {
         telemetry.addData("Right:" , rightGrabber.getPosition());
         telemetry.addData("Left:" , leftGrabber.getPosition());
         telemetry.update();
+        robot.init(hardwareMap);
 
-        /*leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        rightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        int target = (getTargetEncoderCounts(31));
-        telemetry.addData("Target:" , target);
-        telemetry.update();
-
-        leftMotor.setTargetPosition(target);
-        rightMotor.setTargetPosition(target);
-       */
         waitForStart();
 
-
-        //leftMotor.setPower(0.5);
-        //rightMotor.setPower(0.5);
-
-        /*while  (leftMotor.isBusy()){
-
-            telemetry.addData("Count:",leftMotor.getCurrentPosition() );
-            telemetry.update();
-            idle();
-
+        robot.moveStraight(0.5 , TARGET_COUNT);
+        while(robot.wheelsAreBusy()){
+         idle();;
         }
-       */
+
+
         rightGrabber.setPosition (RIGHT_GRABBER_MIN);
         leftGrabber.setPosition (LEFT_GRABBER_MAX);
         telemetry.addData("Right:" , rightGrabber.getPosition());
