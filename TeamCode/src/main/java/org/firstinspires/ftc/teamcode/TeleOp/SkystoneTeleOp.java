@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware;
 import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
 
-import static org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware.SERVO_MIN_ANGLE;
 import static org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware.WHEEL_MAX_ANGLE;
 import static org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware.WHEEL_MIN_ANGLE;
 import static org.firstinspires.ftc.teamcode.Utility.AngleUtilities.getNormalizedAngle;
@@ -17,10 +16,8 @@ import static org.firstinspires.ftc.teamcode.Utility.AngleUtilities.getNormalize
 @TeleOp(name = "SKYSTONE TELEOP 2", group = "competition")
 public class SkystoneTeleOp extends OpMode {
 
-    double powerConstant = 4;
+    public static final double WHEEL_POWER_RATIO = .25;
     public SkystoneHardware robot = new SkystoneHardware();
-
-
 
     @Override
     public void init() {
@@ -29,18 +26,16 @@ public class SkystoneTeleOp extends OpMode {
 
     }
 
-
-
     @Override
     public void loop()  {
         double joystickPositionX = gamepad1.left_stick_x;
         double joystickPositionY = -gamepad1.left_stick_y;
 
         if (Math.abs(gamepad1.right_stick_x) > .1) {
-            double power = getPower(gamepad1.right_stick_x, 0, gamepad1.left_bumper)/powerConstant;
+            double power = getWheelPower(gamepad1.right_stick_x, 0, gamepad1.left_bumper);
             swerveTurn(power);
         } else if (AngleUtilities.getRadius(joystickPositionX, joystickPositionY) > .2) {
-            double power = getPower(joystickPositionX, joystickPositionY, gamepad1.left_bumper)/powerConstant;
+            double power = getWheelPower(joystickPositionX, joystickPositionY, gamepad1.left_bumper);
             double joyWheelAngle = joystickPositionToWheelAngle(joystickPositionX, joystickPositionY);
             swerveStraight(joyWheelAngle, power);
         } else {
@@ -82,6 +77,11 @@ public class SkystoneTeleOp extends OpMode {
         telemetry.addData("BR", String.format("angle: %.2f, mod: %d, pos: %.2f",
                 robot.swerveWheels.backRightMotor.targetAngle, robot.swerveWheels.backRightMotor.modifier, robot.swerveWheels.backRightMotor.wheelAngleToServoPosition()));
 
+        telemetry.addData("frontLeftMotor", String.format("min: %f max:%f", robot.swerveWheels.frontLeftMotor.minWheelAngle, robot.swerveWheels.frontLeftMotor.maxWheelAngle));
+        telemetry.addData("frontRightMotor", String.format("min: %f max:%f", robot.swerveWheels.frontRightMotor.minWheelAngle, robot.swerveWheels.frontRightMotor.maxWheelAngle));
+        telemetry.addData("backLeftMotor", String.format("min: %f max:%f", robot.swerveWheels.backLeftMotor.minWheelAngle, robot.swerveWheels.backLeftMotor.maxWheelAngle));
+        telemetry.addData("backRightMotor", String.format("min: %f max:%f", robot.swerveWheels.backRightMotor.minWheelAngle, robot.swerveWheels.backRightMotor.maxWheelAngle));
+        
         telemetry.update();
     }
 
@@ -91,11 +91,11 @@ public class SkystoneTeleOp extends OpMode {
         return AngleUtilities.getPositiveNormalizedAngle(wheelAngle);
     }
 
-    public double getPower(double x, double y, boolean pause) {
+    public double getWheelPower(double x, double y, boolean pause) {
         if (pause) {
             return 0;
         } else {
-            return AngleUtilities.getRadius(x,y);
+            return AngleUtilities.getRadius(x,y) * WHEEL_POWER_RATIO;
         }
     }
 
@@ -144,11 +144,11 @@ public class SkystoneTeleOp extends OpMode {
 
         double dAngleForward = getNormalizedAngle(goal - start);
         double targetAngleForward = dAngleForward + start;
-        boolean forwardPossible = (WHEEL_MIN_ANGLE <= targetAngleForward && targetAngleForward <= WHEEL_MAX_ANGLE);
+        boolean forwardPossible = (swerveWheel.minWheelAngle <= targetAngleForward && targetAngleForward <= swerveWheel.maxWheelAngle);
 
         double dAngleBackward = getNormalizedAngle(dAngleForward + 180);
         double targetAngleBackward = dAngleBackward + start;
-        boolean backwardPossible = (WHEEL_MIN_ANGLE <= targetAngleBackward && targetAngleBackward <= WHEEL_MAX_ANGLE);
+        boolean backwardPossible = (swerveWheel.minWheelAngle <= targetAngleBackward && targetAngleBackward <= swerveWheel.maxWheelAngle);
 
         boolean goForward;
 

@@ -17,27 +17,33 @@ import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
 
 public class SkystoneHardware {
 
-    public final static double WHEEL_SERVO_GEAR_RATIO = 84/60;
+    public final static double WHEEL_SERVO_GEAR_RATIO = .3;
     public final static double WIDTH_OF_ROBOT = 13.5;
     public final static double LENGTH_OF_ROBOT = 13.5;
     //This is the angle Phi that we defined in the math done before this
     public final static double TURN_ANGLE = Math.atan(WIDTH_OF_ROBOT/ LENGTH_OF_ROBOT);
-    public final static int SERVO_MAX_ANGLE = 280;
+    public final static int SERVO_MAX_ANGLE = 2727;
     public final static int SERVO_MIN_ANGLE = 0;
     public final static double FRONT_LEFT_OFFSET = .0;
-    public final static double FRONT_RIGHT_OFFSET = .18;
+    public final static double FRONT_RIGHT_OFFSET = .0;
     public final static double BACK_LEFT_OFFSET = .0;
     public final static double BACK_RIGHT_OFFSET = .0;
     public final static double WHEEL_MIN_ANGLE = 0;
     public final static double WHEEL_MAX_ANGLE =  SERVO_MAX_ANGLE*WHEEL_SERVO_GEAR_RATIO;
+    public int targetPosition=0;
+
 
     public class SwerveWheel {
         public double targetAngle = 0;
         public int modifier = 1;
         public double offset = 0;
+        public double minWheelAngle=0;
+        public double maxWheelAngle = 0;
 
         public SwerveWheel(double offset) {
             this.offset = offset;
+            minWheelAngle = servoPositionToWheelAngle(0);
+            maxWheelAngle = servoPositionToWheelAngle(1);
         }
 
         public void setTargetAndModifier(double targetAngle, int modifier) {
@@ -46,6 +52,11 @@ public class SkystoneHardware {
         }
 
         public double wheelAngleToServoPosition(double wheelAngle) {
+            /*
+            y=mx+b
+            ServoPosition = [gearRatio*wheelAngle]/ServoMaxAngle] + offset
+            wheelAngle is x
+            */
             double servoAngle = wheelAngleToServoAngle(wheelAngle);
             return servoAngleToServoPosition(servoAngle);
         }
@@ -60,6 +71,11 @@ public class SkystoneHardware {
 
         public double servoAngleToServoPosition(double servoAngle) {
             return (servoAngle / SERVO_MAX_ANGLE) + offset;
+        }
+
+        public double servoPositionToWheelAngle(double servoPosition){
+            return (WHEEL_SERVO_GEAR_RATIO*SERVO_MAX_ANGLE)*(servoPosition-offset);
+
         }
     }
 
@@ -107,6 +123,12 @@ public class SkystoneHardware {
         frontRight = hardwareMap.dcMotor.get("frontRight");
         backLeft = hardwareMap.dcMotor.get("backLeft");
         backRight = hardwareMap.dcMotor.get("backRight");
+
+        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
 
         lift = hardwareMap.dcMotor.get("lift");
 
@@ -192,6 +214,34 @@ public class SkystoneHardware {
             return true;
         }
     }
+    public void moveStraight (double setPower, int targetPosition){
+
+        frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        frontRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        backRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        frontRight.setTargetPosition(targetPosition);
+        frontLeft.setTargetPosition(targetPosition);
+        backLeft.setTargetPosition(targetPosition);
+        backRight.setTargetPosition(targetPosition);
+
+        setWheelMotorMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        setWheelMotorPower(setPower, setPower, setPower, setPower);
+        //call whileMotorisBusy
+
+
+
+    }
+
+
+
 
 }
 

@@ -8,20 +8,24 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-@Autonomous (name = "Kristen V2 Autonomous")
+import org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware;
+
+@Autonomous (name = "Kristen V5 Autonomous")
 public class KristenAutonomous extends LinearOpMode {
 
     //DcMotor leftMotor;
     //DcMotor rightMotor;
+    public static SkystoneHardware robot = new SkystoneHardware();
     public Servo leftGrabber;
     public Servo rightGrabber;
-    public static final double LEFT_GRABBER_MIN = 0.75;
-    public static final double RIGHT_GRABBER_MAX = 0.25;
-    public static final double LEFT_GRABBER_MAX = 0.25;
-    public static final double RIGHT_GRABBER_MIN =0.75;
+    public static final double LEFT_GRABBER_MIN = 1.0;
+    public static final double RIGHT_GRABBER_MAX = 0;
+    public static final double LEFT_GRABBER_MAX = 0.35;
+    public static final double RIGHT_GRABBER_MIN =0.65;
     public static final double WHEEL_CIRCUMFERENCE = 2 * Math.PI;
     public static final double GEAR_RATIO =  2;
     public static final double ENCODER_COUNTS_PER_MOTOR_REV = 1960 ;
+    public static final int TARGET_COUNT = 7747;
 
     public int  getTargetEncoderCounts(int distanceInches){
         return (int)(distanceInches/WHEEL_CIRCUMFERENCE * GEAR_RATIO * ENCODER_COUNTS_PER_MOTOR_REV);
@@ -31,55 +35,31 @@ public class KristenAutonomous extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-
-        //leftMotor = hardwareMap.dcMotor.get("left_drive");
-        //leftMotor = hardwareMap.get(DcMotor.class, "left_drive");
-
         //rightMotor = hardwareMap.dcMotor.get("right_drive");
         leftGrabber = hardwareMap.get(Servo.class, "Left_grabber");
         rightGrabber = hardwareMap.get(Servo.class, "Right_grabber");
 
-        rightGrabber.setPosition (RIGHT_GRABBER_MIN);
-        leftGrabber.setPosition (LEFT_GRABBER_MAX);
-
-        /*leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        leftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-        rightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-
-        leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        leftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        rightMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-
-        leftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        int target = (getTargetEncoderCounts(31));
-        telemetry.addData("Target:" , target);
+        rightGrabber.setPosition (RIGHT_GRABBER_MAX);//0.3
+        leftGrabber.setPosition (LEFT_GRABBER_MIN);//0.7
+        telemetry.addData("Right:" , rightGrabber.getPosition());
+        telemetry.addData("Left:" , leftGrabber.getPosition());
         telemetry.update();
+        robot.init(hardwareMap);
 
-        leftMotor.setTargetPosition(target);
-        rightMotor.setTargetPosition(target);
-       */
+
         waitForStart();
 
-
-        //leftMotor.setPower(0.5);
-        //rightMotor.setPower(0.5);
-
-        /*while  (leftMotor.isBusy()){
-
-            telemetry.addData("Count:",leftMotor.getCurrentPosition() );
-            telemetry.update();
-            idle();
-
+        robot.moveStraight(0.5 , TARGET_COUNT);
+        while(robot.wheelsAreBusy()){
+         idle();;
         }
-       */
-        rightGrabber.setPosition (RIGHT_GRABBER_MAX);
-        leftGrabber.setPosition (LEFT_GRABBER_MIN);
+
+
+        rightGrabber.setPosition (RIGHT_GRABBER_MIN);
+        leftGrabber.setPosition (LEFT_GRABBER_MAX);
+        telemetry.addData("Right:" , rightGrabber.getPosition());
+        telemetry.addData("Left:" , leftGrabber.getPosition());
+        telemetry.update();
 
         /*leftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         rightMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -89,13 +69,13 @@ public class KristenAutonomous extends LinearOpMode {
 
         leftMotor.setPower(.25);
         rightMotor.setPower(.25);
-
-        while (leftMotor.isBusy()){
+        */
+        while (this.opModeIsActive()){
 
             idle();
 
         }
-       */
+
     }
 
 }
