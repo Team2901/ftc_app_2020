@@ -6,6 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
+import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -16,10 +18,16 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+import org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware;
 import org.firstinspires.ftc.teamcode.NewProgrammers.TestingTensorFlowWebcam;
 import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
 
 import java.util.List;
+import java.util.Timer;
+
+import static org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware.WHEEL_MAX_ANGLE;
+import static org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware.WHEEL_MIN_ANGLE;
+import static org.firstinspires.ftc.teamcode.Utility.AngleUtilities.getNormalizedAngle;
 
 @Autonomous(name = "CrawlToSkystone")
 
@@ -34,11 +42,8 @@ public class CrawlToSkystone extends LinearOpMode {
     public static final int LEFT_POSITION = 33;
     public static final int RIGHT_POSITION = 66;
     public static final int CENTER_POSITION = 50;
-    public DcMotor leftDrive;
-    public DcMotor rightDrive;
-    public BNO055IMU imu;
-    public IntegratingGyroscope gyroscope;
-    public double offset = 0;
+
+    public SkystoneHardware robot = new SkystoneHardware();
 
     private static final String VUFORIA_KEY ="AYhwTMH/////AAABmR7oFvU9lEJTryl5O3jDSusAPmWSAx5CHlcB/" +
             "IUoT+t7S1pJqTo7n3OwM4f2vVULA0T1uZVl9i61kWldhVqxK2+kyBNI4Uld8cYgHaNIQFsL/NsyBrb3Zl+1ZFBR" +
@@ -52,14 +57,8 @@ public class CrawlToSkystone extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
-        rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
-        leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        leftDrive.setDirection(DcMotorSimple.Direction.FORWARD);
-        rightDrive.setDirection(DcMotorSimple.Direction.REVERSE);
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-        gyroscope = (IntegratingGyroscope) imu;
+
+        robot.init(hardwareMap);
         /*
         1.) Find skystone
         2.) Get skystone
@@ -102,8 +101,7 @@ public class CrawlToSkystone extends LinearOpMode {
             telemetry.addData("loop is running", "");
             telemetry.update();
 
-            leftDrive.setPower(-1);
-            rightDrive.setPower(-1);
+            robot.setWheelMotorPower(-.5,-.5,-.5,-.5);
 
             skyStonePosition = findSkyStone();
 
@@ -116,18 +114,20 @@ public class CrawlToSkystone extends LinearOpMode {
         telemetry.addData("out of loop", "");
         telemetry.update();
 
-        leftDrive.setPower(1);
-        rightDrive.setPower(1);
+        robot.setWheelMotorPower(.5,.5,.5,.5);
 
-        if(true) {
-            leftDrive.setPower(0);
-            rightDrive.setPower(0);
+        ElapsedTime timer = new ElapsedTime();
+
+        while (timer.milliseconds() < 100 && opModeIsActive()) {
+
         }
 
-        double currentAngle = getAngle();
+        robot.setWheelMotorPower(0,0,0,0);
+
+        double currentAngle = robot.getAngle();
         double targetAngle = currentAngle + 90;
 
-        while(leftDrive.isBusy()){
+        while(robot.wheelsAreBusy()){
 
         }
 
@@ -226,24 +226,25 @@ public class CrawlToSkystone extends LinearOpMode {
     private void moveRight (double inches) {
         telemetry.addData("Moved to a position to the right of oneself", inches);
     }
-    public double getRawAngle() {
-        Orientation orientation = gyroscope.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        double angle =  AngleUtilities.getNormalizedAngle(orientation.firstAngle);
-        return angle;
-    }
-    public double getAngle() {
-        return AngleUtilities.getNormalizedAngle(getRawAngle() + offset);
-    }
+
     public static final int GO_TO_ANGLE_BUFFER = 3;
 
     public void goToAngle ( double angleStart, double angleGoal){
 
+        swerveTurn(0);
+
+        ElapsedTime timer = new ElapsedTime();
+
+        while (timer.seconds() < 1 && opModeIsActive()) {
+
+        }
+
         double angleCurrent = angleStart;
 
         while (Math.abs(angleGoal - angleCurrent) > GO_TO_ANGLE_BUFFER && opModeIsActive()) {
-            angleCurrent = getAngle();
-            double power = 0; // getPower(angleCurrent, angleGoal, angleStart);
-            // robot.turn(-power);
+            angleCurrent = robot.getAngle();
+            double power = getPower(angleCurrent, angleGoal, angleStart);
+            robot.setWheelMotorPower(power, power ,power, power);
 
             telemetry.addData("Start Angle ", "%.1f", angleStart);
             telemetry.addData("Goal Angle  ", "%.1f", angleGoal);
@@ -253,5 +254,94 @@ public class CrawlToSkystone extends LinearOpMode {
             telemetry.update();
             idle();
         }
+    }
+
+    public double getPower(double absCurrent, double absGoal, double absStart) {
+        double relCurrent = AngleUtilities.getNormalizedAngle(absCurrent - absStart);
+        double relGoal = AngleUtilities.getNormalizedAngle(absGoal - absStart);
+        double remainingDistance = AngleUtilities.getNormalizedAngle(relGoal - relCurrent);
+
+        double basePower = 0.01 * remainingDistance;
+        double stallPower = 0.1 * Math.signum(remainingDistance);
+        return Range.clip(basePower + stallPower, -1, 1);
+    }
+
+
+    public void swerveTurn(double power) {
+
+        double fLAngle = joystickPositionToWheelAngle(-1, -1);
+        double fRAngle = joystickPositionToWheelAngle(-1, 1);
+        double bLAngle = joystickPositionToWheelAngle(1, -1);
+        double bRAngle = joystickPositionToWheelAngle(1, 1);
+
+        swerveMove(fLAngle, fRAngle, bLAngle, bRAngle, power);
+    }
+
+    public void swerveMove(double fLAngle, double fRAngle, double bLAngle, double bRAngle, double power) {
+
+        angleCheck(fLAngle, robot.swerveWheels.frontLeftMotor);
+        angleCheck(fRAngle, robot.swerveWheels.frontRightMotor);
+        angleCheck(bLAngle, robot.swerveWheels.backLeftMotor);
+        angleCheck(bRAngle, robot.swerveWheels.backRightMotor);
+
+        double servoPositionfL = robot.swerveWheels.frontLeftMotor.wheelAngleToServoPosition();
+        double servoPositionfR = robot.swerveWheels.frontRightMotor.wheelAngleToServoPosition();
+        double servoPositionbL = robot.swerveWheels.backLeftMotor.wheelAngleToServoPosition();
+        double servoPositionbR = robot.swerveWheels.backRightMotor.wheelAngleToServoPosition();
+
+        robot.setWheelServoPosition(servoPositionfL, servoPositionfR, servoPositionbL, servoPositionbR);
+
+        double frontLeftPower = robot.swerveWheels.frontLeftMotor.modifier * power;
+        double frontRightPower = robot.swerveWheels.frontRightMotor.modifier * power;
+        double backLeftPower = robot.swerveWheels.backLeftMotor.modifier * power;
+        double backRightPower = robot.swerveWheels.backRightMotor.modifier * power;
+
+        robot.setWheelMotorPower(frontLeftPower, frontRightPower, backLeftPower, backRightPower);
+    }
+
+
+
+    public double joystickPositionToWheelAngle(double joystickPositionX, double joystickPositionY) {
+        double wheelAngleRad = Math.atan2(joystickPositionY, joystickPositionX);
+        double wheelAngle = AngleUtilities.radiansDegreesTranslation(wheelAngleRad) - 90;
+        return AngleUtilities.getPositiveNormalizedAngle(wheelAngle);
+    }
+
+
+    public void angleCheck(double goal, SkystoneHardware.SwerveWheel swerveWheel) {
+
+        double start = swerveWheel.targetAngle;
+
+        goal = getNormalizedAngle(goal);
+
+        double dAngleForward = getNormalizedAngle(goal - start);
+        double targetAngleForward = dAngleForward + start;
+        boolean forwardPossible = (WHEEL_MIN_ANGLE <= targetAngleForward && targetAngleForward <= WHEEL_MAX_ANGLE);
+
+        double dAngleBackward = getNormalizedAngle(dAngleForward + 180);
+        double targetAngleBackward = dAngleBackward + start;
+        boolean backwardPossible = (WHEEL_MIN_ANGLE <= targetAngleBackward && targetAngleBackward <= WHEEL_MAX_ANGLE);
+
+        boolean goForward;
+
+        if (forwardPossible && backwardPossible) {
+            goForward = (Math.abs(dAngleForward) < Math.abs(dAngleBackward));
+        } else {
+            goForward = forwardPossible;
+        }
+
+        double targetAngle;
+        int modifier;
+
+        if (goForward) {
+            targetAngle = targetAngleForward;
+            modifier = 1;
+
+        } else {
+            targetAngle = targetAngleBackward;
+            modifier = -1;
+        }
+
+        swerveWheel.setTargetAndModifier(targetAngle, modifier);
     }
 }
