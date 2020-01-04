@@ -29,7 +29,8 @@ public class SkystoneHardware {
     public final static double BACK_LEFT_OFFSET = .0;
     public final static double BACK_RIGHT_OFFSET = .0;
     public final static double WHEEL_MIN_ANGLE = 0;
-    public final static double WHEEL_MAX_ANGLE = SERVO_MAX_ANGLE * WHEEL_SERVO_GEAR_RATIO;
+    public final static double WHEEL_MAX_ANGLE =  SERVO_MAX_ANGLE*WHEEL_SERVO_GEAR_RATIO;
+    public int targetPosition=0;
 
 
     public class SwerveWheel {
@@ -207,6 +208,22 @@ public class SkystoneHardware {
             return true;
         }
     }
+    public void moveStraight (double setPower, int targetPosition){
+
+        frontRight.setTargetPosition(targetPosition);
+        frontLeft.setTargetPosition(targetPosition);
+        backLeft.setTargetPosition(targetPosition);
+        backRight.setTargetPosition(targetPosition);
+
+        setWheelMotorMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        setWheelMotorPower(setPower, setPower, setPower, setPower);
+        //call whileMotorisBusy
+
+
+
+    }
+
 
 
 
