@@ -4,50 +4,39 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-@TeleOp (name = "Gamepad TeleOp" )
+import org.firstinspires.ftc.teamcode.Gamepad.ImprovedGamepad;
+
+@TeleOp (name = "ImprovedGamepad TeleOp" )
 public class TestGamepad extends OpMode {
-    ButtonState aButton = new ButtonState();
-    ElapsedTime timer = new ElapsedTime();
+
+    public ElapsedTime timer = new ElapsedTime();
+    public ImprovedGamepad improvedGamepad1;
+    public ImprovedGamepad improvedGamepad2;
+
     @Override
     public void init() {
-
+        this.improvedGamepad1 = new ImprovedGamepad(gamepad1, timer, "g1_");
+        this.improvedGamepad2 = new ImprovedGamepad(gamepad2, timer, "g2_");
     }
 
     @Override
     public void loop() {
-    double time = timer.time();
-        aButton.update(gamepad1.a , time);
+        improvedGamepad1.update();
+        improvedGamepad2.update();
 
-        telemetry.addData("Gamepad1.a", gamepad1.a);
-        telemetry.addData("aButton State", aButton.state);
-        telemetry.addData("aButton event Time", aButton.eventTime);
-        telemetry.addData("Elsapsed Time", time);
-        telemetry.addData("aButton name", aButton.name);
-        telemetry.addData("is pressed" , aButton.onPressed(time));
+        telemetry.addData("Pressed", improvedGamepad1.left_stick_y.isPressed());
+        telemetry.addData("Pressed Count", improvedGamepad1.left_stick_y.getPressedCounts());
+        telemetry.addData("Pressed Time", improvedGamepad1.left_stick_y.getPressedElapseTime());
+
+        telemetry.addData("Raw x", improvedGamepad1.left_stick_x.getRawValue());
+        telemetry.addData("Raw y", improvedGamepad1.left_stick_y.getRawValue());
+        telemetry.addData("x", improvedGamepad1.left_stick_x.getValue());
+        telemetry.addData("y", improvedGamepad1.left_stick_y.getValue());
+
+        telemetry.addData("Raw Radius", improvedGamepad1.raw_left_stick_radius);
+        telemetry.addData("Radius", improvedGamepad1.left_stick_radius);
+        telemetry.addData("Angle", improvedGamepad1.left_stick_angle);
+
         telemetry.update();
-
     }
-
-    public class ButtonState {
-        boolean state;
-        double eventTime;
-        String name = "NULL";
-
-        public void update(boolean newState, double time) {
-            if (state != newState) {
-                eventTime = time;
-            }
-            
-            state = gamepad1.a;
-        }
-        public boolean onPressed(double time) {
-            if (eventTime == time && state){
-                return true;
-            }
-            return false;
-        }
-
-    }
-
-
 }
