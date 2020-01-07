@@ -41,7 +41,7 @@ public class SkystoneTeleOp extends OpMode {
         } else {
             robot.setWheelMotorPower(0,0,0,0);
         }
-
+//LIFT CONTROL
         if (gamepad2.left_trigger > .2) {
             robot.lift.setPower(-.5);
         } else if (gamepad2.right_trigger > .2) {
@@ -49,19 +49,19 @@ public class SkystoneTeleOp extends OpMode {
         } else {
             robot.lift.setPower(0);
         }
-
+//CRANE CONTROL
         if (gamepad2.right_bumper) {
             robot.crane.setPosition(robot.crane.getPosition() + .005);
         } else if (gamepad2.left_bumper) {
             robot.crane.setPosition(robot.crane.getPosition() - .005);
         }
-
+//WRIST CONTROL
         if (gamepad2.x) {
             robot.wrist.setPosition(robot.wrist.getPosition() + .01);
         } else if (gamepad2.y) {
             robot.wrist.setPosition(robot.wrist.getPosition() - .01);
         }
-
+//JAW CONTROL
         if (gamepad2.a) {
             robot.jaw.setPosition(robot.jaw.getPosition() + .01);
         } else if (gamepad2.b) {
