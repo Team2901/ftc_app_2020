@@ -36,9 +36,13 @@ public class BuilderSkystoneHardware {
         public double targetAngle = 0;
         public int modifier = 1;
         public double offset = 0;
+        public double minWheelAngle=0;
+        public double maxWheelAngle = 0;
 
         public SwerveWheel(double offset) {
             this.offset = offset;
+            minWheelAngle = servoPositionToWheelAngle(0);
+            maxWheelAngle = servoPositionToWheelAngle(1);
         }
 
         public void setTargetAndModifier(double targetAngle, int modifier) {
@@ -47,6 +51,11 @@ public class BuilderSkystoneHardware {
         }
 
         public double wheelAngleToServoPosition(double wheelAngle) {
+            /*
+            y=mx+b
+            ServoPosition = [gearRatio*wheelAngle]/ServoMaxAngle] + offset
+            wheelAngle is x
+            */
             double servoAngle = wheelAngleToServoAngle(wheelAngle);
             return servoAngleToServoPosition(servoAngle);
         }
@@ -61,6 +70,11 @@ public class BuilderSkystoneHardware {
 
         public double servoAngleToServoPosition(double servoAngle) {
             return (servoAngle / SERVO_MAX_ANGLE) + offset;
+        }
+
+        public double servoPositionToWheelAngle(double servoPosition){
+            return (WHEEL_SERVO_GEAR_RATIO*SERVO_MAX_ANGLE)*(servoPosition-offset);
+
         }
     }
 
