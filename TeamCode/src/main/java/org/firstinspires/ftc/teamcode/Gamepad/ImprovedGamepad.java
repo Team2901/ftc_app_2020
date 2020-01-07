@@ -38,7 +38,7 @@ public class ImprovedGamepad {
 
     public double raw_left_stick_radius = 0;
     public double raw_right_stick_radius = 0;
-    
+
     public double left_stick_radius = 0;
     public double right_stick_radius = 0;
 

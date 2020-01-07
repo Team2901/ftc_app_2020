@@ -23,6 +23,7 @@ public class BooleanButton extends Button<Boolean> {
         if (null != value) {
             return value;
         } else {
+            // Default null values to false
             return false;
         }
     }

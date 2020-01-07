@@ -34,6 +34,7 @@ public class FloatButton extends Button<Float> {
 
     @Override
     public Float getRawValue() {
+        // Invert the rawVaue if needed
         if (null != rawValue && rawValue != 0) {
             return this.invertValue ? -rawValue : rawValue;
         } else {
@@ -45,9 +46,11 @@ public class FloatButton extends Button<Float> {
     public Float getValue() {
 
         if (this.isPressed()) {
+            // Adjust the rawValue given the size of the deadzone
             final Float rawValue = this.getRawValue();
             return (rawValue - (Math.signum(rawValue) * deadZoneValue)) / (1 - deadZoneValue);
         } else {
+            // Default unpressed values to 0.0
             return 0.0f;
         }
     }
