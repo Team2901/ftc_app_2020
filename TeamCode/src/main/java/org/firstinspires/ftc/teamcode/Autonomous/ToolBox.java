@@ -1,21 +1,48 @@
-package org.firstinspires.ftc.teamcode.TeleOp;
+package org.firstinspires.ftc.teamcode.Autonomous;
 
 import android.annotation.SuppressLint;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Hardware.BuilderSkystoneHardware;
 import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
 
 import static org.firstinspires.ftc.teamcode.Utility.AngleUtilities.getNormalizedAngle;
 
 @SuppressLint("DefaultLocale")
-@TeleOp(name = "BUILDER SKYSTONE TELEOP v3", group = "competition")
-public class BuilderSkystoneTeleOp extends OpMode {
+@TeleOp(name = "ToolBox", group = "competition")
+public class ToolBox extends LinearOpMode {
 
     public BuilderSkystoneHardware robot = new BuilderSkystoneHardware();
+    public static final int GO_TO_ANGLE_BUFFER = 5;
 
+    @Override
+    public void runOpMode() throws InterruptedException {
+
+        robot.init(hardwareMap);
+        swerveStraight(0, 0);
+
+        waitForStart();
+
+        while (opModeIsActive()) {
+            if(gamepad1.a){
+                turnTo(90);
+                while (robot.frontLeft.isBusy() && opModeIsActive());
+            }else if (gamepad1.b){
+                moveInches(45 ,24, .7);
+            }else if (gamepad1.x){
+                moveInches(0 ,24, .7);
+            }else if (gamepad1.y){
+                moveInches(90 ,24, .7);
+            }
+        }
+    }
+/*
     @Override
     public void init() {
         robot.init(hardwareMap);
@@ -24,30 +51,44 @@ public class BuilderSkystoneTeleOp extends OpMode {
 
     @Override
     public void loop()  {
-        double joystickPositionX = gamepad1.left_stick_x;
-        double joystickPositionY = -gamepad1.left_stick_y;
 
-        if (Math.abs(gamepad1.right_stick_x) > .1) {
-            double power = getPower(gamepad1.right_stick_x, 0, gamepad1.left_bumper);
-            swerveTurn(power);
-        } else if (AngleUtilities.getRadius(joystickPositionX, joystickPositionY) > .2) {
-            double power = getPower(joystickPositionX, joystickPositionY, gamepad1.left_bumper);
-            double joyWheelAngle = joystickPositionToWheelAngle(joystickPositionX, joystickPositionY);
-            swerveStraight(joyWheelAngle, power);
-        } else {
-            robot.setWheelMotorPower(0,0,0,0);
+        if(gamepad1.a){
+            turnTo(90);
+            while (robot.frontLeft.isBusy());
+        }else if (gamepad1.b){
+            moveInches(45 ,24, .7);
+        }else if (gamepad1.x){
+            moveInches(0 ,24, .7);
+        }else if (gamepad1.y){
+            moveInches(90 ,24, .7);
         }
+    }
 
-        telemetry.addData("FL", String.format("angle: %.2f, mod: %d, pos: %.2f",
-                robot.swerveWheels.frontLeftMotor.targetAngle, robot.swerveWheels.frontLeftMotor.modifier, robot.swerveWheels.frontLeftMotor.wheelAngleToServoPosition()));
-        telemetry.addData("FR", String.format("angle: %.2f, mod: %d, pos: %.2f",
-                robot.swerveWheels.frontRightMotor.targetAngle, robot.swerveWheels.frontRightMotor.modifier, robot.swerveWheels.frontRightMotor.wheelAngleToServoPosition()));
-        telemetry.addData("BL", String.format("angle: %.2f, mod: %d, pos: %.2f",
-                robot.swerveWheels.backLeftMotor.targetAngle, robot.swerveWheels.backLeftMotor.modifier, robot.swerveWheels.backLeftMotor.wheelAngleToServoPosition()));
-        telemetry.addData("BR", String.format("angle: %.2f, mod: %d, pos: %.2f",
-                robot.swerveWheels.backRightMotor.targetAngle, robot.swerveWheels.backRightMotor.modifier, robot.swerveWheels.backRightMotor.wheelAngleToServoPosition()));
+    */
 
-        telemetry.update();
+    public void turnTo (double angle){
+
+        goToAngle(robot.getAngle(), angle);
+
+    }
+
+    public void moveInches (double angle, double inches, double power){
+
+        robot.setWheelMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.setWheelMotorMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.setWheelMotorMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.setWheelTargetPositions((int)(inches*robot.INCHES_TO_ENCODER));
+
+        swerveStraight(angle,power);
+
+        while (robot.frontLeft.isBusy() && opModeIsActive());
+
+        robot.setWheelMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.setWheelMotorMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        swerveStraight( angle,0);
+
+
     }
 
     public double joystickPositionToWheelAngle(double joystickPositionX, double joystickPositionY) {
@@ -135,6 +176,39 @@ public class BuilderSkystoneTeleOp extends OpMode {
         }
 
         swerveWheel.setTargetAndModifier(targetAngle, modifier);
+    }
+
+    public void goToAngle(double angleStart, double angleGoal) {
+
+
+        double angleCurrent = angleStart;
+
+        while ((Math.abs(angleGoal - angleCurrent) > GO_TO_ANGLE_BUFFER) && opModeIsActive()) {
+            angleCurrent = robot.getAngle();
+            double power = getPower(angleCurrent, angleGoal, angleStart);
+            //swerveTurn(power);
+
+            telemetry.addData("Start Angle ", "%.1f", angleStart);
+            telemetry.addData("Goal Angle  ", "%.1f", angleGoal);
+            telemetry.addData("Cur Angle   ", "%.1f", angleCurrent);
+            telemetry.addData("Remain Angle", "%.1f", AngleUnit.normalizeDegrees(angleGoal - angleCurrent));
+            telemetry.addData("Power       ", "%.2f", power);
+            telemetry.update();
+
+        }
+        swerveTurn(0);
+        telemetry.addData("Is Stopped" , "");
+        telemetry.update();
+    }
+
+    public double getPower(double absCurrent, double absGoal, double absStart) {
+        double relCurrent = AngleUtilities.getNormalizedAngle(absCurrent - absStart);
+        double relGoal = AngleUtilities.getNormalizedAngle(absGoal - absStart);
+        double remainingDistance = AngleUtilities.getNormalizedAngle(relGoal - relCurrent);
+
+        double basePower = 0.01 * remainingDistance;
+        double stallPower = 0.1 * Math.signum(remainingDistance);
+        return Range.clip(basePower + stallPower, -1, 1);
     }
 }
 

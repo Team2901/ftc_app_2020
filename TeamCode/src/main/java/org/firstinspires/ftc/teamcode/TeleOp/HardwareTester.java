@@ -5,14 +5,14 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-import org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware;
+import org.firstinspires.ftc.teamcode.Hardware.BuilderSkystoneHardware;
 
 import java.util.ArrayList;
 
 @TeleOp(name = "HardwareTester2")
 public class HardwareTester extends OpMode {
 
-    SkystoneHardware robot = new SkystoneHardware();
+    BuilderSkystoneHardware robot = new BuilderSkystoneHardware();
 
     DcMotor  motorUnderTest;
     Servo servoUnderTest;
