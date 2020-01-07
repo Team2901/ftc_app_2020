@@ -4,6 +4,7 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -25,10 +26,12 @@ public class BuilderSkystoneHardware {
     public final static double TURN_ANGLE = Math.atan(WIDTH_OF_ROBOT/ LENGTH_OF_ROBOT);
     public final static int SERVO_MAX_ANGLE = 280;
     public final static int SERVO_MIN_ANGLE = 0;
-    public final static double FRONT_LEFT_OFFSET = 0;//.11;
-    public final static double FRONT_RIGHT_OFFSET = 0;//.13;
-    public final static double BACK_LEFT_OFFSET = 0;//.1;
-    public final static double BACK_RIGHT_OFFSET = 0;//.11;
+    public final static double FRONT_LEFT_OFFSET = 0.04;
+    public final static double FRONT_RIGHT_OFFSET = .33;
+    public final static double BACK_LEFT_OFFSET = .14;
+    public final static double BACK_RIGHT_OFFSET = 0.06;
+    public final static double INCHES_TO_ENCODER = 22;
+    // 103.6 ticks per rev *2motor revolutions per wheel revolution/3pi for wheel rev. to in
     public final static double WHEEL_MIN_ANGLE = 0;
     public final static double WHEEL_MAX_ANGLE = SERVO_MAX_ANGLE * WHEEL_SERVO_GEAR_RATIO;
 
@@ -79,10 +82,10 @@ public class BuilderSkystoneHardware {
     }
 
     public class SwerveWheels {
-        public SwerveWheel frontLeftMotor = new SwerveWheel(FRONT_LEFT_OFFSET);
-        public SwerveWheel frontRightMotor = new SwerveWheel(FRONT_RIGHT_OFFSET);
-        public SwerveWheel backLeftMotor = new SwerveWheel(BACK_LEFT_OFFSET);
-        public SwerveWheel backRightMotor = new SwerveWheel(BACK_RIGHT_OFFSET);
+        public BuilderSkystoneHardware.SwerveWheel frontLeftMotor = new BuilderSkystoneHardware.SwerveWheel(FRONT_LEFT_OFFSET);
+        public BuilderSkystoneHardware.SwerveWheel frontRightMotor = new BuilderSkystoneHardware.SwerveWheel(FRONT_RIGHT_OFFSET);
+        public BuilderSkystoneHardware.SwerveWheel backLeftMotor = new BuilderSkystoneHardware.SwerveWheel(BACK_LEFT_OFFSET);
+        public BuilderSkystoneHardware.SwerveWheel backRightMotor = new BuilderSkystoneHardware.SwerveWheel(BACK_RIGHT_OFFSET);
     }
 
     public HardwareMap hardwareMap;
@@ -98,6 +101,15 @@ public class BuilderSkystoneHardware {
     public Servo servoFrontRight;
     public Servo servoBackLeft;
     public Servo servoBackRight;
+
+    public DcMotor lift;
+
+
+    public Servo bridgeTickler;
+    public Servo crane;
+    public Servo jaw;
+    public Servo wrist;
+
 
     public SwerveWheels swerveWheels = new SwerveWheels();
 
@@ -116,11 +128,28 @@ public class BuilderSkystoneHardware {
         backLeft = hardwareMap.dcMotor.get("backLeft");
         backRight = hardwareMap.dcMotor.get("backRight");
 
+        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        lift = hardwareMap.dcMotor.get("lift");
+
         //Initialize all servos
         servoFrontLeft = hardwareMap.servo.get("servoFrontLeft");
         servoFrontRight = hardwareMap.servo.get("servoFrontRight");
         servoBackLeft = hardwareMap.servo.get("servoBackLeft");
         servoBackRight = hardwareMap.servo.get("servoBackRight");
+
+        bridgeTickler = hardwareMap.servo.get("bridgeTickler");
+        crane = hardwareMap.servo.get("crane");
+        jaw = hardwareMap.servo.get("jaw");
+        wrist = hardwareMap.servo.get("wrist");
+
+        crane.setPosition(0);
+
+        servoBackLeft.setDirection(Servo.Direction.REVERSE);
+        servoBackRight.setDirection(Servo.Direction.REVERSE);
+        servoFrontRight.setDirection(Servo.Direction.REVERSE);
+        servoFrontLeft.setDirection(Servo.Direction.REVERSE);
+
 
         // setting up the gyroscope
         imu = hardwareMap.get(BNO055IMU.class, "imu");
@@ -178,6 +207,13 @@ public class BuilderSkystoneHardware {
         while (opMode.opModeIsActive() && timer.milliseconds() < milliseconds) {
 
         }
+    }
+
+    public void setWheelTargetPositions (int position){
+        frontLeft.setTargetPosition(position*swerveWheels.frontLeftMotor.modifier);
+        frontRight.setTargetPosition(position*swerveWheels.frontRightMotor.modifier);
+        backLeft.setTargetPosition(position*swerveWheels.backLeftMotor.modifier);
+        backRight.setTargetPosition(position*swerveWheels.backRightMotor.modifier);
     }
 }
 

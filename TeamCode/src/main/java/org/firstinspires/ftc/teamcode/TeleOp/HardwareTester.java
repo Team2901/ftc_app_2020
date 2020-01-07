@@ -4,7 +4,9 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.Gamepad.ImprovedGamepad;
 import org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware;
 
 import java.util.ArrayList;
@@ -13,14 +15,11 @@ import java.util.ArrayList;
 public class HardwareTester extends OpMode {
 
     SkystoneHardware robot = new SkystoneHardware();
+    ImprovedGamepad impGamepad;
+    ElapsedTime timer = new ElapsedTime();
 
     DcMotor  motorUnderTest;
     Servo servoUnderTest;
-
-    private boolean isLastRightBumperPressed;
-    private boolean isLastLeftBumperPressed;
-    private boolean isLastRightTriggerPressed;
-    private boolean isLastLeftTriggerPressed;
 
     String[] motorNames = {"frontLeft","frontRight","backLeft","backRight","lift"};
     String[] servoNames = {"servoFrontLeft","servoFrontRight","servoBackLeft","servoBackRight","jaw"
@@ -37,6 +36,8 @@ public class HardwareTester extends OpMode {
 
     @Override
     public void init() {
+        impGamepad = new ImprovedGamepad(this.gamepad1, this.timer, "GP");
+
         robot.init(hardwareMap);
         for(int i = 0; i < motorNames.length; i++){
             String motorName = motorNames[i];
@@ -58,12 +59,13 @@ public class HardwareTester extends OpMode {
 
     @Override
     public void loop() {
-        if(this.gamepad1.dpad_up){
+        impGamepad.update();
+        if(this.impGamepad.dpad_up.isInitialPress()){
             motorIndex++;
             if(motorIndex >= motorArrayList.size()){
                 motorIndex = 0;
             }
-        } else if(this.gamepad1.dpad_down) {
+        } else if(this.impGamepad.dpad_down.isInitialPress()) {
             motorIndex--;
             if(motorIndex < 0){
                 motorIndex = motorArrayList.size() - 1;
@@ -71,12 +73,12 @@ public class HardwareTester extends OpMode {
         }
         motorUnderTest = motorArrayList.get(motorIndex);
 
-        if(this.gamepad1.dpad_right){
+        if(this.impGamepad.dpad_right.isInitialPress()){
             servoIndex++;
             if(servoIndex >= servoArrayList.size()){
                 servoIndex = 0;
             }
-        } else if(this.gamepad1.dpad_left) {
+        } else if(this.impGamepad.dpad_left.isInitialPress()) {
             servoIndex--;
             if(servoIndex < 0){
                 servoIndex = servoArrayList.size() - 1;
@@ -86,13 +88,13 @@ public class HardwareTester extends OpMode {
         servoUnderTest = servoArrayList.get(servoIndex);
 
         if(motorUnderTest != null){
-            if(Math.abs(this.gamepad1.left_stick_x) > 0.25 ){
-                motorUnderTest.setPower(this.gamepad1.left_stick_x);
+            if(Math.abs(this.impGamepad.left_stick_x.getValue()) > 0.25 ){
+                motorUnderTest.setPower(this.impGamepad.left_stick_x.getValue());
             } else {
                 motorUnderTest.setPower(0);
             }
 
-            if(this.gamepad1.a){
+            if(this.impGamepad.a.isPressed()){
                 motorUnderTest.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
                 motorUnderTest.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             }
@@ -108,13 +110,13 @@ public class HardwareTester extends OpMode {
         telemetry.addData("D Pad Up/Down", "Increment/decrement motors");
 
         if(servoUnderTest != null){
-            if(this.gamepad1.left_bumper && !isLastLeftBumperPressed){
+            if(this.impGamepad.left_bumper.isInitialPress()){
                 servoUnderTest.setPosition(servoUnderTest.getPosition()-0.1);
-            } else if(this.gamepad1.right_bumper && !isLastRightBumperPressed){
+            } else if(this.impGamepad.right_bumper.isInitialPress()){
                 servoUnderTest.setPosition(servoUnderTest.getPosition()+0.1);
-            } else if(this.gamepad1.left_trigger > 0.25 && !isLastLeftTriggerPressed){
+            } else if(this.impGamepad.left_trigger.isInitialPress()){
                 servoUnderTest.setPosition(servoUnderTest.getPosition()-0.02);
-            } else if(this.gamepad1.right_trigger > 0.25 && !isLastRightTriggerPressed) {
+            } else if(this.impGamepad.right_trigger.isInitialPress()) {
                 servoUnderTest.setPosition(servoUnderTest.getPosition()+0.02);
             }
 
@@ -129,11 +131,6 @@ public class HardwareTester extends OpMode {
         telemetry.addData("D Pad Right/Left", "Increment/decrement servos");
 
         telemetry.update();
-
-        isLastRightBumperPressed = gamepad1.right_bumper;
-        isLastLeftBumperPressed = gamepad1.left_bumper;
-        isLastRightTriggerPressed = gamepad1.right_trigger > 0.25;
-        isLastLeftTriggerPressed = gamepad1.left_trigger > 0.25;
 
     }
 }
