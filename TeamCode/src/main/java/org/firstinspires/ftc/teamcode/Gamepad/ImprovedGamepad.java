@@ -83,8 +83,8 @@ public class ImprovedGamepad {
         this.left_stick_button = new BooleanButton(this.name + "left_stick_button");
         this.right_stick_button = new BooleanButton(this.name + "right_stick_button");
 
-        this.left_trigger = new FloatButton(this.name + "left_trigger");
-        this.right_trigger = new FloatButton(this.name + "right_trigger");
+        this.left_trigger = new FloatButton(this.name + "left_trigger", 0.25f);
+        this.right_trigger = new FloatButton(this.name + "right_trigger", 0.25f);
     }
 
     public void update() {
