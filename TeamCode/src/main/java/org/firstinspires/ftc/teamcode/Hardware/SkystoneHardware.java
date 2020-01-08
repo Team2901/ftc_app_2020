@@ -204,15 +204,17 @@ public class SkystoneHardware {
         }
     }
     public boolean isOkayToOpen() {
-        if (lift.getCurrentPosition() == 0) {
-            if (wrist.getPosition() > .25) {
-                return false;
+        if(crane.getPosition()> .3) {
+            if (lift.getCurrentPosition() == 0) {
+                if (wrist.getPosition() > .25) {
+                    return false;
+                }
+                return true;
+            } else {
+                return true;
             }
-            return true;
         }
-        else {
-            return true;
-        }
+        return true;
     }
     public void moveStraight (double setPower, int targetPosition){
 
