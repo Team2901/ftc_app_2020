@@ -33,8 +33,11 @@ public class ImprovedGamepad {
     public BooleanButton right_bumper;
     public BooleanButton left_stick_button;
     public BooleanButton right_stick_button;
+    public JoyStickButton left_stick;
+    public JoyStickButton right_stick;
     public FloatButton left_trigger;
     public FloatButton right_trigger;
+
 
     public double raw_left_stick_radius = 0;
     public double raw_right_stick_radius = 0;
@@ -62,29 +65,34 @@ public class ImprovedGamepad {
         this.name = (null != name) ? name : "";
         this.stickDeadZoneValue = stickDeadZoneValue;
 
-        this.left_stick_x = new FloatButton(this.name + "left_stick_x", stickDeadZoneValue, false);
-        this.left_stick_y = new FloatButton(this.name + "left_stick_y", stickDeadZoneValue, true);
-        this.right_stick_x = new FloatButton(this.name + "right_stick_x", stickDeadZoneValue, false);
-        this.right_stick_y = new FloatButton(this.name + "right_stick_y", stickDeadZoneValue, true);
 
-        this.dpad_up = new BooleanButton(this.name + "dpad_up");
-        this.dpad_down = new BooleanButton(this.name + "dpad_down");
-        this.dpad_left = new BooleanButton(this.name + "dpad_left");
-        this.dpad_right = new BooleanButton(this.name + "dpad_right");
-        this.a = new BooleanButton(this.name + "a");
-        this.b = new BooleanButton(this.name + "b");
-        this.x = new BooleanButton(this.name + "x");
-        this.y = new BooleanButton(this.name + "y");
-        this.guide = new BooleanButton(this.name + "guide");
-        this.start = new BooleanButton(this.name + "start");
-        this.back = new BooleanButton(this.name + "back");
-        this.left_bumper = new BooleanButton(this.name + "left_bumper");
-        this.right_bumper = new BooleanButton(this.name + "right_bumper");
-        this.left_stick_button = new BooleanButton(this.name + "left_stick_button");
-        this.right_stick_button = new BooleanButton(this.name + "right_stick_button");
+        this.right_stick = new JoyStickButton(String.format("%s_right_stick", this.name), stickDeadZoneValue);
+        this.left_stick = new JoyStickButton(String.format("%s_left_stick", this.name), stickDeadZoneValue);
 
-        this.left_trigger = new FloatButton(this.name + "left_trigger");
-        this.right_trigger = new FloatButton(this.name + "right_trigger");
+        this.left_stick_x = this.left_stick.x;
+        this.left_stick_y = this.left_stick.y;
+        this.right_stick_x = this.right_stick.x;
+        this.right_stick_y = this.right_stick.y;
+
+        this.dpad_up = new BooleanButton(String.format("%s_dpad_up", this.name));
+        this.dpad_down = new BooleanButton(String.format("%s_dpad_down", this.name));
+        this.dpad_left = new BooleanButton(String.format("%s_dpad_left", this.name));
+        this.dpad_right = new BooleanButton(String.format("%s_dpad_right", this.name));
+        this.a = new BooleanButton(String.format("%s_a", this.name));
+        this.b = new BooleanButton(String.format("%s_b", this.name));
+        this.x = new BooleanButton(String.format("%s_x", this.name));
+        this.y = new BooleanButton(String.format("%s_y", this.name));
+        this.guide = new BooleanButton(String.format("%s_guide", this.name));
+        this.start = new BooleanButton(String.format("%s_start", this.name));
+        this.back = new BooleanButton(String.format("%s_back", this.name));
+        this.left_bumper = new BooleanButton(String.format("%s_left_bumper", this.name));
+        this.right_bumper = new BooleanButton(String.format("%s_right_bumper", this.name));
+        this.left_stick_button = new BooleanButton(String.format("%s_left_stick_button", this.name));
+        this.right_stick_button = new BooleanButton(String.format("%s_right_stick_button", this.name));
+
+        this.left_trigger = new FloatButton(String.format("%s_left_trigger",this.name), 0.25f);
+        this.right_trigger = new FloatButton(String.format("%s_right_trigger", this.name), 0.25f);
+
     }
 
     public void update() {
@@ -116,13 +124,13 @@ public class ImprovedGamepad {
 
         raw_right_stick_radius = AngleUtilities.getRadius(right_stick_x.getRawValue(), right_stick_y.getRawValue());
 
-       if (raw_right_stick_radius > stickDeadZoneValue) {
-           right_stick_radius = (raw_right_stick_radius - stickDeadZoneValue) / (1 - stickDeadZoneValue);
-           right_stick_angle = getJoystickAngle(right_stick_x, right_stick_y);
-       } else {
-           right_stick_radius = 0;
-           // else keep last known angle 
-       }
+        if (raw_right_stick_radius > stickDeadZoneValue) {
+            right_stick_radius = (raw_right_stick_radius - stickDeadZoneValue) / (1 - stickDeadZoneValue);
+            right_stick_angle = getJoystickAngle(right_stick_x, right_stick_y);
+        } else {
+            right_stick_radius = 0;
+            // else keep last known angle
+        }
 
         raw_left_stick_radius = AngleUtilities.getRadius(left_stick_x.getRawValue(), left_stick_y.getRawValue());
 
@@ -131,7 +139,7 @@ public class ImprovedGamepad {
             left_stick_angle = getJoystickAngle(left_stick_x, left_stick_y);
         } else {
             left_stick_radius = 0;
-            // else keep last known angle 
+            // else keep last known angle
         }
     }
 

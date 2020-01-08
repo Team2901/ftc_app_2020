@@ -6,13 +6,13 @@ public abstract class Button<T> {
     protected final String name;
     protected T rawValue;
 
-    private Boolean pressed = null;
+    protected Boolean pressed = null;
 
     private int pressedCounts = 0;
     private int releaseCounts = 0;
 
-    private Double lastUpdateTime;
-    private Double lastChangeTime = null;
+    protected Double lastUpdateTime;
+    protected Double lastChangeTime = null;
 
     public Button(final String name) {
         this.name = name;
