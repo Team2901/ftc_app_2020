@@ -65,7 +65,6 @@ public class ImprovedGamepad {
         this.name = (null != name) ? name : "";
         this.stickDeadZoneValue = stickDeadZoneValue;
 
-
         this.right_stick = new JoyStickButton(String.format("%s_right_stick", this.name), stickDeadZoneValue);
         this.left_stick = new JoyStickButton(String.format("%s_left_stick", this.name), stickDeadZoneValue);
 

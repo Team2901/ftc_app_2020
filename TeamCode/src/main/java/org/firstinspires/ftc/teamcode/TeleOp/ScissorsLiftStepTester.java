@@ -3,16 +3,18 @@ package org.firstinspires.ftc.teamcode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.Gamepad.ImprovedGamepad;
 import org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware;
 
 
 @TeleOp(name="ScissorsLiftStepTester")
 public class ScissorsLiftStepTester extends OpMode {
-    private boolean isYPressed;
-    private boolean isXPressed;
-    private boolean isBPressed;
-    private boolean isAPressed;
+
+    ImprovedGamepad impGamepad;
+    ElapsedTime timer = new ElapsedTime();
+
     double power=0;
     int step = 0;
     int topStep = 0;
@@ -22,6 +24,7 @@ public class ScissorsLiftStepTester extends OpMode {
 
     @Override
     public void init() {
+        impGamepad = new ImprovedGamepad(this.gamepad2, this.timer, "GP2")
         robot.init(hardwareMap);
         DcMotor lift = this.hardwareMap.dcMotor.get("lift");
         lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -33,12 +36,12 @@ public class ScissorsLiftStepTester extends OpMode {
     @Override
     public void loop() {
 
-        if(this.gamepad2.y && !isYPressed){
+        if(this.impGamepad.y.isInitialPress()){
             step = step+1;
            // power= .5;
             //up by one
         }
-        if(this.gamepad2.a && !isAPressed){
+        if(this.impGamepad.a.isInitialPress()){
             step = step-1;
             if(step < 0){
                 step = 0;
@@ -47,14 +50,14 @@ public class ScissorsLiftStepTester extends OpMode {
             //down by one
         }
 
-        if(this.gamepad2.b && !isBPressed){
+        if(this.impGamepad.b.isInitialPress()){
             topStep = step;
             step = 0;
            // power=.7;
             //to bottom
         }
 
-        if(this.gamepad2.x && !isXPressed){
+        if(this.impGamepad.x.isInitialPress()){
             step = topStep;
             //power= -.7;
             //to top
@@ -67,11 +70,6 @@ public class ScissorsLiftStepTester extends OpMode {
         telemetry.addData("Step", step);
         telemetry.addData("Top Step", topStep);
         telemetry.update();
-
-        isYPressed = gamepad2.y;
-        isXPressed = gamepad2.x;
-        isBPressed = gamepad2.b;
-        isAPressed = gamepad2.a;
     }
     /*public int stepByOne (int step)
     {
