@@ -34,11 +34,11 @@ public class ToolBox extends LinearOpMode {
                 turnTo(90);
                 while (robot.frontLeft.isBusy() && opModeIsActive());
             }else if (gamepad1.b){
-                moveInches(45 ,24, .7);
+                moveInches(45 ,24, 1);
             }else if (gamepad1.x){
-                moveInches(0 ,24, .7);
+                moveInches(0 ,24, 1);
             }else if (gamepad1.y){
-                moveInches(90 ,24, .7);
+                moveInches(90 ,24, 1);
             }
         }
     }
@@ -77,11 +77,11 @@ public class ToolBox extends LinearOpMode {
         robot.setWheelMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.setWheelMotorMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.setWheelMotorMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.setWheelTargetPositions((int)(inches*robot.INCHES_TO_ENCODER));
+        robot.setWheelTargetPositions((int)(-inches*robot.INCHES_TO_ENCODER));
 
         swerveStraight(angle,power);
 
-        while (robot.frontLeft.isBusy() && opModeIsActive());
+        while (robot.wheelsAreBusy() && opModeIsActive());
 
         robot.setWheelMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.setWheelMotorMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -186,7 +186,7 @@ public class ToolBox extends LinearOpMode {
         while ((Math.abs(angleGoal - angleCurrent) > GO_TO_ANGLE_BUFFER) && opModeIsActive()) {
             angleCurrent = robot.getAngle();
             double power = getPower(angleCurrent, angleGoal, angleStart);
-            //swerveTurn(power);
+            swerveTurn(power);
 
             telemetry.addData("Start Angle ", "%.1f", angleStart);
             telemetry.addData("Goal Angle  ", "%.1f", angleGoal);
@@ -206,7 +206,7 @@ public class ToolBox extends LinearOpMode {
         double relGoal = AngleUtilities.getNormalizedAngle(absGoal - absStart);
         double remainingDistance = AngleUtilities.getNormalizedAngle(relGoal - relCurrent);
 
-        double basePower = 0.01 * remainingDistance;
+        double basePower = 0.045 * remainingDistance;
         double stallPower = 0.1 * Math.signum(remainingDistance);
         return Range.clip(basePower + stallPower, -1, 1);
     }
