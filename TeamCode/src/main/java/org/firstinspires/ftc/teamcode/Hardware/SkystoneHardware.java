@@ -242,7 +242,15 @@ public class SkystoneHardware {
 
     }
 
-
+    public void parkingLowRisk(){
+        //Step one: turn wheels 90 degrees counterclockwise and go forward 1 ft.
+        moveStraight(0.5,1);
+        //Step two: turn wheels 90 degrees clockwise and go forward 1 ft.
+        moveStraight(0.5,1);
+        //Step three: turn wheels 90 degrees counterclockwise and go forward 1.5 ft.
+        moveStraight(0.5,2);
+        //Step four: stop
+    }
 
 
 }
