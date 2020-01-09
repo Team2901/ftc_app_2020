@@ -15,8 +15,8 @@ public class TestGamepad extends OpMode {
 
     @Override
     public void init() {
-        this.improvedGamepad1 = new ImprovedGamepad(gamepad1, timer, "g1_");
-        this.improvedGamepad2 = new ImprovedGamepad(gamepad2, timer, "g2_");
+        this.improvedGamepad1 = new ImprovedGamepad(gamepad1, timer, "g1");
+        this.improvedGamepad2 = new ImprovedGamepad(gamepad2, timer, "g2");
     }
 
     @Override
@@ -25,17 +25,18 @@ public class TestGamepad extends OpMode {
         improvedGamepad2.update();
 
         telemetry.addData("Pressed", improvedGamepad1.left_stick_y.isPressed());
-        telemetry.addData("Pressed Count", improvedGamepad1.left_stick_y.getPressedCounts());
-        telemetry.addData("Pressed Time", improvedGamepad1.left_stick_y.getPressedElapseTime());
+        telemetry.addData("Pressed Count", improvedGamepad1.left_stick.y.getPressedCounts());
+        telemetry.addData("Pressed Time", improvedGamepad1.left_stick.y.getPressedElapseTime());
 
-        telemetry.addData("Raw x", improvedGamepad1.left_stick_x.getRawValue());
-        telemetry.addData("Raw y", improvedGamepad1.left_stick_y.getRawValue());
-        telemetry.addData("x", improvedGamepad1.left_stick_x.getValue());
-        telemetry.addData("y", improvedGamepad1.left_stick_y.getValue());
+        telemetry.addData("Raw x", improvedGamepad1.left_stick.x.getRawValue());
+        telemetry.addData("Raw y", improvedGamepad1.left_stick.y.getRawValue());
+        telemetry.addData("x", improvedGamepad1.left_stick.x.getValue());
+        telemetry.addData("y", improvedGamepad1.left_stick.y.getValue());
 
-        telemetry.addData("Raw Radius", improvedGamepad1.raw_left_stick_radius);
-        telemetry.addData("Radius", improvedGamepad1.left_stick_radius);
-        telemetry.addData("Angle", improvedGamepad1.left_stick_angle);
+        telemetry.addData("Raw Radius", improvedGamepad1.left_stick.getRawValue());
+        telemetry.addData("Radius", improvedGamepad1.left_stick.getValue());
+        telemetry.addData("Raw Angle", improvedGamepad1.left_stick.getRawAngle());
+        telemetry.addData("Angle", improvedGamepad1.left_stick.getAngel());
 
         telemetry.update();
     }
