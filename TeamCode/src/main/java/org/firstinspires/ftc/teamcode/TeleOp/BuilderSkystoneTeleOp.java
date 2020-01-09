@@ -23,7 +23,7 @@ public class BuilderSkystoneTeleOp extends OpMode {
     }
 
     @Override
-    public void loop()  {
+    public void loop() {
         double joystickPositionX = gamepad1.left_stick_x;
         double joystickPositionY = -gamepad1.left_stick_y;
 
@@ -35,7 +35,34 @@ public class BuilderSkystoneTeleOp extends OpMode {
             double joyWheelAngle = joystickPositionToWheelAngle(joystickPositionX, joystickPositionY);
             swerveStraight(joyWheelAngle, power);
         } else {
-            robot.setWheelMotorPower(0,0,0,0);
+            robot.setWheelMotorPower(0, 0, 0, 0);
+        }
+
+        //LIFT CONTROL
+        if (gamepad2.left_trigger > .2) {
+            robot.lift.setPower(-.5);
+        } else if (gamepad2.right_trigger > .2) {
+            robot.lift.setPower(1);
+        } else {
+            robot.lift.setPower(0);
+        }
+//CRANE CONTROL
+        if (gamepad2.right_bumper) {
+            robot.crane.setPosition(robot.crane.getPosition() + .005);
+        } else if (gamepad2.left_bumper) {
+            robot.crane.setPosition(robot.crane.getPosition() - .005);
+        }
+//WRIST CONTROL
+        if (gamepad2.x) {
+            robot.wrist.setPosition(robot.wrist.getPosition() + .01);
+        } else if (gamepad2.y) {
+            robot.wrist.setPosition(robot.wrist.getPosition() - .01);
+        }
+//JAW CONTROL
+        if (gamepad2.a) {
+            robot.jaw.setPosition(robot.jaw.getPosition() + .01);
+        } else if (gamepad2.b) {
+            robot.jaw.setPosition(robot.jaw.getPosition() - .01);
         }
 
         telemetry.addData("FL", String.format("angle: %.2f, mod: %d, pos: %.2f",
@@ -60,7 +87,7 @@ public class BuilderSkystoneTeleOp extends OpMode {
         if (pause) {
             return 0;
         } else {
-            return AngleUtilities.getRadius(x,y);
+            return AngleUtilities.getRadius(x, y);
         }
     }
 
@@ -137,4 +164,3 @@ public class BuilderSkystoneTeleOp extends OpMode {
         swerveWheel.setTargetAndModifier(targetAngle, modifier);
     }
 }
-
