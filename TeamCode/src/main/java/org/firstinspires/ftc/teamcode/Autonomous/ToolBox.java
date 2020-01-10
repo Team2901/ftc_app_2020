@@ -30,41 +30,10 @@ public class ToolBox extends LinearOpMode {
         waitForStart();
 
         while (opModeIsActive()) {
-            if(gamepad1.a){
-                turnTo(90);
-                while (robot.frontLeft.isBusy() && opModeIsActive());
-            }else if (gamepad1.b){
-                moveInches(45 ,24, 1);
-            }else if (gamepad1.x){
-                moveInches(0 ,24, 1);
-            }else if (gamepad1.y){
-                moveInches(90 ,24, 1);
-            }
-        }
-    }
-/*
-    @Override
-    public void init() {
-        robot.init(hardwareMap);
-        swerveStraight(0, 0);
-    }
 
-    @Override
-    public void loop()  {
-
-        if(gamepad1.a){
-            turnTo(90);
-            while (robot.frontLeft.isBusy());
-        }else if (gamepad1.b){
-            moveInches(45 ,24, .7);
-        }else if (gamepad1.x){
-            moveInches(0 ,24, .7);
-        }else if (gamepad1.y){
-            moveInches(90 ,24, .7);
         }
     }
 
-    */
 
     public void turnTo (double angle){
 
