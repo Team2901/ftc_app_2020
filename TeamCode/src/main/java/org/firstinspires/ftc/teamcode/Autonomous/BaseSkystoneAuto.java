@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.Hardware.BaseSkyStoneHardware;
 import org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware;
 import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
 
@@ -84,7 +85,7 @@ public class BaseSkystoneAuto extends LinearOpMode {
     }
 
 
-    public void angleCheck(double goal, SkystoneHardware.SwerveWheel swerveWheel) {
+    public void angleCheck(double goal, BaseSkyStoneHardware.SwerveWheel swerveWheel) {
 
         double start = swerveWheel.targetAngle;
 

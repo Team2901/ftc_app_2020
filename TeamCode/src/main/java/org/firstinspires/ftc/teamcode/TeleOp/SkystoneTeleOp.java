@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.Hardware.BaseSkyStoneHardware;
 import org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware;
 import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
 
@@ -134,7 +135,7 @@ public class SkystoneTeleOp extends OpMode {
     }
 
 
-    public void angleCheck(double goal, SkystoneHardware.SwerveWheel swerveWheel) {
+    public void angleCheck(double goal, BaseSkyStoneHardware.SwerveWheel swerveWheel) {
 
         double start = swerveWheel.targetAngle;
 

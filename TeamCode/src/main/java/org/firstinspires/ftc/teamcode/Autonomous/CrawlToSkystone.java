@@ -18,6 +18,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+import org.firstinspires.ftc.teamcode.Hardware.BaseSkyStoneHardware;
 import org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware;
 import org.firstinspires.ftc.teamcode.NewProgrammers.TestingTensorFlowWebcam;
 import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
@@ -308,7 +309,7 @@ public class CrawlToSkystone extends LinearOpMode {
     }
 
 
-    public void angleCheck(double goal, SkystoneHardware.SwerveWheel swerveWheel) {
+    public void angleCheck(double goal, BaseSkyStoneHardware.SwerveWheel swerveWheel) {
 
         double start = swerveWheel.targetAngle;
 

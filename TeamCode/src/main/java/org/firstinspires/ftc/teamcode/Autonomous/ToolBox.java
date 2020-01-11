@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.Hardware.BaseSkyStoneHardware;
 import org.firstinspires.ftc.teamcode.Hardware.BuilderSkystoneHardware;
 import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
 
@@ -110,7 +111,7 @@ public class ToolBox extends LinearOpMode {
         robot.setWheelMotorPower(frontLeftPower, frontRightPower, backLeftPower, backRightPower);
     }
 
-    public void angleCheck(double goal, BuilderSkystoneHardware.SwerveWheel swerveWheel) {
+    public void angleCheck(double goal, BaseSkyStoneHardware.SwerveWheel swerveWheel) {
 
         double start = swerveWheel.targetAngle;
 

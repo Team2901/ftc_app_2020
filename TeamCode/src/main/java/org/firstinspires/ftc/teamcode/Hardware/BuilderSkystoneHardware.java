@@ -16,7 +16,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
 
-public class BuilderSkystoneHardware {
+public class BuilderSkystoneHardware extends BaseSkyStoneHardware{
 
     public final static double MOTOR_POWER_RATIO = .25;
     public final static double WHEEL_SERVO_GEAR_RATIO = 1.25;
@@ -34,185 +34,15 @@ public class BuilderSkystoneHardware {
     public final static double WHEEL_MIN_ANGLE = 0;
     public final static double WHEEL_MAX_ANGLE = SERVO_MAX_ANGLE * WHEEL_SERVO_GEAR_RATIO;
 
-    public class SwerveWheel {
-        public double targetAngle = 0;
-        public int modifier = 1;
-        public double offset = 0;
-        public double minWheelAngle=0;
-        public double maxWheelAngle = 0;
-
-        public SwerveWheel(double offset) {
-            this.offset = offset;
-            minWheelAngle = servoPositionToWheelAngle(0);
-            maxWheelAngle = servoPositionToWheelAngle(1);
-        }
-
-        public void setTargetAndModifier(double targetAngle, int modifier) {
-            this.targetAngle = targetAngle;
-            this.modifier = modifier;
-        }
-
-        public double wheelAngleToServoPosition(double wheelAngle) {
-            /*
-            y=mx+b
-            ServoPosition = [gearRatio*wheelAngle]/ServoMaxAngle] + offset
-            wheelAngle is x
-            */
-            double servoAngle = wheelAngleToServoAngle(wheelAngle);
-            return servoAngleToServoPosition(servoAngle);
-        }
-
-        public double wheelAngleToServoPosition() {
-            return wheelAngleToServoPosition(targetAngle);
-        }
-
-        public double wheelAngleToServoAngle(double wheelAngle) {
-            return wheelAngle / WHEEL_SERVO_GEAR_RATIO;
-        }
-
-        public double servoAngleToServoPosition(double servoAngle) {
-            return (servoAngle / SERVO_MAX_ANGLE) + offset;
-        }
-
-        public double servoPositionToWheelAngle(double servoPosition){
-            return (WHEEL_SERVO_GEAR_RATIO*SERVO_MAX_ANGLE)*(servoPosition-offset);
-
-        }
-    }
-
-    public class SwerveWheels {
-        public BuilderSkystoneHardware.SwerveWheel frontLeftMotor = new BuilderSkystoneHardware.SwerveWheel(FRONT_LEFT_OFFSET);
-        public BuilderSkystoneHardware.SwerveWheel frontRightMotor = new BuilderSkystoneHardware.SwerveWheel(FRONT_RIGHT_OFFSET);
-        public BuilderSkystoneHardware.SwerveWheel backLeftMotor = new BuilderSkystoneHardware.SwerveWheel(BACK_LEFT_OFFSET);
-        public BuilderSkystoneHardware.SwerveWheel backRightMotor = new BuilderSkystoneHardware.SwerveWheel(BACK_RIGHT_OFFSET);
-    }
-
-    public HardwareMap hardwareMap;
-
-    //Made for a 4 wheel swerve drive system
-    public DcMotor frontLeft;
-    public DcMotor frontRight;
-    public DcMotor backLeft;
-    public DcMotor backRight;
-
-    //Steering servo for their respective motor
-    public Servo servoFrontLeft;
-    public Servo servoFrontRight;
-    public Servo servoBackLeft;
-    public Servo servoBackRight;
-
-    public DcMotor lift;
-
-
-    public Servo bridgeTickler;
-    public Servo crane;
-    public Servo jaw;
-    public Servo wrist;
-
-
-    public SwerveWheels swerveWheels = new SwerveWheels();
-
-    //Sensors and Things
-    public BNO055IMU imu;
-    public IntegratingGyroscope gyroscope;
-
-    public double offset = 0;
-
-    public void init(HardwareMap hwMap) {
-        hardwareMap = hwMap;
-
-        //Inititialize all Motors
-        frontLeft = hardwareMap.dcMotor.get("frontLeft");
-        frontRight = hardwareMap.dcMotor.get("frontRight");
-        backLeft = hardwareMap.dcMotor.get("backLeft");
-        backRight = hardwareMap.dcMotor.get("backRight");
-
-        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        lift = hardwareMap.dcMotor.get("lift");
-
-        //Initialize all servos
-        servoFrontLeft = hardwareMap.servo.get("servoFrontLeft");
-        servoFrontRight = hardwareMap.servo.get("servoFrontRight");
-        servoBackLeft = hardwareMap.servo.get("servoBackLeft");
-        servoBackRight = hardwareMap.servo.get("servoBackRight");
-
-        bridgeTickler = hardwareMap.servo.get("bridgeTickler");
-        crane = hardwareMap.servo.get("crane");
-        jaw = hardwareMap.servo.get("jaw");
-        wrist = hardwareMap.servo.get("wrist");
-
-        crane.setPosition(0);
-
-        servoBackLeft.setDirection(Servo.Direction.REVERSE);
-        servoBackRight.setDirection(Servo.Direction.REVERSE);
-        servoFrontRight.setDirection(Servo.Direction.REVERSE);
-        servoFrontLeft.setDirection(Servo.Direction.REVERSE);
-
-
-        // setting up the gyroscope
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-        gyroscope = (IntegratingGyroscope) imu;
-
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
-        parameters.loggingEnabled = true;
-        parameters.loggingTag = "IMU";
-        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
-
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-        imu.initialize(parameters);
-    }
-
-    public double getRawAngle() {
-        Orientation orientation = gyroscope.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        return AngleUtilities.getNormalizedAngle(orientation.firstAngle);
-    }
-
-    public double getAngle() {
-        return AngleUtilities.getNormalizedAngle(getRawAngle() + offset);
-    }
-
-    public void setWheelMotorPower(double frontLeftPower, double frontRightPower, double backLeftPower, double backRightPower) {
-        backRight.setPower(-backRightPower * MOTOR_POWER_RATIO);
-        backLeft.setPower(-backLeftPower * MOTOR_POWER_RATIO);
-        frontRight.setPower(-frontRightPower * MOTOR_POWER_RATIO);
-        frontLeft.setPower(-frontLeftPower * MOTOR_POWER_RATIO);
-    }
-
-    public void setWheelServoPosition(double fLPos, double fRPos, double bLPos, double bRPos) {
-        servoFrontRight.setPosition(fRPos);
-        servoBackRight.setPosition(bRPos);
-        servoFrontLeft.setPosition(fLPos);
-        servoBackLeft.setPosition(bLPos);
-    }
-
-    public void setWheelMotorMode(DcMotor.RunMode runMode) {
-        backLeft.setMode(runMode);
-        backRight.setMode(runMode);
-        frontLeft.setMode(runMode);
-        frontRight.setMode(runMode);
-    }
-
-    public boolean wheelsAreBusy() {
-        return frontRight.isBusy() || frontLeft.isBusy() || backLeft.isBusy() || backRight.isBusy();
-
-    }
-
-    public void wait(int milliseconds, LinearOpMode opMode) {
-        ElapsedTime timer = new ElapsedTime();
-        while (opMode.opModeIsActive() && timer.milliseconds() < milliseconds) {
-
-        }
-    }
-
-    public void setWheelTargetPositions (int position){
-        frontLeft.setTargetPosition(position*swerveWheels.frontLeftMotor.modifier);
-        frontRight.setTargetPosition(position*swerveWheels.frontRightMotor.modifier);
-        backLeft.setTargetPosition(position*swerveWheels.backLeftMotor.modifier);
-        backRight.setTargetPosition(position*swerveWheels.backRightMotor.modifier);
+    public BuilderSkystoneHardware(){
+        super (WIDTH_OF_ROBOT,
+                LENGTH_OF_ROBOT,
+                WHEEL_SERVO_GEAR_RATIO,
+                SERVO_MAX_ANGLE,
+                FRONT_LEFT_OFFSET,
+                FRONT_RIGHT_OFFSET,
+                BACK_LEFT_OFFSET,
+                BACK_RIGHT_OFFSET);
     }
 }
 
