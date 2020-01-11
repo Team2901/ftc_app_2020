@@ -7,11 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Gamepad.ImprovedGamepad;
-import org.firstinspires.ftc.teamcode.Hardware.BaseSkyStoneHardware;
 import org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware;
-import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
-
-import static org.firstinspires.ftc.teamcode.Utility.AngleUtilities.getNormalizedAngle;
 
 @SuppressLint("DefaultLocale")
 @TeleOp(name = "SKYSTONE TELEOP 2", group = "competition")
@@ -37,6 +33,7 @@ public class SkystoneTeleOp extends OpMode {
         improvedGamepad1.update();
         improvedGamepad2.update();
 
+        // WHHEL CONTROL
         if (improvedGamepad1.right_stick_x.isPressed()) {
             double power = getWheelPower(improvedGamepad1.right_stick.x.getValue(), gamepad1.left_bumper);
             robot.swerveTurn(power);
@@ -47,32 +44,45 @@ public class SkystoneTeleOp extends OpMode {
         } else {
             robot.setWheelMotorPower(0,0,0,0);
         }
-//LIFT CONTROL
-        if (improvedGamepad2.left_trigger.isPressed()) {
-            robot.lift.setPower(-.5);
-        } else if (improvedGamepad1.right_trigger.isPressed()) {
-            robot.lift.setPower(1);
+
+        // GRABBER CONTROL
+        if (improvedGamepad1.dpad_up.isPressed()) {
+            robot.leftGrabber.setPosition(robot.leftGrabber.getPosition()+.01);
+            robot.rightGrabber.setPosition(robot.rightGrabber.getPosition()+.01);
+        } else if (improvedGamepad1.dpad_down.isPressed()) {
+            robot.leftGrabber.setPosition(robot.leftGrabber.getPosition()-.01);
+            robot.rightGrabber.setPosition(robot.rightGrabber.getPosition()-.01);
+        }
+
+        //CRANE CONTROL
+        if (improvedGamepad2.right_stick.y.getValue() > 0) {
+            robot.crane.setPosition(robot.crane.getPosition()+.01);
+        } else if (improvedGamepad2.right_stick.y.getValue() < 0) {
+            robot.crane.setPosition(robot.crane.getPosition()-.01);
+        }
+
+        //LIFT CONTROL
+        if (improvedGamepad2.left_stick.y.isPressed()) {
+            robot.lift.setPower(improvedGamepad2.left_stick.y.getValue());
         } else {
             robot.lift.setPower(0);
         }
-//CRANE CONTROL
+
+        // TODO use a/b/x/y to move lift up/down left amounts
+        
+        //JAW CONTROL
         if (gamepad2.right_bumper) {
-            robot.crane.setPosition(robot.crane.getPosition() + .005);
+            robot.jaw.setPosition(robot.crane.getPosition() + .005);
         } else if (gamepad2.left_bumper) {
-            robot.crane.setPosition(robot.crane.getPosition() - .005);
+            robot.jaw.setPosition(robot.crane.getPosition() - .005);
         }
-//WRIST CONTROL
-        if (gamepad2.x) {
+        //WRIST CONTROL
+        if (improvedGamepad2.right_trigger.isPressed()) {
             robot.wrist.setPosition(robot.wrist.getPosition() + .01);
-        } else if (gamepad2.y) {
+        } else if (improvedGamepad2.left_trigger.isPressed()) {
             robot.wrist.setPosition(robot.wrist.getPosition() - .01);
         }
-//JAW CONTROL
-        if (gamepad2.a) {
-            robot.jaw.setPosition(robot.jaw.getPosition() + .01);
-        } else if (gamepad2.b) {
-            robot.jaw.setPosition(robot.jaw.getPosition() - .01);
-        }
+
 
         telemetry.addData("FL", String.format("angle: %.2f, mod: %d, pos: %.2f",
                 robot.swerveWheels.frontLeftMotor.targetAngle, robot.swerveWheels.frontLeftMotor.modifier, robot.swerveWheels.frontLeftMotor.wheelAngleToServoPosition()));
@@ -87,7 +97,7 @@ public class SkystoneTeleOp extends OpMode {
         telemetry.addData("frontRightMotor", String.format("min: %f max:%f", robot.swerveWheels.frontRightMotor.minWheelAngle, robot.swerveWheels.frontRightMotor.maxWheelAngle));
         telemetry.addData("backLeftMotor", String.format("min: %f max:%f", robot.swerveWheels.backLeftMotor.minWheelAngle, robot.swerveWheels.backLeftMotor.maxWheelAngle));
         telemetry.addData("backRightMotor", String.format("min: %f max:%f", robot.swerveWheels.backRightMotor.minWheelAngle, robot.swerveWheels.backRightMotor.maxWheelAngle));
-        
+
         telemetry.update();
     }
 
