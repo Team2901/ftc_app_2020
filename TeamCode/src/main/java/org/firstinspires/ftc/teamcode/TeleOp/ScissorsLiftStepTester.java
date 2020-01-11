@@ -24,7 +24,7 @@ public class ScissorsLiftStepTester extends OpMode {
 
     @Override
     public void init() {
-        impGamepad = new ImprovedGamepad(this.gamepad2, this.timer, "GP2")
+        impGamepad = new ImprovedGamepad(this.gamepad2, this.timer, "GP2");
         robot.init(hardwareMap);
         DcMotor lift = this.hardwareMap.dcMotor.get("lift");
         lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
