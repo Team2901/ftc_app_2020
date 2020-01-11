@@ -194,8 +194,12 @@ public class ToolBox extends LinearOpMode {
     public void platformParkInner(int Team){
         //Step one: turn wheels 90 degrees counterclockwise and go forward 1 ft and lower grabbers.
         moveInches(- 90,12 , 0.5 );
-        //Step two: turn wheels 90 degrees clockwise and go forward 1 ft.
+        robot.rightGrabber.setPosition (robot.RIGHT_GRABBER_MAX);
+        robot.leftGrabber.setPosition(robot.LEFT_GRABBER_MIN);
+        //Step two: turn wheels 90 degrees clockwise and go forward 1 ft and raise grabbers.
         moveInches(0,12 , 0.5);
+        robot.rightGrabber.setPosition (robot.RIGHT_GRABBER_MAX);
+        robot.leftGrabber.setPosition(robot.LEFT_GRABBER_MIN);
         //Step three: turn wheels 90 degrees counterclockwise and go forward 1.5 ft.
         moveInches(- 90, 18  , 0.5);
         //Step four: stop
