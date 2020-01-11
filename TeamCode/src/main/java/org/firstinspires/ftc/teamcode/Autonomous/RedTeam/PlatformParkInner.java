@@ -21,6 +21,7 @@ public class PlatformParkInner extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         robot.init(hardwareMap);
+        robot.swerveStraight(0, 0);
         waitForStart();
         toolBox.platformParkInner(Color.RED);
     }

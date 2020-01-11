@@ -129,7 +129,6 @@ public class BaseSkyStoneHardware {
     public Servo servoBackLeft;
     public Servo servoBackRight;
 
-    public Servo bridgeTickler;
     public Servo crane;
     public Servo jaw;
     public Servo wrist;
@@ -170,7 +169,6 @@ public class BaseSkyStoneHardware {
         servoBackLeft = hardwareMap.servo.get("servoBackLeft");
         servoBackRight = hardwareMap.servo.get("servoBackRight");
 
-        bridgeTickler = hardwareMap.servo.get("bridgeTickler");
         crane = hardwareMap.servo.get("crane");
         jaw = hardwareMap.servo.get("jaw");
         wrist = hardwareMap.servo.get("wrist");
