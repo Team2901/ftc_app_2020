@@ -24,8 +24,6 @@ public class ToolBox extends LinearOpMode {
     public BaseSkyStoneHardware robot = null;
     public static final int GO_TO_ANGLE_BUFFER = 5;
 
-
-
     public ToolBox(BaseSkyStoneHardware robot){
 
         this.robot = robot;
@@ -36,7 +34,7 @@ public class ToolBox extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         robot.init(hardwareMap);
-        swerveStraight(0, 0);
+        robot.swerveStraight(0, 0);
 
         waitForStart();
 
@@ -45,11 +43,9 @@ public class ToolBox extends LinearOpMode {
         }
     }
 
-
     public void turnTo (double angle){
 
         goToAngle(robot.getAngle(), angle);
-
     }
 
     public void moveInches (double angle, double inches, double power){
@@ -59,114 +55,24 @@ public class ToolBox extends LinearOpMode {
         robot.setWheelMotorMode(DcMotor.RunMode.RUN_TO_POSITION);
         robot.setWheelTargetPositions((int)(-inches*robot.inchesToEncoder));
 
-        swerveStraight(angle,power);
+        robot.swerveStraight(angle,power);
 
         while (robot.wheelsAreBusy() && opModeIsActive());
 
         robot.setWheelMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.setWheelMotorMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        swerveStraight( angle,0);
-
-
-    }
-
-    public double joystickPositionToWheelAngle(double joystickPositionX, double joystickPositionY) {
-        double wheelAngleRad = Math.atan2(joystickPositionY, joystickPositionX);
-        double wheelAngle = AngleUtilities.radiansDegreesTranslation(wheelAngleRad) - 90;
-        return AngleUtilities.getPositiveNormalizedAngle(wheelAngle);
-    }
-
-    public double getPower(double x, double y, boolean pause) {
-        if (pause) {
-            return 0;
-        } else {
-            return AngleUtilities.getRadius(x,y);
-        }
-    }
-
-    public void swerveStraight(double joyWheelAngle, double power) {
-        swerveMove(joyWheelAngle, joyWheelAngle, joyWheelAngle, joyWheelAngle, power);
-    }
-
-    public void swerveTurn(double power) {
-
-        double fLAngle = joystickPositionToWheelAngle(-1, -1);
-        double fRAngle = joystickPositionToWheelAngle(-1, 1);
-        double bLAngle = joystickPositionToWheelAngle(1, -1);
-        double bRAngle = joystickPositionToWheelAngle(1, 1);
-
-        swerveMove(fLAngle, fRAngle, bLAngle, bRAngle, power);
-    }
-
-    public void swerveMove(double fLAngle, double fRAngle, double bLAngle, double bRAngle, double power) {
-
-        angleCheck(fLAngle, robot.swerveWheels.frontLeftMotor);
-        angleCheck(fRAngle, robot.swerveWheels.frontRightMotor);
-        angleCheck(bLAngle, robot.swerveWheels.backLeftMotor);
-        angleCheck(bRAngle, robot.swerveWheels.backRightMotor);
-
-        double servoPositionfL = robot.swerveWheels.frontLeftMotor.wheelAngleToServoPosition();
-        double servoPositionfR = robot.swerveWheels.frontRightMotor.wheelAngleToServoPosition();
-        double servoPositionbL = robot.swerveWheels.backLeftMotor.wheelAngleToServoPosition();
-        double servoPositionbR = robot.swerveWheels.backRightMotor.wheelAngleToServoPosition();
-
-        robot.setWheelServoPosition(servoPositionfL, servoPositionfR, servoPositionbL, servoPositionbR);
-
-        double frontLeftPower = robot.swerveWheels.frontLeftMotor.modifier * power;
-        double frontRightPower = robot.swerveWheels.frontRightMotor.modifier * power;
-        double backLeftPower = robot.swerveWheels.backLeftMotor.modifier * power;
-        double backRightPower = robot.swerveWheels.backRightMotor.modifier * power;
-
-        robot.setWheelMotorPower(frontLeftPower, frontRightPower, backLeftPower, backRightPower);
-    }
-
-    public void angleCheck(double goal, BaseSkyStoneHardware.SwerveWheel swerveWheel) {
-
-        double start = swerveWheel.targetAngle;
-
-        goal = getNormalizedAngle(goal);
-
-        double dAngleForward = getNormalizedAngle(goal - start);
-        double targetAngleForward = dAngleForward + start;
-        boolean forwardPossible = (swerveWheel.minWheelAngle <= targetAngleForward && targetAngleForward <= swerveWheel.maxWheelAngle);
-
-        double dAngleBackward = getNormalizedAngle(dAngleForward + 180);
-        double targetAngleBackward = dAngleBackward + start;
-        boolean backwardPossible = (swerveWheel.minWheelAngle <= targetAngleBackward && targetAngleBackward <= swerveWheel.maxWheelAngle);
-
-        boolean goForward;
-
-        if (forwardPossible && backwardPossible) {
-            goForward = (Math.abs(dAngleForward) < Math.abs(dAngleBackward));
-        } else {
-            goForward = forwardPossible;
-        }
-
-        double targetAngle;
-        int modifier;
-
-        if (goForward) {
-            targetAngle = targetAngleForward;
-            modifier = 1;
-
-        } else {
-            targetAngle = targetAngleBackward;
-            modifier = -1;
-        }
-
-        swerveWheel.setTargetAndModifier(targetAngle, modifier);
+        robot.swerveStraight( angle,0);
     }
 
     public void goToAngle(double angleStart, double angleGoal) {
-
 
         double angleCurrent = angleStart;
 
         while ((Math.abs(angleGoal - angleCurrent) > GO_TO_ANGLE_BUFFER) && opModeIsActive()) {
             angleCurrent = robot.getAngle();
             double power = getPower(angleCurrent, angleGoal, angleStart);
-            swerveTurn(power);
+            robot.swerveTurn(power);
 
             telemetry.addData("Start Angle ", "%.1f", angleStart);
             telemetry.addData("Goal Angle  ", "%.1f", angleGoal);
@@ -176,7 +82,7 @@ public class ToolBox extends LinearOpMode {
             telemetry.update();
 
         }
-        swerveTurn(0);
+        robot.swerveTurn(0);
         telemetry.addData("Is Stopped" , "");
         telemetry.update();
     }
