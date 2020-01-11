@@ -25,7 +25,6 @@ public class BuilderSkystoneHardware {
     //This is the angle Phi that we defined in the math done before this
     public final static double TURN_ANGLE = Math.atan(WIDTH_OF_ROBOT/ LENGTH_OF_ROBOT);
     public final static int SERVO_MAX_ANGLE = 280;
-    public final static int SERVO_MIN_ANGLE = 0;
     public final static double FRONT_LEFT_OFFSET = 0.04;
     public final static double FRONT_RIGHT_OFFSET = .33;
     public final static double BACK_LEFT_OFFSET = .14;

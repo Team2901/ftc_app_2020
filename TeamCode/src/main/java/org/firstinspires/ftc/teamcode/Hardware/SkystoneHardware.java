@@ -23,15 +23,13 @@ public class SkystoneHardware {
     //This is the angle Phi that we defined in the math done before this
     public final static double TURN_ANGLE = Math.atan(WIDTH_OF_ROBOT/ LENGTH_OF_ROBOT);
     public final static int SERVO_MAX_ANGLE = 2727;
-    public final static int SERVO_MIN_ANGLE = 0;
     public final static double FRONT_LEFT_OFFSET = .0;
     public final static double FRONT_RIGHT_OFFSET = .0;
     public final static double BACK_LEFT_OFFSET = .0;
     public final static double BACK_RIGHT_OFFSET = .0;
+
     public final static double WHEEL_MIN_ANGLE = 0;
     public final static double WHEEL_MAX_ANGLE =  SERVO_MAX_ANGLE*WHEEL_SERVO_GEAR_RATIO;
-    public int targetPosition=0;
-
 
     public class SwerveWheel {
         public double targetAngle = 0;
@@ -203,6 +201,7 @@ public class SkystoneHardware {
 
         }
     }
+
     public boolean isOkayToOpen() {
         if(crane.getPosition()> .3) {
             if (lift.getCurrentPosition() == 0) {
@@ -216,6 +215,7 @@ public class SkystoneHardware {
         }
         return true;
     }
+
     public void moveStraight (double setPower, int targetPosition){
 
         frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -252,6 +252,12 @@ public class SkystoneHardware {
         //Step four: stop
     }
 
+    public void setWheelTargetPositions (int position){
+        frontLeft.setTargetPosition(position*swerveWheels.frontLeftMotor.modifier);
+        frontRight.setTargetPosition(position*swerveWheels.frontRightMotor.modifier);
+        backLeft.setTargetPosition(position*swerveWheels.backLeftMotor.modifier);
+        backRight.setTargetPosition(position*swerveWheels.backRightMotor.modifier);
+    }
 
 }
 
