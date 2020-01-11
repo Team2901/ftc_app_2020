@@ -20,7 +20,7 @@ public class BuilderSkystoneTeleOp extends OpMode {
     @Override
     public void init() {
         robot.init(hardwareMap);
-        swerveStraight(0, 0);
+        robot.swerveStraight(0, 0);
     }
 
     @Override
@@ -30,11 +30,11 @@ public class BuilderSkystoneTeleOp extends OpMode {
 
         if (Math.abs(gamepad1.right_stick_x) > .1) {
             double power = getPower(gamepad1.right_stick_x, 0, gamepad1.left_bumper);
-            swerveTurn(power);
+            robot.swerveTurn(power);
         } else if (AngleUtilities.getRadius(joystickPositionX, joystickPositionY) > .2) {
             double power = getPower(joystickPositionX, joystickPositionY, gamepad1.left_bumper);
             double joyWheelAngle = joystickPositionToWheelAngle(joystickPositionX, joystickPositionY);
-            swerveStraight(joyWheelAngle, power);
+            robot.swerveStraight(joyWheelAngle, power);
         } else {
             robot.setWheelMotorPower(0, 0, 0, 0);
         }
@@ -90,78 +90,5 @@ public class BuilderSkystoneTeleOp extends OpMode {
         } else {
             return AngleUtilities.getRadius(x, y);
         }
-    }
-
-    public void swerveStraight(double joyWheelAngle, double power) {
-        swerveMove(joyWheelAngle, joyWheelAngle, joyWheelAngle, joyWheelAngle, power);
-    }
-
-    public void swerveTurn(double power) {
-
-        double fLAngle = joystickPositionToWheelAngle(-1, -1);
-        double fRAngle = joystickPositionToWheelAngle(-1, 1);
-        double bLAngle = joystickPositionToWheelAngle(1, -1);
-        double bRAngle = joystickPositionToWheelAngle(1, 1);
-
-        swerveMove(fLAngle, fRAngle, bLAngle, bRAngle, power);
-    }
-
-    public void swerveMove(double fLAngle, double fRAngle, double bLAngle, double bRAngle, double power) {
-
-        angleCheck(fLAngle, robot.swerveWheels.frontLeftMotor);
-        angleCheck(fRAngle, robot.swerveWheels.frontRightMotor);
-        angleCheck(bLAngle, robot.swerveWheels.backLeftMotor);
-        angleCheck(bRAngle, robot.swerveWheels.backRightMotor);
-
-        double servoPositionfL = robot.swerveWheels.frontLeftMotor.wheelAngleToServoPosition();
-        double servoPositionfR = robot.swerveWheels.frontRightMotor.wheelAngleToServoPosition();
-        double servoPositionbL = robot.swerveWheels.backLeftMotor.wheelAngleToServoPosition();
-        double servoPositionbR = robot.swerveWheels.backRightMotor.wheelAngleToServoPosition();
-
-        robot.setWheelServoPosition(servoPositionfL, servoPositionfR, servoPositionbL, servoPositionbR);
-
-        double frontLeftPower = robot.swerveWheels.frontLeftMotor.modifier * power;
-        double frontRightPower = robot.swerveWheels.frontRightMotor.modifier * power;
-        double backLeftPower = robot.swerveWheels.backLeftMotor.modifier * power;
-        double backRightPower = robot.swerveWheels.backRightMotor.modifier * power;
-
-        robot.setWheelMotorPower(frontLeftPower, frontRightPower, backLeftPower, backRightPower);
-    }
-
-    public void angleCheck(double goal, BaseSkyStoneHardware.SwerveWheel swerveWheel) {
-
-        double start = swerveWheel.targetAngle;
-
-        goal = getNormalizedAngle(goal);
-
-        double dAngleForward = getNormalizedAngle(goal - start);
-        double targetAngleForward = dAngleForward + start;
-        boolean forwardPossible = (swerveWheel.minWheelAngle <= targetAngleForward && targetAngleForward <= swerveWheel.maxWheelAngle);
-
-        double dAngleBackward = getNormalizedAngle(dAngleForward + 180);
-        double targetAngleBackward = dAngleBackward + start;
-        boolean backwardPossible = (swerveWheel.minWheelAngle <= targetAngleBackward && targetAngleBackward <= swerveWheel.maxWheelAngle);
-
-        boolean goForward;
-
-        if (forwardPossible && backwardPossible) {
-            goForward = (Math.abs(dAngleForward) < Math.abs(dAngleBackward));
-        } else {
-            goForward = forwardPossible;
-        }
-
-        double targetAngle;
-        int modifier;
-
-        if (goForward) {
-            targetAngle = targetAngleForward;
-            modifier = 1;
-
-        } else {
-            targetAngle = targetAngleBackward;
-            modifier = -1;
-        }
-
-        swerveWheel.setTargetAndModifier(targetAngle, modifier);
     }
 }

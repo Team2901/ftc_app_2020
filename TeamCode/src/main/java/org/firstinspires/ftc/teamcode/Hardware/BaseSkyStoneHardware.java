@@ -15,6 +15,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
 
+import static org.firstinspires.ftc.teamcode.Utility.AngleUtilities.getNormalizedAngle;
+
 public class BaseSkyStoneHardware {
 
     public double wheelServoGearRatio;
@@ -274,5 +276,84 @@ public class BaseSkyStoneHardware {
         backRight.setTargetPosition(position*swerveWheels.backRightMotor.modifier);
     }
 
+    public void angleCheck(double goal, BaseSkyStoneHardware.SwerveWheel swerveWheel) {
+
+        double start = swerveWheel.targetAngle;
+
+        goal = getNormalizedAngle(goal);
+
+        double dAngleForward = getNormalizedAngle(goal - start);
+        double targetAngleForward = dAngleForward + start;
+        boolean forwardPossible = (swerveWheel.minWheelAngle <= targetAngleForward && targetAngleForward <= swerveWheel.maxWheelAngle);
+
+        double dAngleBackward = getNormalizedAngle(dAngleForward + 180);
+        double targetAngleBackward = dAngleBackward + start;
+        boolean backwardPossible = (swerveWheel.minWheelAngle <= targetAngleBackward && targetAngleBackward <= swerveWheel.maxWheelAngle);
+
+        boolean goForward;
+
+        if (forwardPossible && backwardPossible) {
+            goForward = (Math.abs(dAngleForward) < Math.abs(dAngleBackward));
+        } else {
+            goForward = forwardPossible;
+        }
+
+        double targetAngle;
+        int modifier;
+
+        if (goForward) {
+            targetAngle = targetAngleForward;
+            modifier = 1;
+
+        } else {
+            targetAngle = targetAngleBackward;
+            modifier = -1;
+        }
+
+        swerveWheel.setTargetAndModifier(targetAngle, modifier);
+    }
+
+    public double joystickPositionToWheelAngle(double joystickPositionX, double joystickPositionY) {
+        double wheelAngleRad = Math.atan2(joystickPositionY, joystickPositionX);
+        double wheelAngle = AngleUtilities.radiansDegreesTranslation(wheelAngleRad) - 90;
+        return AngleUtilities.getPositiveNormalizedAngle(wheelAngle);
+
+    }
+
+    public void swerveStraight(double joyWheelAngle, double power) {
+        swerveMove(joyWheelAngle, joyWheelAngle, joyWheelAngle, joyWheelAngle, power);
+    }
+
+    public void swerveTurn(double power) {
+
+        double fLAngle = joystickPositionToWheelAngle(-1, -1);
+        double fRAngle = joystickPositionToWheelAngle(-1, 1);
+        double bLAngle = joystickPositionToWheelAngle(1, -1);
+        double bRAngle = joystickPositionToWheelAngle(1, 1);
+
+        swerveMove(fLAngle, fRAngle, bLAngle, bRAngle, power);
+    }
+
+    public void swerveMove(double fLAngle, double fRAngle, double bLAngle, double bRAngle, double power) {
+
+        angleCheck(fLAngle, swerveWheels.frontLeftMotor);
+        angleCheck(fRAngle, swerveWheels.frontRightMotor);
+        angleCheck(bLAngle, swerveWheels.backLeftMotor);
+        angleCheck(bRAngle, swerveWheels.backRightMotor);
+
+        double servoPositionfL = swerveWheels.frontLeftMotor.wheelAngleToServoPosition();
+        double servoPositionfR = swerveWheels.frontRightMotor.wheelAngleToServoPosition();
+        double servoPositionbL = swerveWheels.backLeftMotor.wheelAngleToServoPosition();
+        double servoPositionbR = swerveWheels.backRightMotor.wheelAngleToServoPosition();
+
+        setWheelServoPosition(servoPositionfL, servoPositionfR, servoPositionbL, servoPositionbR);
+
+        double frontLeftPower = swerveWheels.frontLeftMotor.modifier * power;
+        double frontRightPower = swerveWheels.frontRightMotor.modifier * power;
+        double backLeftPower = swerveWheels.backLeftMotor.modifier * power;
+        double backRightPower = swerveWheels.backRightMotor.modifier * power;
+
+        setWheelMotorPower(frontLeftPower, frontRightPower, backLeftPower, backRightPower);
+    }
 }
 
