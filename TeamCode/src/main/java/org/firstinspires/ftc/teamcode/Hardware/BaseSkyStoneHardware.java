@@ -19,6 +19,7 @@ import static org.firstinspires.ftc.teamcode.Utility.AngleUtilities.getNormalize
 
 public class BaseSkyStoneHardware {
 
+    public final double inchesToEncoder;
     public double wheelServoGearRatio;
     public double widthOfRobot;
     public double lengthOfRobot;
@@ -36,7 +37,10 @@ public class BaseSkyStoneHardware {
                                 double frontLeftOffset,
                                 double frontRightOffset,
                                 double backLeftOffset,
-                                double backRightOffset) {
+                                double backRightOffset,
+                                double inchesToEncoder
+                                ) {
+        this.inchesToEncoder = inchesToEncoder;
         this.wheelServoGearRatio = wheelServoGearRatio;
         this.widthOfRobot = widthOfRobot;
         this.lengthOfRobot = lengthOfRobot;

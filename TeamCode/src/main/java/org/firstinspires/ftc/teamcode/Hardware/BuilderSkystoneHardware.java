@@ -34,6 +34,10 @@ public class BuilderSkystoneHardware extends BaseSkyStoneHardware{
     public final static double WHEEL_MIN_ANGLE = 0;
     public final static double WHEEL_MAX_ANGLE = SERVO_MAX_ANGLE * WHEEL_SERVO_GEAR_RATIO;
 
+
+    public static final double LEFT_GRABBER_MAX = 1.00;
+    public static final double RIGHT_GRABBER_MIN = 0;
+
     public BuilderSkystoneHardware(){
         super (WIDTH_OF_ROBOT,
                 LENGTH_OF_ROBOT,
@@ -42,7 +46,21 @@ public class BuilderSkystoneHardware extends BaseSkyStoneHardware{
                 FRONT_LEFT_OFFSET,
                 FRONT_RIGHT_OFFSET,
                 BACK_LEFT_OFFSET,
-                BACK_RIGHT_OFFSET);
+                BACK_RIGHT_OFFSET,
+                INCHES_TO_ENCODER);
+    }
+
+
+    public void init(HardwareMap hwMap) {
+
+        super.init(hwMap);
+
+        //Platform Grabber
+        Servo leftGrabber = hwMap.get(Servo.class, "Left_grabber");
+        Servo rightGrabber = hwMap.get(Servo.class, "Right_grabber");
+        leftGrabber.setPosition(LEFT_GRABBER_MAX);
+        rightGrabber.setPosition(RIGHT_GRABBER_MIN);
+
     }
 }
 
