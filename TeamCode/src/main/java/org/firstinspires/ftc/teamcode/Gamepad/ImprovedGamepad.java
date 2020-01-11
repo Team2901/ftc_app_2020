@@ -98,10 +98,8 @@ public class ImprovedGamepad {
 
         double time = timer.time();
 
-        left_stick_x.update(hardwareGamepad.left_stick_x, time);
-        left_stick_y.update(hardwareGamepad.left_stick_y, time);
-        right_stick_x.update(hardwareGamepad.right_stick_x, time);
-        right_stick_y.update(hardwareGamepad.right_stick_y, time);
+        left_stick.update(hardwareGamepad.left_stick_x, hardwareGamepad.left_stick_y, time);
+        right_stick.update(hardwareGamepad.right_stick_x, hardwareGamepad.right_stick_y, time);
         dpad_up.update(hardwareGamepad.dpad_up, time);
         dpad_down.update(hardwareGamepad.dpad_down, time);
         dpad_left.update(hardwareGamepad.dpad_left, time);

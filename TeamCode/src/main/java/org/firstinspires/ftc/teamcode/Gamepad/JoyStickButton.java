@@ -24,7 +24,7 @@ public class JoyStickButton extends FloatButton {
         super.update(radius, updateTime);
 
         x.update(xUpdateValue, updateTime);
-        y.update(xUpdateValue, updateTime);
+        y.update(yUpdateValue, updateTime);
 
         // offset by 90 degrees so that forward is angle 0
         this.rawAngle = (float) AngleUtilities.getAngle(y.getRawValue(), -x.getRawValue());
