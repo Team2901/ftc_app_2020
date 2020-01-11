@@ -232,7 +232,7 @@ public class CrawlToSkystone extends LinearOpMode {
 
     public void goToAngle ( double angleStart, double angleGoal){
 
-        swerveTurn(0);
+        robot.swerveTurn(0);
 
         ElapsedTime timer = new ElapsedTime();
 
@@ -267,82 +267,4 @@ public class CrawlToSkystone extends LinearOpMode {
         return Range.clip(basePower + stallPower, -1, 1);
     }
 
-
-    public void swerveTurn(double power) {
-
-        double fLAngle = joystickPositionToWheelAngle(-1, -1);
-        double fRAngle = joystickPositionToWheelAngle(-1, 1);
-        double bLAngle = joystickPositionToWheelAngle(1, -1);
-        double bRAngle = joystickPositionToWheelAngle(1, 1);
-
-        swerveMove(fLAngle, fRAngle, bLAngle, bRAngle, power);
-    }
-
-    public void swerveMove(double fLAngle, double fRAngle, double bLAngle, double bRAngle, double power) {
-
-        angleCheck(fLAngle, robot.swerveWheels.frontLeftMotor);
-        angleCheck(fRAngle, robot.swerveWheels.frontRightMotor);
-        angleCheck(bLAngle, robot.swerveWheels.backLeftMotor);
-        angleCheck(bRAngle, robot.swerveWheels.backRightMotor);
-
-        double servoPositionfL = robot.swerveWheels.frontLeftMotor.wheelAngleToServoPosition();
-        double servoPositionfR = robot.swerveWheels.frontRightMotor.wheelAngleToServoPosition();
-        double servoPositionbL = robot.swerveWheels.backLeftMotor.wheelAngleToServoPosition();
-        double servoPositionbR = robot.swerveWheels.backRightMotor.wheelAngleToServoPosition();
-
-        robot.setWheelServoPosition(servoPositionfL, servoPositionfR, servoPositionbL, servoPositionbR);
-
-        double frontLeftPower = robot.swerveWheels.frontLeftMotor.modifier * power;
-        double frontRightPower = robot.swerveWheels.frontRightMotor.modifier * power;
-        double backLeftPower = robot.swerveWheels.backLeftMotor.modifier * power;
-        double backRightPower = robot.swerveWheels.backRightMotor.modifier * power;
-
-        robot.setWheelMotorPower(frontLeftPower, frontRightPower, backLeftPower, backRightPower);
-    }
-
-
-
-    public double joystickPositionToWheelAngle(double joystickPositionX, double joystickPositionY) {
-        double wheelAngleRad = Math.atan2(joystickPositionY, joystickPositionX);
-        double wheelAngle = AngleUtilities.radiansDegreesTranslation(wheelAngleRad) - 90;
-        return AngleUtilities.getPositiveNormalizedAngle(wheelAngle);
-    }
-
-
-    public void angleCheck(double goal, BaseSkyStoneHardware.SwerveWheel swerveWheel) {
-
-        double start = swerveWheel.targetAngle;
-
-        goal = getNormalizedAngle(goal);
-
-        double dAngleForward = getNormalizedAngle(goal - start);
-        double targetAngleForward = dAngleForward + start;
-        boolean forwardPossible = (WHEEL_MIN_ANGLE <= targetAngleForward && targetAngleForward <= WHEEL_MAX_ANGLE);
-
-        double dAngleBackward = getNormalizedAngle(dAngleForward + 180);
-        double targetAngleBackward = dAngleBackward + start;
-        boolean backwardPossible = (WHEEL_MIN_ANGLE <= targetAngleBackward && targetAngleBackward <= WHEEL_MAX_ANGLE);
-
-        boolean goForward;
-
-        if (forwardPossible && backwardPossible) {
-            goForward = (Math.abs(dAngleForward) < Math.abs(dAngleBackward));
-        } else {
-            goForward = forwardPossible;
-        }
-
-        double targetAngle;
-        int modifier;
-
-        if (goForward) {
-            targetAngle = targetAngleForward;
-            modifier = 1;
-
-        } else {
-            targetAngle = targetAngleBackward;
-            modifier = -1;
-        }
-
-        swerveWheel.setTargetAndModifier(targetAngle, modifier);
-    }
 }

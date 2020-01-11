@@ -273,7 +273,7 @@ public class BaseSkyStoneHardware {
         //Step four: stop
     }
 
-    public void setWheelTargetPositions (int position){
+    public void setWheelTargetPositions(int position){
         frontLeft.setTargetPosition(position*swerveWheels.frontLeftMotor.modifier);
         frontRight.setTargetPosition(position*swerveWheels.frontRightMotor.modifier);
         backLeft.setTargetPosition(position*swerveWheels.backLeftMotor.modifier);
