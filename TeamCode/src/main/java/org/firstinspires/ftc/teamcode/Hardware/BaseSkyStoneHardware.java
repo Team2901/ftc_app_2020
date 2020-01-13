@@ -155,8 +155,8 @@ public class BaseSkyStoneHardware {
         backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        leftGrabber = hwMap.get(Servo.class, "Left_grabber");
-        rightGrabber = hwMap.get(Servo.class, "Right_grabber");
+        leftGrabber = hwMap.get(Servo.class, "leftGrabber");
+        rightGrabber = hwMap.get(Servo.class, "rightGrabber");
         leftGrabber.setPosition(LEFT_GRABBER_MAX);
         rightGrabber.setPosition(RIGHT_GRABBER_MIN);
 
