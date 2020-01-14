@@ -3,7 +3,9 @@ package org.firstinspires.ftc.teamcode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.Gamepad.ImprovedGamepad;
 import org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware;
 import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
 
@@ -25,68 +27,16 @@ public class OneControllerSkystoneTeleOp extends OpMode {
     public final static double FRONT_RIGHT_OFFSET = .13;
     public final static double BACK_LEFT_OFFSET = .1;
     public final static double BACK_RIGHT_OFFSET = .11;
-    private boolean isYPressed;
-    private boolean isXPressed;
-    private boolean isBPressed;
-    private boolean isAPressed;
+
     double power = 0;
     int step = 0;
     int topStep = 0;
 
+    public ElapsedTime timer = new ElapsedTime();
+    public ImprovedGamepad improvedGamepad1;
+    public ImprovedGamepad improvedGamepad2;
+
     public final static double WHEEL_MAX_ANGLE = SERVO_MAX_ANGLE * WHEEL_SERVO_GEAR_RATIO;
-
-    public class SwerveWheel {
-        double targetAngle = 0;
-        int modifier = 1;
-        double offset = 0;
-
-        public void setTargetAndModifier(double targetAngle, int modifier) {
-            this.targetAngle = targetAngle;
-            this.modifier = modifier;
-        }
-
-        public double wheelAngleToServoPosition(double wheelAngle) {
-            double servoAngle = wheelAngleToServoAngle(wheelAngle);
-            double servoPosition = servoAngleToServoPosition(servoAngle);
-
-            return servoPosition;
-
-        }
-
-        public double wheelAngleToServoPosition() {
-
-            return wheelAngleToServoPosition(targetAngle);
-
-        }
-
-        public double wheelAngleToServoAngle(double wheelAngle) {
-            double servoAngle = wheelAngle / WHEEL_SERVO_GEAR_RATIO;
-            return servoAngle;
-        }
-
-        public double servoAngleToServoPosition(double servoAngle) {
-            double servoPosition = (servoAngle / SERVO_MAX_ANGLE) + offset;
-            return servoPosition;
-        }
-
-        public SwerveWheel(double offset) {
-            this.offset = offset;
-        }
-    }
-
-    public class SwerveWheels {
-        SwerveWheel frontLeftMotor = new SwerveWheel(FRONT_LEFT_OFFSET);
-        SwerveWheel frontRightMotor = new SwerveWheel(FRONT_RIGHT_OFFSET);
-        SwerveWheel backLeftMotor = new SwerveWheel(BACK_LEFT_OFFSET);
-        SwerveWheel backRightMotor = new SwerveWheel(BACK_RIGHT_OFFSET);
-
-        public void setTargetAndModifier(double targetAngle, int modifier) {
-            frontLeftMotor.setTargetAndModifier(targetAngle, modifier);
-            frontRightMotor.setTargetAndModifier(targetAngle, modifier);
-            backLeftMotor.setTargetAndModifier(targetAngle, modifier);
-            backRightMotor.setTargetAndModifier(targetAngle, modifier);
-        }
-    }
 
     SkystoneHardware robot = new SkystoneHardware();
 
@@ -95,10 +45,17 @@ public class OneControllerSkystoneTeleOp extends OpMode {
         robot.init(hardwareMap);
         //The y position is -1 to correct the joystick directions
         robot.swerveStraight(0, 0);
+
+        this.improvedGamepad1 = new ImprovedGamepad(gamepad1, timer, "g1");
+        this.improvedGamepad2 = new ImprovedGamepad(gamepad2, timer, "g2");
     }
 
     @Override
     public void loop() {
+
+        improvedGamepad1.update();
+        improvedGamepad2.update();
+
         double joystickPositionX = gamepad1.left_stick_x;
         double joystickPositionY = -gamepad1.left_stick_y;
 
@@ -107,12 +64,13 @@ public class OneControllerSkystoneTeleOp extends OpMode {
         telemetry.addData("X", joystickPositionX);
         telemetry.addData("Y", joystickPositionY);
 
-        if (Math.abs(gamepad1.right_stick_x) > .1) {
-            double power = getWheelPower(gamepad1.right_stick_x, 0, gamepad1.left_bumper);
+        // WHHEL CONTROL
+        if (improvedGamepad1.right_stick_x.isPressed()) {
+            double power = getWheelPower(improvedGamepad1.right_stick.x.getValue(), gamepad1.left_bumper);
             robot.swerveTurn(power);
-        } else if (AngleUtilities.getRadius(joystickPositionX, joystickPositionY) > .2) {
-            double power = getWheelPower(joystickPositionX, joystickPositionY, gamepad1.left_bumper);
-            double joyWheelAngle = joystickPositionToWheelAngle(joystickPositionX, joystickPositionY);
+        } else if (improvedGamepad1.left_stick.isPressed()) {
+            double power = getWheelPower(improvedGamepad1.left_stick.getValue(), gamepad1.left_bumper);
+            double joyWheelAngle = improvedGamepad1.left_stick.getAngel();
             robot.swerveStraight(joyWheelAngle, power);
         } else {
             robot.setWheelMotorPower(0,0,0,0);
@@ -133,10 +91,10 @@ public class OneControllerSkystoneTeleOp extends OpMode {
                 robot.crane.setPosition(robot.crane.getPosition() - .005);
             }
 
-            if (gamepad1.x) {
+            if (gamepad1.right_trigger >.3) {
                 robot.wrist.setPosition(robot.wrist.getPosition() + .01);
 
-            } else if (gamepad1.y) {
+            } else if (gamepad1.left_trigger>.3) {
                 robot.wrist.setPosition(robot.wrist.getPosition() - .01);
             }
             telemetry.addData("wrist Position:", robot.wrist.getPosition());
@@ -164,11 +122,11 @@ public class OneControllerSkystoneTeleOp extends OpMode {
         telemetry.update();
     }
 
-    public double getWheelPower(double x, double y, boolean pause) {
+    public double getWheelPower(double radius, boolean pause) {
         if (pause) {
             return 0;
         } else {
-            return AngleUtilities.getRadius(x,y) * WHEEL_POWER_RATIO;
+            return radius * WHEEL_POWER_RATIO;
         }
     }
 
@@ -200,7 +158,7 @@ public class OneControllerSkystoneTeleOp extends OpMode {
             }
         }
         else{
-            if (this.gamepad1.y && !isYPressed) {
+            if (this.improvedGamepad1.y.isInitialPress()) {
                 step = step + 1;
                 if (step > 5) {
                     step = 5;
@@ -208,7 +166,7 @@ public class OneControllerSkystoneTeleOp extends OpMode {
                 power = .5;
                 //up by one
             }
-            if (this.gamepad1.a && !isAPressed) {
+            if (this.improvedGamepad1.a.isInitialPress()) {
                 step = step - 1;
                 if (step < 0) {
                     step = 0;
@@ -217,14 +175,14 @@ public class OneControllerSkystoneTeleOp extends OpMode {
                 //down by one
             }
 
-            if (this.gamepad1.b && !isBPressed) {
+            if (this.improvedGamepad1.b.isInitialPress()) {
                 topStep = step;
                 step = 0;
                 power = .7;
                 //to bottom
             }
 
-            if (this.gamepad1.x && !isXPressed) {
+            if (this.improvedGamepad1.x.isInitialPress()) {
                 step = topStep;
                 power = .7;
                 //to top
@@ -235,11 +193,6 @@ public class OneControllerSkystoneTeleOp extends OpMode {
         telemetry.addData("Step", step);
         telemetry.addData("Top Step", topStep);
         telemetry.update();
-
-        isYPressed = gamepad1.y;
-        isXPressed = gamepad1.x;
-        isBPressed = gamepad1.b;
-        isAPressed = gamepad1.a;
 
 
         //DcMotor lift = this.hardwareMap.dcMotor.get("lift");
