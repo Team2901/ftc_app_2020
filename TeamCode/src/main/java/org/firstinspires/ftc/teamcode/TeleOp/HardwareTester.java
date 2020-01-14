@@ -23,12 +23,12 @@ public class HardwareTester extends OpMode {
 
     String[] motorNames = {"frontLeft","frontRight","backLeft","backRight","lift"};
     String[] servoNames = {"servoFrontLeft","servoFrontRight","servoBackLeft","servoBackRight","jaw"
-            , "crane", "wrist"};
+            , "crane", "wrist", "leftGrabber", "rightGrabber"};
 
     int motorIndex;
 
     Servo[] servos = {robot.servoFrontLeft,robot.servoFrontRight,robot.servoBackLeft,robot.servoBackRight
-    , robot.jaw, robot.crane, robot.wrist};
+    , robot.jaw, robot.crane, robot.wrist, robot.leftGrabber, robot.rightGrabber};
     int servoIndex;
 
     ArrayList<DcMotor> motorArrayList = new ArrayList<>();
