@@ -20,10 +20,11 @@ import static org.firstinspires.ftc.teamcode.Utility.AngleUtilities.getNormalize
 
 public class BaseSkyStoneHardware {
 
-    public static final double LEFT_GRABBER_MIN = 0.25;
-    public static final double LEFT_GRABBER_MAX = 1.00;
-    public static final double RIGHT_GRABBER_MIN = 0;
-    public static final double RIGHT_GRABBER_MAX = 0.75;
+    public static final double GRABBER_MIN = 0.25;
+    public static final double GRABBER_MAX = 0.75;
+    public static final double ROBOT_FRONT_ANGLE = 0;
+    public static final double ROBOT_RIGHT_ANGLE = -90;
+    public static final double ROBOT_LEFT_ANGLE = 90;
 
     public final double inchesToEncoder;
     public double wheelServoGearRatio;
@@ -157,8 +158,9 @@ public class BaseSkyStoneHardware {
 
         leftGrabber = hwMap.get(Servo.class, "leftGrabber");
         rightGrabber = hwMap.get(Servo.class, "rightGrabber");
-        leftGrabber.setPosition(LEFT_GRABBER_MAX);
-        rightGrabber.setPosition(RIGHT_GRABBER_MIN);
+        leftGrabber.setDirection(Servo.Direction.REVERSE);
+        leftGrabber.setPosition(GRABBER_MIN);
+        rightGrabber.setPosition(GRABBER_MIN);
 
 
         lift = hardwareMap.dcMotor.get("lift");

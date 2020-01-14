@@ -4,18 +4,14 @@ import android.annotation.SuppressLint;
 import android.graphics.Color;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Hardware.BaseSkyStoneHardware;
-import org.firstinspires.ftc.teamcode.Hardware.BuilderSkystoneHardware;
-import org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware;
 import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
-
-import static org.firstinspires.ftc.teamcode.Utility.AngleUtilities.getNormalizedAngle;
 
 @SuppressLint("DefaultLocale")
 @TeleOp(name = "ToolBox", group = "competition")
@@ -97,18 +93,33 @@ public class ToolBox extends LinearOpMode {
         return Range.clip(basePower + stallPower, -1, 1);
     }
 
-    public void platformParkInner(int Team){
-        //Step one: turn wheels 90 degrees counterclockwise and go forward 1 ft and lower grabbers.
-        moveInches(- 90,12 , 0.5 );
-        robot.rightGrabber.setPosition (robot.RIGHT_GRABBER_MAX);
-        robot.leftGrabber.setPosition(robot.LEFT_GRABBER_MIN);
-        //Step two: turn wheels 90 degrees clockwise and go forward 1 ft and raise grabbers.
-        moveInches(0,12 , 0.5);
-        robot.rightGrabber.setPosition (robot.RIGHT_GRABBER_MAX);
-        robot.leftGrabber.setPosition(robot.LEFT_GRABBER_MIN);
-        //Step three: turn wheels 90 degrees counterclockwise and go forward 1.5 ft.
-        moveInches(- 90, 18  , 0.5);
-        //Step four: stop
+    public void platformParkInner(int team){
+        double colorAngle;
+        if (team == Color.RED){
+            colorAngle = robot.ROBOT_LEFT_ANGLE;
+        }
+        else {
+            colorAngle = robot.ROBOT_RIGHT_ANGLE;
+
+        }
+        //Step one: turn wheels 90 degrees counterclockwise and go forward 28.5 inches and lower grabbers.
+        moveInches(colorAngle,28.5 , 0.5 );
+        robot.rightGrabber.setPosition (robot.GRABBER_MAX);
+        robot.leftGrabber.setPosition(robot.GRABBER_MAX);
+        ElapsedTime timer = new ElapsedTime();
+        while (timer.milliseconds()< 500);
+
+        //Step two: back up 26 inches and raise grabbers.
+        moveInches(colorAngle,-26 , 0.5);
+        robot.rightGrabber.setPosition (robot.GRABBER_MIN);
+        robot.leftGrabber.setPosition(robot.GRABBER_MIN);
+        //Step three: turn wheels 90 degrees counterclockwise and slide out 2 ft.
+        moveInches(robot.ROBOT_FRONT_ANGLE, -24  , 0.5);
+        //Step four: turn wheels to position 90, move forwards 2 ft
+        moveInches(colorAngle, 24, 0.5);
+        //Step Five: Turn Wheels to 0, move forward 2 ft
+        moveInches(robot.ROBOT_FRONT_ANGLE, -24, 0.5);
+        //Step  Six: Stop
     }
 }
 
