@@ -130,7 +130,12 @@ public class ToolBox extends LinearOpMode {
 
         float centerPercentDifference = 0;
         float stonePercentLocation = 0;
-        List<Recognition> updatedRecognitions = robot.tfod.getUpdatedRecognitions();
+
+        if (robot.webCamera.tfod == null) {
+            return 50;
+        }
+
+        List<Recognition> updatedRecognitions = robot.webCamera.tfod.getUpdatedRecognitions();
         if (updatedRecognitions != null) {
             telemetry.addData("# Object Detected", updatedRecognitions.size());
             // step through the list of recognitions and display boundary info.

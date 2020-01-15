@@ -9,14 +9,10 @@ import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
 
 import static org.firstinspires.ftc.teamcode.Utility.AngleUtilities.getNormalizedAngle;
@@ -33,6 +29,8 @@ public class BaseSkyStoneHardware {
     public static final double CLOSED_JAW = 0;
     public static final double LIFT_STEP = 750;
 
+    public static final String WEB_CAM_NAME = "Webcam 1";
+    
     public final double inchesToEncoder;
     public double wheelServoGearRatio;
     public double widthOfRobot;
@@ -45,16 +43,6 @@ public class BaseSkyStoneHardware {
     public double backRightOffset;
     public Servo leftGrabber;
     public Servo rightGrabber;
-
-    private static final String VUFORIA_KEY ="AYhwTMH/////AAABmR7oFvU9lEJTryl5O3jDSusAPmWSAx5CHlcB/" +
-            "IUoT+t7S1pJqTo7n3OwM4f2vVULA0T1uZVl9i61kWldhVqxK2+kyBNI4Uld8cYgHaNIQFsL/NsyBrb3Zl+1ZFBR" +
-            "tpI5BjPnJkivkDsGU0rAFd+vPkyZt0p3/Uz+50eEwMZrZh499IsfooWkGX1wobjOFeA7DYQU+5ulhc1Rdp4mqjj" +
-            "uKrS24Eop0MKJ+PwvNJhnN4LqIWQSfSABmcw9ogaeEsCzJdowrpXAcSo9d+ykJFZuB92iKN16lC9dRG3PABt26o" +
-            "lSUCeXJrC4g6bEldHlmTc51nRpix6i1sGfvNuxlATzuRf5dtX/YlQm2WvvG9TilHbz";
-
-    public VuforiaLocalizer vuforia;
-
-    public TFObjectDetector tfod;
 
     public static final String TFOD_MODEL_ASSET = "Skystone.tflite";
     public static final String LABEL_BUTTER = "Stone";
@@ -69,7 +57,7 @@ public class BaseSkyStoneHardware {
                                 double backLeftOffset,
                                 double backRightOffset,
                                 double inchesToEncoder
-                                ) {
+    ) {
         this.inchesToEncoder = inchesToEncoder;
         this.wheelServoGearRatio = wheelServoGearRatio;
         this.widthOfRobot = widthOfRobot;
@@ -163,6 +151,8 @@ public class BaseSkyStoneHardware {
 
     public double offset = 0;
 
+    public TensorFlowCamera webCamera = new TensorFlowCamera();
+
     public void init(HardwareMap hwMap) {
         hardwareMap = hwMap;
 
@@ -183,7 +173,6 @@ public class BaseSkyStoneHardware {
         leftGrabber.setPosition(GRABBER_MIN);
         rightGrabber.setPosition(GRABBER_MIN);
 
-
         lift = hardwareMap.dcMotor.get("lift");
 
         //Initialize all servos
@@ -197,7 +186,6 @@ public class BaseSkyStoneHardware {
         wrist = hardwareMap.servo.get("wrist");
 
         crane.setPosition(0);
-
 
         // setting up the gyroscope
         imu = hardwareMap.get(BNO055IMU.class, "imu");
@@ -215,33 +203,8 @@ public class BaseSkyStoneHardware {
         imu.initialize(parameters);
     }
 
-    public void initVuforia(LinearOpMode opMode) {
-        /*
-         * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
-         */
-        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
-
-        parameters.vuforiaLicenseKey = VUFORIA_KEY;
-        parameters.cameraName = opMode.hardwareMap.get(WebcamName.class, "Webcam 1");
-
-        //  Instantiate the Vuforia engine
-        vuforia = ClassFactory.getInstance().createVuforia(parameters);
-
-        // Loading trackables is not necessary for the TensorFlow Object Detection engine.
-
-        if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
-            initTfod();
-        } else {
-            opMode.telemetry.addData("Sorry!", "This device is not compatible with TFOD");
-        }
-
-        if (tfod != null) {
-            tfod.activate();
-        } else {
-            opMode.telemetry.addData("We Regret to Inform You", "Tensor flow has failed to initialize");
-        }
-        opMode.telemetry.addData(">", "Press Play to start op mode");
-        opMode.telemetry.update();
+    public String initWebCamera(HardwareMap hardwareMap) {
+        return webCamera.initWebCamera(hardwareMap, WEB_CAM_NAME,.8, TFOD_MODEL_ASSET, LABEL_BUTTER, LABEL_SKY_BUTTER);
     }
 
     public double getRawAngle() {
@@ -421,15 +384,6 @@ public class BaseSkyStoneHardware {
         double backRightPower = swerveWheels.backRightMotor.modifier * power;
 
         setWheelMotorPower(frontLeftPower, frontRightPower, backLeftPower, backRightPower);
-    }
-
-    public void initTfod() {
-        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
-                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
-        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
-        tfodParameters.minimumConfidence = 0.8;
-        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
-        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_BUTTER, LABEL_SKY_BUTTER);
     }
 }
 

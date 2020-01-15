@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.Hardware.TensorFlowCamera;
 import org.firstinspires.ftc.teamcode.Hardware.VuforiaCamera;
 
-@TeleOp(name = "Test Camera TeleOp", group = "Test")
+@TeleOp(name = "Camera Test TeleOp", group = "Test")
 public class TestCamera extends OpMode {
 
     public ElapsedTime timer = new ElapsedTime();
@@ -19,7 +19,6 @@ public class TestCamera extends OpMode {
     private static final String LABEL_GOLD_MINERAL = "Gold Mineral";
     private static final String LABEL_SILVER_MINERAL = "Silver Mineral";
 
-
     @Override
     public void init() {
 
@@ -28,7 +27,6 @@ public class TestCamera extends OpMode {
         tensorFlowCamera.initBackCamera(hardwareMap, .8, TFOD_MODEL_ASSET, LABEL_GOLD_MINERAL, LABEL_SILVER_MINERAL);
 
         tensorFlowCamera.activateTfod();
-
 
     }
 

@@ -17,22 +17,22 @@ public class VuforiaCamera extends BaseCamera {
 
     public VuforiaTrackables vuforiaTrackables;
 
-    public VuforiaLocalizer initBackCamera(final HardwareMap hardwareMap) {
+    public String initBackCamera(final HardwareMap hardwareMap) {
         return super.initBackCamera(hardwareMap, true);
     }
 
-    public VuforiaLocalizer initWebCamera(final HardwareMap hardwareMap,
+    public String initWebCamera(final HardwareMap hardwareMap,
                                           final String configName) {
         return super.initWebCamera(hardwareMap, configName, true);
     }
 
-    public VuforiaTrackables loadVuforiaTrackables(final String assetName) {
+    public String loadVuforiaTrackables(final String assetName) {
 
         if (this.vuforiaTrackables == null && vuforia != null) {
             this.vuforiaTrackables = this.vuforia.loadTrackablesFromAsset(assetName);
         }
 
-        return this.vuforiaTrackables;
+        return errorMessage;
     }
 
     public void activateVuforiaTrackables() {

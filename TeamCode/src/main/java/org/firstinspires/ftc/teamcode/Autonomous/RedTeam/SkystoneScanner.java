@@ -20,8 +20,18 @@ public class SkystoneScanner extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         robot.init(hardwareMap);
-        robot.initVuforia(this);
+
+        String initVuforiaErrorMessage = robot.initWebCamera(hardwareMap);
+
+        if (initVuforiaErrorMessage != null) {
+            telemetry.addData("ERROR", initVuforiaErrorMessage);
+        }
+
         robot.swerveStraight(0, 0);
+
+        telemetry.addData(">", "Press Play to start op mode");
+        telemetry.update();
+
         waitForStart();
         toolBox.SkystonsScanner(Color.RED);
     }

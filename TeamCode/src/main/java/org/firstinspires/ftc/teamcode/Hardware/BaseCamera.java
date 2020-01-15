@@ -10,6 +10,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackable;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaTrackables;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
+import org.firstinspires.ftc.robotcore.internal.vuforia.VuforiaException;
 import org.firstinspires.ftc.teamcode.Utility.VuforiaUtilities;
 
 import static org.firstinspires.ftc.robotcore.external.navigation.AngleUnit.DEGREES;
@@ -23,25 +24,32 @@ public class BaseCamera {
     protected int tfodMonitorViewId;
     public VuforiaLocalizer.Parameters parameters;
     public VuforiaLocalizer vuforia;
+    public WebcamName webcamName;
+    public String errorMessage;
 
-    protected VuforiaLocalizer initBackCamera(final HardwareMap hardwareMap,
+    protected String initBackCamera(final HardwareMap hardwareMap,
                                            final boolean showView) {
 
         final VuforiaLocalizer.Parameters parameters = VuforiaUtilities.getBackCameraParameters(hardwareMap, showView);
         return init(hardwareMap, parameters);
     }
 
-    protected VuforiaLocalizer initWebCamera(final HardwareMap hardwareMap,
+    protected String initWebCamera(final HardwareMap hardwareMap,
                                           final String configName,
                                           final boolean showView) {
 
-        final WebcamName webcamName = hardwareMap.get(WebcamName.class, configName);
-        final VuforiaLocalizer.Parameters parameters = VuforiaUtilities.getWebCameraParameters(hardwareMap, webcamName, showView);
-        return init(hardwareMap, parameters);
+        try {
+            webcamName = hardwareMap.get(WebcamName.class, configName);
+            final VuforiaLocalizer.Parameters parameters = VuforiaUtilities.getWebCameraParameters(hardwareMap, webcamName, showView);
+            return init(hardwareMap, parameters);
+        } catch (Exception e) {
+            errorMessage = "Failed to init WebCamera. " + e.getMessage();
+            return errorMessage;
+        }
     }
 
 
-    private VuforiaLocalizer init(final HardwareMap hardwareMap,
+    public String init(final HardwareMap hardwareMap,
                       final VuforiaLocalizer.Parameters parameters) {
 
         if (vuforia == null) {
@@ -51,6 +59,10 @@ public class BaseCamera {
             this.vuforia = VuforiaUtilities.getVuforia(parameters);
         }
 
-        return this.vuforia;
+        return errorMessage;
+    }
+
+    public boolean hasError() {
+        return errorMessage != null;
     }
 }
