@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.Autonomous.ToolBox;
 import org.firstinspires.ftc.teamcode.Hardware.BuilderSkystoneHardware;
 
-@Autonomous(name = "Sky_Red_Platform_Park_Inner", group = "RED")
+@Autonomous(name = "Sky_Red_Scanner", group = "RED")
 
 
 
