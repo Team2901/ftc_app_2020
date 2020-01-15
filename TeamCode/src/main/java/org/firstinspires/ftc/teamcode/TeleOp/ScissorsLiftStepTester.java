@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.Gamepad.ImprovedGamepad;
 import org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware;
 
 
-@TeleOp(name="ScissorsLiftStepTester")
+@TeleOp(name="ScissorsLiftStepTester", group = "Test")
 public class ScissorsLiftStepTester extends OpMode {
 
     ImprovedGamepad impGamepad;

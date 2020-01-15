@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@TeleOp(name = "MotorAndServoTester")
+@TeleOp(name = "MotorAndServoTester", group = "Test")
 public class MotorAndServoTester extends OpMode {
     Servo mrServo;
 

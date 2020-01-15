@@ -11,6 +11,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 @SuppressLint("DefaultLocale")
 public class PolarCoord {
+
+    public static final double MM_TO_INCHES = 0.0393701;
+
     public double x;
     public double y;
     public double theta;
@@ -54,8 +57,8 @@ public class PolarCoord {
         Orientation orientation = Orientation.getOrientation(location,
                 AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
 
-        this.x = (translation.get(0) * VuforiaUtilities.MM_TO_INCHES);
-        this.y = (translation.get(1) * VuforiaUtilities.MM_TO_INCHES);
+        this.x = (translation.get(0) * MM_TO_INCHES);
+        this.y = (translation.get(1) * MM_TO_INCHES);
         this.theta = AngleUtilities.getNormalizedAngle(orientation.thirdAngle);
     }
 

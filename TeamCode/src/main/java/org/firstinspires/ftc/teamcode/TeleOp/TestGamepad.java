@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Gamepad.ImprovedGamepad;
 
-@TeleOp (name = "ImprovedGamepad TeleOp" )
+@TeleOp (name = "ImprovedGamepad TeleOp", group = "Test")
 public class TestGamepad extends OpMode {
 
     public ElapsedTime timer = new ElapsedTime();

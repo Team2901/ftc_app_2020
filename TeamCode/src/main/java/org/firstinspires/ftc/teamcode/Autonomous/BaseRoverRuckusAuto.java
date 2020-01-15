@@ -23,7 +23,6 @@ import org.firstinspires.ftc.teamcode.Utility.VuforiaUtilities;
 
 import static org.firstinspires.ftc.teamcode.Autonomous.BaseRoverRuckusAuto.GoldPosition.MIDDLE;
 import static org.firstinspires.ftc.teamcode.Utility.VuforiaUtilities.getWebCameraParameters;
-import static org.firstinspires.ftc.teamcode.Utility.VuforiaUtilities.setUpTrackables;
 
 @SuppressLint("DefaultLocale")
 public class BaseRoverRuckusAuto extends LinearOpMode {
@@ -228,7 +227,7 @@ public class BaseRoverRuckusAuto extends LinearOpMode {
             vuforia = VuforiaUtilities.getVuforia(parameters);
 
             if (useVuforiaNav) {
-                roverRuckus = setUpTrackables(vuforia, parameters);
+                roverRuckus = RoverRuckusUtilities.setUpTrackables(vuforia, parameters);
             }
         }
     }
@@ -298,7 +297,7 @@ public class BaseRoverRuckusAuto extends LinearOpMode {
         if (roverRuckus != null && opModeIsActive()) {
             updateStep("getVuforiaCurrentPosition");
             roverRuckus.activate();
-            OpenGLMatrix location = VuforiaUtilities.getLocation(roverRuckus);
+            OpenGLMatrix location = RoverRuckusUtilities.getLocation(roverRuckus);
             roverRuckus.deactivate();
             if (location != null) {
                 return new PolarCoord(location);

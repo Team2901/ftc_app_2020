@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware;
 
-@TeleOp(name="BrigitteScissorsLiftStepTester")
+@TeleOp(name="BrigitteScissorsLiftStepTester", group = "Test")
 public class BrigitteScissorsLiftStepTester extends OpMode{
     private boolean isYPressed;
     private boolean isXPressed;

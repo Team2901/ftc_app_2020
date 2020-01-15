@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware;
 
 import java.util.ArrayList;
 
-@TeleOp(name = "HardwareTester2")
+@TeleOp(name = "HardwareTester2", group = "Test")
 public class HardwareTester extends OpMode {
 
     SkystoneHardware robot = new SkystoneHardware();
