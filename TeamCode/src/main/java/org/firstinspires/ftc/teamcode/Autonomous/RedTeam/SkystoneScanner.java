@@ -23,8 +23,13 @@ public class SkystoneScanner extends LinearOpMode {
 
         String initVuforiaErrorMessage = robot.initWebCamera(hardwareMap);
 
-        if (initVuforiaErrorMessage != null) {
-            telemetry.addData("ERROR", initVuforiaErrorMessage);
+        robot.webCamera.activateTfod();
+
+        if (robot.webCamera.hasError()) {
+            telemetry.addData("FAILED!",  robot.webCamera.errorMessage);
+
+        } else {
+            telemetry.addData("Successful!", "");
         }
 
         robot.swerveStraight(0, 0);

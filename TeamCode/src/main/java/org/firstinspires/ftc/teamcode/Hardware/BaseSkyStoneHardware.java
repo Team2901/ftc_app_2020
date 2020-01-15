@@ -30,7 +30,7 @@ public class BaseSkyStoneHardware {
     public static final double LIFT_STEP = 750;
 
     public static final String WEB_CAM_NAME = "Webcam 1";
-    
+
     public final double inchesToEncoder;
     public double wheelServoGearRatio;
     public double widthOfRobot;
