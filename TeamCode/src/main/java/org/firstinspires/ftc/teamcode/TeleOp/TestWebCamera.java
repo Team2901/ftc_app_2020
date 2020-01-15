@@ -18,13 +18,6 @@ public class TestWebCamera extends LinearOpMode {
 
     public ElapsedTime timer = new ElapsedTime();
 
-    public VuforiaCamera vuforiaCamera = new VuforiaCamera();
-    public TensorFlowCamera tensorFlowCamera = new TensorFlowCamera();
-
-    private static final String TFOD_MODEL_ASSET = "RoverRuckus.tflite";
-    private static final String LABEL_GOLD_MINERAL = "Gold Mineral";
-    private static final String LABEL_SILVER_MINERAL = "Silver Mineral";
-
     public BuilderSkystoneHardware robot = new BuilderSkystoneHardware();
 
     @Override
