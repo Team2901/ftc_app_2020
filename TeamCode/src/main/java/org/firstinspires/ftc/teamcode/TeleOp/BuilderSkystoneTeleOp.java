@@ -4,7 +4,9 @@ import android.annotation.SuppressLint;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
+import org.firstinspires.ftc.teamcode.Gamepad.ImprovedGamepad;
 import org.firstinspires.ftc.teamcode.Hardware.BaseSkyStoneHardware;
 import org.firstinspires.ftc.teamcode.Hardware.BuilderSkystoneHardware;
 import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
@@ -15,30 +17,36 @@ import static org.firstinspires.ftc.teamcode.Utility.AngleUtilities.getNormalize
 @TeleOp(name = "Builder Skystone", group = "SKYSTONE")
 public class BuilderSkystoneTeleOp extends OpMode {
 
+    public static final double WHEEL_POWER_RATIO = .35;
     public BuilderSkystoneHardware robot = new BuilderSkystoneHardware();
+    public ElapsedTime timer = new ElapsedTime();
+    public ImprovedGamepad improvedGamepad1;
+    public ImprovedGamepad improvedGamepad2;
 
     @Override
     public void init() {
         robot.init(hardwareMap);
         robot.swerveStraight(0, 0);
+        this.improvedGamepad1 = new ImprovedGamepad(gamepad1, timer, "g1");
+        this.improvedGamepad2 = new ImprovedGamepad(gamepad2, timer, "g2");
     }
 
     @Override
     public void loop() {
-        double joystickPositionX = gamepad1.left_stick_x;
-        double joystickPositionY = -gamepad1.left_stick_y;
 
-        if (Math.abs(gamepad1.right_stick_x) > .1) {
-            double power = getPower(gamepad1.right_stick_x, 0, gamepad1.left_bumper);
-            robot.swerveTurn(power*Math.signum(gamepad1.right_stick_x));
+        improvedGamepad1.update();
+        improvedGamepad2.update();
 
-
-        } else if (AngleUtilities.getRadius(joystickPositionX, joystickPositionY) > .2) {
-            double power = getPower(joystickPositionX, joystickPositionY, gamepad1.left_bumper);
-            double joyWheelAngle = joystickPositionToWheelAngle(joystickPositionX, joystickPositionY);
+        // WHEEL CONTROL
+        if (improvedGamepad1.right_stick_x.isPressed()) {
+            double power = getWheelPower(improvedGamepad1.right_stick.x.getValue(), gamepad1.left_bumper);
+            robot.swerveTurn(power);
+        } else if (improvedGamepad1.left_stick.isPressed()) {
+            double power = getWheelPower(improvedGamepad1.left_stick.getValue(), gamepad1.left_bumper);
+            double joyWheelAngle = improvedGamepad1.left_stick.getAngel();
             robot.swerveStraight(joyWheelAngle, power);
         } else {
-            robot.setWheelMotorPower(0, 0, 0, 0);
+            robot.setWheelMotorPower(0,0,0,0);
         }
 
         //LIFT CONTROL
@@ -90,11 +98,11 @@ public class BuilderSkystoneTeleOp extends OpMode {
         return AngleUtilities.getPositiveNormalizedAngle(wheelAngle);
     }
 
-    public double getPower(double x, double y, boolean pause) {
+    public double getWheelPower(double radius, boolean pause) {
         if (pause) {
             return 0;
         } else {
-            return AngleUtilities.getRadius(x, y);
+            return radius * WHEEL_POWER_RATIO;
         }
     }
 }

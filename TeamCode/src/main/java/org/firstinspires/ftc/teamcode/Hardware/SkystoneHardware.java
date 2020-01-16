@@ -40,24 +40,7 @@ public class SkystoneHardware extends BaseSkyStoneHardware {
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
-    }
 
-    public void platformParkInner(){
-        //Step one: turn wheels 90 degrees counterclockwise and go forward 1 ft.
-        moveStraight(0.5,1);
-        //Step two: turn wheels 90 degrees clockwise and go forward 1 ft.
-        moveStraight(0.5,1);
-        //Step three: turn wheels 90 degrees counterclockwise and go forward 1.5 ft.
-        moveStraight(0.5,2);
-        //Step four: stop
     }
-
-    public void setWheelTargetPositions (int position){
-        frontLeft.setTargetPosition(position*swerveWheels.frontLeftMotor.modifier);
-        frontRight.setTargetPosition(position*swerveWheels.frontRightMotor.modifier);
-        backLeft.setTargetPosition(position*swerveWheels.backLeftMotor.modifier);
-        backRight.setTargetPosition(position*swerveWheels.backRightMotor.modifier);
-    }
-
 }
 

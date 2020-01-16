@@ -30,12 +30,6 @@ public class BuilderSkystoneHardware extends BaseSkyStoneHardware{
     public final static double BACK_LEFT_OFFSET = .4;
     public final static double BACK_RIGHT_OFFSET = 0.16;
     public final static double INCHES_TO_ENCODER = 22;
-    // 103.6 ticks per rev *2motor revolutions per wheel revolution/3pi for wheel rev. to in
-    public final static double WHEEL_MIN_ANGLE = 0;
-    public final static double WHEEL_MAX_ANGLE = SERVO_MAX_ANGLE * WHEEL_SERVO_GEAR_RATIO;
-
-
-
 
     public BuilderSkystoneHardware(){
         super (WIDTH_OF_ROBOT,
@@ -65,8 +59,6 @@ public class BuilderSkystoneHardware extends BaseSkyStoneHardware{
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
         //Platform Grabber
-
-
     }
 }
 
