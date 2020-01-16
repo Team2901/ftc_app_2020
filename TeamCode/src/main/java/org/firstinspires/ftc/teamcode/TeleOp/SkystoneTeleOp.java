@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware;
 @TeleOp(name = "SKYSTONE TELEOP 2", group = "competition")
 public class SkystoneTeleOp extends OpMode {
 
-    public static final double WHEEL_POWER_RATIO = .5;
+    public static final double WHEEL_POWER_RATIO = .35;
     public BuilderSkystoneHardware robot = new BuilderSkystoneHardware();
     public ElapsedTime timer = new ElapsedTime();
     public ImprovedGamepad improvedGamepad1;

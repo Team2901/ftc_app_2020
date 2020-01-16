@@ -15,7 +15,7 @@ import static org.firstinspires.ftc.teamcode.Utility.AngleUtilities.getNormalize
 public class OneControllerSkystoneTeleOp extends OpMode {
 
 
-    public static final double WHEEL_POWER_RATIO = .5;
+    public static final double WHEEL_POWER_RATIO = .35;
 
     public final static double WHEEL_SERVO_GEAR_RATIO = .3;
     public final static double WIDTH_OF_ROBOT = 13.5;
