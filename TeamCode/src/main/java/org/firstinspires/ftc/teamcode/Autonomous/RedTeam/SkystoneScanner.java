@@ -3,19 +3,11 @@ package org.firstinspires.ftc.teamcode.Autonomous.RedTeam;
 import android.graphics.Color;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.Autonomous.ToolBox;
-import org.firstinspires.ftc.teamcode.Hardware.BuilderSkystoneHardware;
+import org.firstinspires.ftc.teamcode.Autonomous.BaseSkyStoneAuto;
 
 @Autonomous(name = "Sky_Red_Scanner", group = "_RED")
-
-
-
-public class SkystoneScanner extends LinearOpMode {
-
-    public BuilderSkystoneHardware robot = new BuilderSkystoneHardware();
-    public ToolBox toolBox = new ToolBox(robot);
+public class SkystoneScanner extends BaseSkyStoneAuto {
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -38,6 +30,6 @@ public class SkystoneScanner extends LinearOpMode {
         telemetry.update();
 
         waitForStart();
-        toolBox.SkystonsScanner(Color.RED);
+        SkystonsScanner(Color.RED);
     }
 }
