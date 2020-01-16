@@ -25,9 +25,9 @@ public class BuilderSkystoneHardware extends BaseSkyStoneHardware{
     //This is the angle Phi that we defined in the math done before this
     public final static double TURN_ANGLE = Math.atan(WIDTH_OF_ROBOT/ LENGTH_OF_ROBOT);
     public final static int SERVO_MAX_ANGLE = 280;
-    public final static double FRONT_LEFT_OFFSET = 0.24;
-    public final static double FRONT_RIGHT_OFFSET = .42;
-    public final static double BACK_LEFT_OFFSET = .32;
+    public final static double FRONT_LEFT_OFFSET = 0.3205;
+    public final static double FRONT_RIGHT_OFFSET = .34;
+    public final static double BACK_LEFT_OFFSET = .4;
     public final static double BACK_RIGHT_OFFSET = 0.16;
     public final static double INCHES_TO_ENCODER = 22;
     // 103.6 ticks per rev *2motor revolutions per wheel revolution/3pi for wheel rev. to in
@@ -62,7 +62,7 @@ public class BuilderSkystoneHardware extends BaseSkyStoneHardware{
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        backRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
         //Platform Grabber
 
