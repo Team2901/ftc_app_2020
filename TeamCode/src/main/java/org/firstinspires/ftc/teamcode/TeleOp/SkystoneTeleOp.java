@@ -7,14 +7,15 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Gamepad.ImprovedGamepad;
+import org.firstinspires.ftc.teamcode.Hardware.BuilderSkystoneHardware;
 import org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware;
 
 @SuppressLint("DefaultLocale")
 @TeleOp(name = "SKYSTONE TELEOP 2", group = "competition")
 public class SkystoneTeleOp extends OpMode {
 
-    public static final double WHEEL_POWER_RATIO = .25;
-    public SkystoneHardware robot = new SkystoneHardware();
+    public static final double WHEEL_POWER_RATIO = .5;
+    public BuilderSkystoneHardware robot = new BuilderSkystoneHardware();
     public ElapsedTime timer = new ElapsedTime();
     public ImprovedGamepad improvedGamepad1;
     public ImprovedGamepad improvedGamepad2;
@@ -97,6 +98,16 @@ public class SkystoneTeleOp extends OpMode {
         telemetry.addData("frontRightMotor", String.format("min: %f max:%f", robot.swerveWheels.frontRightMotor.minWheelAngle, robot.swerveWheels.frontRightMotor.maxWheelAngle));
         telemetry.addData("backLeftMotor", String.format("min: %f max:%f", robot.swerveWheels.backLeftMotor.minWheelAngle, robot.swerveWheels.backLeftMotor.maxWheelAngle));
         telemetry.addData("backRightMotor", String.format("min: %f max:%f", robot.swerveWheels.backRightMotor.minWheelAngle, robot.swerveWheels.backRightMotor.maxWheelAngle));
+
+        telemetry.addData("x  ", improvedGamepad1.left_stick.x.getValue());
+        telemetry.addData("y  ", improvedGamepad1.left_stick.y.getValue());
+        telemetry.addData("rad", improvedGamepad1.left_stick.isPressed());
+        telemetry.addData("rad", improvedGamepad1.left_stick.getValue());
+        telemetry.addData("ang", improvedGamepad1.left_stick.getAngel());
+
+        telemetry.addData("wheelServoGearRatio  ", robot.wheelServoGearRatio);
+        telemetry.addData("servoMaxAngle  ",robot.servoMaxAngle);
+        telemetry.addData("1-frontRightOffset  ",  1-robot.frontRightOffset);
 
         telemetry.update();
     }

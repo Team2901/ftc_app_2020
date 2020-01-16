@@ -68,6 +68,9 @@ public class BaseSkyStoneHardware {
         this.backLeftOffset = backLeftOffset;
         this.backRightOffset = backRightOffset;
         this.turnAngle = Math.atan(widthOfRobot/lengthOfRobot);
+
+        this.swerveWheels = new SwerveWheels();
+
     }
 
     public class SwerveWheel {
@@ -143,7 +146,7 @@ public class BaseSkyStoneHardware {
     public Servo jaw;
     public Servo wrist;
 
-    public SwerveWheels swerveWheels = new SwerveWheels();
+    public SwerveWheels swerveWheels;
 
     //Sensors and Things
     public BNO055IMU imu;
@@ -217,10 +220,10 @@ public class BaseSkyStoneHardware {
     }
 
     public void setWheelMotorPower(double frontLeftPower, double frontRightPower, double backLeftPower, double backRightPower) {
-        backRight.setPower(-backRightPower);
-        backLeft.setPower(-backLeftPower);
-        frontRight.setPower(-frontRightPower);
-        frontLeft.setPower(-frontLeftPower);
+        backRight.setPower(backRightPower);
+        backLeft.setPower(backLeftPower);
+        frontRight.setPower(frontRightPower);
+        frontLeft.setPower(frontLeftPower);
     }
 
     public void setWheelServoPosition(double fLPos, double fRPos, double bLPos, double bRPos) {
@@ -356,10 +359,10 @@ public class BaseSkyStoneHardware {
 
     public void swerveTurn(double power) {
 
-        double fLAngle = joystickPositionToWheelAngle(-1, -1);
-        double fRAngle = joystickPositionToWheelAngle(-1, 1);
-        double bLAngle = joystickPositionToWheelAngle(1, -1);
-        double bRAngle = joystickPositionToWheelAngle(1, 1);
+        double fLAngle = joystickPositionToWheelAngle(1, 1);
+        double fRAngle = joystickPositionToWheelAngle(1, -1);
+        double bLAngle = joystickPositionToWheelAngle(-1, 1);
+        double bRAngle = joystickPositionToWheelAngle(-1, -1);
 
         swerveMove(fLAngle, fRAngle, bLAngle, bRAngle, power);
     }
