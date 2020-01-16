@@ -40,7 +40,7 @@ public class SkystoneHardware extends BaseSkyStoneHardware {
         frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        
+
     }
 }
 
