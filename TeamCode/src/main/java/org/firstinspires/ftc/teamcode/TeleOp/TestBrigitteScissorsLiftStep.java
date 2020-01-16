@@ -1,13 +1,15 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware;
 
-@TeleOp(name="BrigitteScissorsLiftStepTester", group = "Test")
-public class BrigitteScissorsLiftStepTester extends OpMode{
+@Disabled
+@TeleOp(name="TestBrigitteScissorsLiftStep", group = "TEST")
+public class TestBrigitteScissorsLiftStep extends OpMode{
     private boolean isYPressed;
     private boolean isXPressed;
     private boolean isBPressed;

@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
@@ -7,7 +8,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.teamcode.Hardware.TensorFlowCamera;
 import org.firstinspires.ftc.teamcode.Hardware.VuforiaCamera;
 
-@TeleOp(name = "Camera Test TeleOp", group = "Test")
+@Disabled
+@TeleOp(name = "Camera Test", group = "TEST")
 public class TestCamera extends OpMode {
 
     public ElapsedTime timer = new ElapsedTime();

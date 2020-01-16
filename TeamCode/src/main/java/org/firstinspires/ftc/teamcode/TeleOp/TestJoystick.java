@@ -4,8 +4,9 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware;
-@TeleOp(name = "JoystickTestProgram")
-public class JoystickTestProgram extends OpMode {
+
+@TeleOp(name = "Joystick Test", group = "TEST")
+public class TestJoystick extends OpMode {
 
     @Override
     public void init() {

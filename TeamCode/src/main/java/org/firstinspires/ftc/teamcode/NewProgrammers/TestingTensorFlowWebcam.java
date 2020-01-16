@@ -12,6 +12,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
 import java.util.List;
+@Disabled
 @TeleOp (name = "testing tensor flow with webcam")
 public class TestingTensorFlowWebcam extends LinearOpMode {
 

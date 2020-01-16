@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.NewProgrammers;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -13,6 +14,7 @@ import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
 import java.util.List;
 
+@Disabled
 @TeleOp (name = "testing tensor flow with phone camera")
 public class TestingTensorFlowPhoneCamera extends LinearOpMode {
 

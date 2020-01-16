@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
 import static org.firstinspires.ftc.teamcode.Utility.AngleUtilities.getNormalizedAngle;
 
 @SuppressLint("DefaultLocale")
-@TeleOp(name = "BUILDER SKYSTONE TELEOP v3", group = "competition")
+@TeleOp(name = "Builder Skystone", group = "SKYSTONE")
 public class BuilderSkystoneTeleOp extends OpMode {
 
     public BuilderSkystoneHardware robot = new BuilderSkystoneHardware();

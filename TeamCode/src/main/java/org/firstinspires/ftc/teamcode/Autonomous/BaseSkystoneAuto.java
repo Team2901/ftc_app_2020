@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Autonomous;
 import android.annotation.SuppressLint;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -17,6 +18,7 @@ import static org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware.WHEEL_MIN
 import static org.firstinspires.ftc.teamcode.Utility.AngleUtilities.getNormalizedAngle;
 
 
+@Disabled
 @Autonomous (name = "BaseAuto")
 public class BaseSkystoneAuto extends LinearOpMode {
 

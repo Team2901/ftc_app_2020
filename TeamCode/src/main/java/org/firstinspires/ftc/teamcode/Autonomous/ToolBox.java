@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.Autonomous;
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -17,6 +18,7 @@ import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
 
 import java.util.List;
 
+@Disabled
 @SuppressLint("DefaultLocale")
 @TeleOp(name = "ToolBox", group = "competition")
 public class ToolBox extends LinearOpMode {

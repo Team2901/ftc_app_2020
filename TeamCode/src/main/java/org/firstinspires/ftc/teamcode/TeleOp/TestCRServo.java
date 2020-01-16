@@ -1,12 +1,14 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@TeleOp (name = "Test CRServo" , group = "Test")
+@Disabled
+@TeleOp (name = "CRServo Test" , group = "TEST")
 public class TestCRServo extends OpMode {
 
     CRServo crServo;

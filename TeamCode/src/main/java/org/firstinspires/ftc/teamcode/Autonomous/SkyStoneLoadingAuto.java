@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
@@ -12,7 +13,8 @@ import org.firstinspires.ftc.teamcode.NewProgrammers.TestingTensorFlowWebcam;
 
 import java.util.List;
 
-@Autonomous(name = "SkyStoneLoadingAuto")
+@Disabled
+@Autonomous(name = "SkyStoneLoadingAuto", group = "new_programmer")
 
 public class SkyStoneLoadingAuto extends LinearOpMode {
 

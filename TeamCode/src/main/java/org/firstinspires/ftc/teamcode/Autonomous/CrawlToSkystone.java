@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
@@ -30,7 +31,8 @@ import static org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware.WHEEL_MAX
 import static org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware.WHEEL_MIN_ANGLE;
 import static org.firstinspires.ftc.teamcode.Utility.AngleUtilities.getNormalizedAngle;
 
-@Autonomous(name = "CrawlToSkystone")
+@Disabled
+@Autonomous(name = "CrawlToSkystone", group = "new_programmer")
 
 public class CrawlToSkystone extends LinearOpMode {
 

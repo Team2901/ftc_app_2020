@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware;
 import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
 
 import static org.firstinspires.ftc.teamcode.Utility.AngleUtilities.getNormalizedAngle;
-@TeleOp(name = "One Controller SKYSTONE TELEOP ", group = "competition")
+@TeleOp(name = "Builder Skystone - One Controller", group = "SKYSTONE")
 public class OneControllerSkystoneTeleOp extends OpMode {
 
 

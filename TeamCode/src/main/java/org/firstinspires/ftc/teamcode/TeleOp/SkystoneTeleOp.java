@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.Hardware.BuilderSkystoneHardware;
 import org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware;
 
 @SuppressLint("DefaultLocale")
-@TeleOp(name = "SKYSTONE TELEOP 2", group = "competition")
+@TeleOp(name = "Skystone", group = "SKYSTONE")
 public class SkystoneTeleOp extends OpMode {
 
     public static final double WHEEL_POWER_RATIO = .35;

@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.Utility.VuforiaUtilities;
 
 import static org.firstinspires.ftc.teamcode.Hardware.BaseSkyStoneHardware.WEB_CAM_NAME;
 
-@TeleOp(name = "Webcamera Test", group = "Test")
+@TeleOp(name = "Webcamera Test", group = "TEST")
 public class TestWebCamera extends LinearOpMode {
 
     public ElapsedTime timer = new ElapsedTime();

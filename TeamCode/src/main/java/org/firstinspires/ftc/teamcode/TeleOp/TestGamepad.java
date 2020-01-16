@@ -1,12 +1,14 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Gamepad.ImprovedGamepad;
 
-@TeleOp (name = "ImprovedGamepad TeleOp", group = "Test")
+@Disabled
+@TeleOp (name = "Gamepad Test", group = "TEST")
 public class TestGamepad extends OpMode {
 
     public ElapsedTime timer = new ElapsedTime();

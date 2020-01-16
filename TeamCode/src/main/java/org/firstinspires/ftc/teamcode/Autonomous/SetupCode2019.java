@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.robotcontroller.internal.FtcRobotControllerActivity;
 import org.firstinspires.ftc.robotcontroller.internal.JewelFinder;
@@ -22,7 +23,8 @@ import java.util.List;
 import static org.firstinspires.ftc.robotcontroller.internal.JewelFinder.JEWEL_CONFIG_FILE_FORMAT;
 
 @SuppressLint("DefaultLocale")
-@Autonomous(name = "SetUpCode", group = "SetupCode")
+@Disabled
+@Autonomous(name = "SetUpCode", group = "RoverRuckus")
 public class SetupCode2019 extends LinearOpModeJewelCamera {
     private int leftHueTotal[] = {0, 0};
     private int middleHueTotal[] = {0, 0};

@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.Autonomous.ToolBox;
 import org.firstinspires.ftc.teamcode.Hardware.BuilderSkystoneHardware;
 import org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware;
 
-@Autonomous(name = "Sky_Red_Platform_Park_Inner", group = "RED")
+@Autonomous(name = "Sky_Red_Platform_Park_Inner", group = "_RED")
 
 
 

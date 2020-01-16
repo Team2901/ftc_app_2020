@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.Autonomous.ToolBox;
 import org.firstinspires.ftc.teamcode.Hardware.BuilderSkystoneHardware;
 
-@Autonomous(name = "Sky_Blue_Platform_Park_Inner", group = "BLUE")
+@Autonomous(name = "Sky_Blue_Platform_Park_Inner", group = "_BLUE")
 
 
 

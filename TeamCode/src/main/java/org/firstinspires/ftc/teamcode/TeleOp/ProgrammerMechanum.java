@@ -1,14 +1,15 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
 
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.Hardware.Programmer_MechanumHardware;
 
-
-@TeleOp(name="Programmer_Mechanum")
-public class Programmer_MechanumRobot extends OpMode {
+@Disabled
+@TeleOp(name="ProgrammerMechanum")
+public class ProgrammerMechanum extends OpMode {
     Programmer_MechanumHardware robot = new Programmer_MechanumHardware();
 
     public void init() {
