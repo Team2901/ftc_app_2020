@@ -14,11 +14,19 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
+import org.firstinspires.ftc.teamcode.Utility.FileUtilities;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.firstinspires.ftc.teamcode.Utility.AngleUtilities.getNormalizedAngle;
 
 
 public class BaseSkyStoneHardware {
+
+    String CONFIG_FILENAME = "servo_offset_config.txt";
+    List<Double> offsets = new ArrayList<>();
 
     public static final double GRABBER_MIN = 0.25;
     public static final double GRABBER_MAX = 0.75;
@@ -68,8 +76,6 @@ public class BaseSkyStoneHardware {
         this.backLeftOffset = backLeftOffset;
         this.backRightOffset = backRightOffset;
         this.turnAngle = Math.atan(widthOfRobot/lengthOfRobot);
-
-        this.swerveWheels = new SwerveWheels();
 
     }
 
@@ -204,6 +210,22 @@ public class BaseSkyStoneHardware {
 
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
+
+        try {
+            offsets = FileUtilities.readDoubleConfigFile(CONFIG_FILENAME);
+        } catch (IOException e) {
+            offsets = new ArrayList<>();
+            for (int i = 0; i < 4; i++) {
+                offsets.add(0.0);
+            }
+        }
+
+        frontLeftOffset = offsets.get(0);
+        frontRightOffset = offsets.get(1);
+        backLeftOffset = offsets.get(2);
+        backRightOffset = offsets.get(3);
+
+        this.swerveWheels = new SwerveWheels();
     }
 
     public String initWebCamera(HardwareMap hardwareMap) {

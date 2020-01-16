@@ -14,7 +14,7 @@ public class BasicAtonomus extends BaseSkyStoneAuto {
         moveInches(0,12 ,0.1);
         turnTo(90);
         robot.swerveStraight(0,0);
-        //Do swerve turn after turn 
+        //Do swerve turn after turn
         moveInches(0,120,0.2);
        // turnTo(70);
         while (opModeIsActive())

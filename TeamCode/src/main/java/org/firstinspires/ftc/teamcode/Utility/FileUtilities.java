@@ -70,6 +70,17 @@ public class FileUtilities {
 
         return config;
     }
+    public static List<Double> readDoubleConfigFile(String filename) throws IOException {
+
+        final List<String> stringConfig = readConfigFile(filename);
+
+        final List<Double> config = new ArrayList<>();
+        for (String string : stringConfig) {
+            config.add(Double.valueOf(string));
+        }
+
+        return config;
+    }
 
     public static void writeBitmapFile(String filename, Bitmap bitmap) throws IOException {
         final String filePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + PICTURES_FOLDER_NAME;

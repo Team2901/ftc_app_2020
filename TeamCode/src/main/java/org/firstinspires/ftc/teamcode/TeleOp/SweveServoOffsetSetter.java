@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @TeleOp(name = "Servo Offset Setter", group = "TEST")
-public class SweveServoOffsetSetter extends LinearOpMode {
+public class SweveServoOffsetSetter extends OpMode {
 
     String CONFIG_FILENAME = "servo_offset_config.txt";
 
@@ -35,7 +35,7 @@ public class SweveServoOffsetSetter extends LinearOpMode {
     List<Integer> offsets = new ArrayList<>();
 
     @Override
-    public void runOpMode() {
+    public void init() {
 
         impGamepad = new ImprovedGamepad(this.gamepad1, this.timer, "GP");
 
@@ -45,22 +45,26 @@ public class SweveServoOffsetSetter extends LinearOpMode {
             offsets = FileUtilities.readIntegerConfigFile(CONFIG_FILENAME);
         } catch (IOException e) {
             offsets = new ArrayList<>();
-            for(int i = 0; i < servoNames.length; i++) {
+            for (int i = 0; i < servoNames.length; i++) {
                 offsets.add(0);
             }
         }
 
-        for(int i = 0; i < servoNames.length; i++){
+        for (int i = 0; i < servoNames.length; i++) {
+            offsets.add(0);
+        }
+        for (int i = 0; i < servoNames.length; i++) {
             String servoName = servoNames[i];
             Servo servo = hardwareMap.servo.get(servoName);
             servoArrayList.add(servo);
             servo.setPosition(offsets.get(i));
-            telemetry.addData("Servo"+i,servoArrayList.get(i));
+            telemetry.addData("Servo" + i, servoArrayList.get(i));
         }
 
         telemetry.update();
+    }
 
-        while (opModeIsActive() && !isStarted()) {
+    public void loop() {
             impGamepad.update();
 
             if(this.impGamepad.dpad_right.isInitialPress()){
@@ -102,19 +106,15 @@ public class SweveServoOffsetSetter extends LinearOpMode {
             telemetry.update();
         }
 
+    @Override
+    public void stop() {
+        super.stop();
 
-        if (opModeIsActive()) {
             try {
                 FileUtilities.writeConfigFile(CONFIG_FILENAME, offsets);
                 telemetry.addData("Success writing to file", "");
             } catch (Exception e) {
-                telemetry.addData("Error writing to file", e.getMessage());
+                throw new RuntimeException("Error writing to file", e);
             }
         }
-
-        telemetry.update();
-
-        while(opModeIsActive()) {
-        }
-    }
 }

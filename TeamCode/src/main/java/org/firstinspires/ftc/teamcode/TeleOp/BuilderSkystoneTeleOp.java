@@ -75,6 +75,10 @@ public class BuilderSkystoneTeleOp extends OpMode {
         telemetry.addData("BR", String.format("angle: %.2f, mod: %d, pos: %.2f",
                 robot.swerveWheels.backRightMotor.targetAngle, robot.swerveWheels.backRightMotor.modifier, robot.swerveWheels.backRightMotor.wheelAngleToServoPosition()));
 
+        telemetry.addData("flo", robot.frontLeftOffset);
+        telemetry.addData("fro", robot.frontRightOffset);
+        telemetry.addData("blo", robot.backLeftOffset);
+        telemetry.addData("bro", robot.backRightOffset);
         telemetry.update();
     }
 
