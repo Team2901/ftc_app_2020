@@ -17,7 +17,7 @@ import static org.firstinspires.ftc.teamcode.Utility.AngleUtilities.getNormalize
 @TeleOp(name = "Builder Skystone", group = "SKYSTONE")
 public class BuilderSkystoneTeleOp extends OpMode {
 
-    public static final double WHEEL_POWER_RATIO = .35;
+    public static final double WHEEL_POWER_RATIO = .5;
     public BuilderSkystoneHardware robot = new BuilderSkystoneHardware();
     public ElapsedTime timer = new ElapsedTime();
     public ImprovedGamepad improvedGamepad1;
@@ -46,7 +46,7 @@ public class BuilderSkystoneTeleOp extends OpMode {
             double joyWheelAngle = improvedGamepad1.left_stick.getAngel();
             robot.swerveStraight(joyWheelAngle, power);
         } else {
-            robot.setWheelMotorPower(0,0,0,0);
+            robot.setWheelMotorPower(0, 0, 0, 0);
         }
 
         //LIFT CONTROL
@@ -74,6 +74,12 @@ public class BuilderSkystoneTeleOp extends OpMode {
             robot.jaw.setPosition(robot.jaw.getPosition() + .01);
         } else if (gamepad2.b) {
             robot.jaw.setPosition(robot.jaw.getPosition() - .01);
+        }
+//Waffle Grabber
+        if (gamepad2.dpad_up) {
+            robot.setGrabberPositition(.7, .84);
+        } else if (gamepad2.dpad_down) {
+            robot.setGrabberPositition(0, 0);
         }
 
         telemetry.addData("FL", String.format("angle: %.2f, mod: %d, pos: %.2f",

@@ -47,7 +47,7 @@ public abstract class BaseSkyStoneAuto extends LinearOpMode {
         robot.setWheelMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.setWheelMotorMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.setWheelMotorMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.setWheelTargetPositions((int)(-inches*robot.inchesToEncoder));
+        robot.setWheelTargetPositions((int)(inches*robot.inchesToEncoder));
 
         robot.swerveStraight(angle,power);
 
@@ -65,7 +65,7 @@ public abstract class BaseSkyStoneAuto extends LinearOpMode {
 
         while ((Math.abs(angleGoal - angleCurrent) > GO_TO_ANGLE_BUFFER) && opModeIsActive()) {
             angleCurrent = robot.getAngle();
-            double power = getPower(angleCurrent, angleGoal, angleStart);
+            double power = getPower(angleCurrent, angleGoal, angleStart)/2;
             robot.swerveTurn(power);
 
             telemetry.addData("Start Angle ", "%.1f", angleStart);

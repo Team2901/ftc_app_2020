@@ -23,7 +23,8 @@ import java.util.List;
 import static org.firstinspires.ftc.teamcode.Utility.AngleUtilities.getNormalizedAngle;
 
 
-public class BaseSkyStoneHardware {
+public class
+BaseSkyStoneHardware {
 
     String CONFIG_FILENAME = "servo_offset_config.txt";
     List<Double> offsets = new ArrayList<>();
@@ -179,8 +180,10 @@ public class BaseSkyStoneHardware {
         leftGrabber = hwMap.get(Servo.class, "leftGrabber");
         rightGrabber = hwMap.get(Servo.class, "rightGrabber");
         leftGrabber.setDirection(Servo.Direction.REVERSE);
-        leftGrabber.setPosition(GRABBER_MIN);
-        rightGrabber.setPosition(GRABBER_MIN);
+
+        /*Servos Aren't lined up so these aren't the same*/
+        //leftGrabber.setPosition(GRABBER_MIN);
+        //rightGrabber.setPosition(GRABBER_MIN);
 
         lift = hardwareMap.dcMotor.get("lift");
 
@@ -260,6 +263,11 @@ public class BaseSkyStoneHardware {
         backRight.setMode(runMode);
         frontLeft.setMode(runMode);
         frontRight.setMode(runMode);
+    }
+
+    public void setGrabberPositition (double leftGrabberPos, double rightGrabberPos){
+        leftGrabber.setPosition(leftGrabberPos);
+        rightGrabber.setPosition(rightGrabberPos);
     }
 
     public boolean wheelsAreBusy() {

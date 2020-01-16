@@ -53,12 +53,13 @@ public class BuilderSkystoneHardware extends BaseSkyStoneHardware{
         servoBackRight.setDirection(Servo.Direction.REVERSE);
 
 
-        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        backRight.setDirection(DcMotorSimple.Direction.FORWARD);
 
         //Platform Grabber
+        setGrabberPositition(.7,.84);
     }
 }
 

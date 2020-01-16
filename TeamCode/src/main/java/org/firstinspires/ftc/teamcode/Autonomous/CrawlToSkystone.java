@@ -20,6 +20,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.Hardware.BaseSkyStoneHardware;
+import org.firstinspires.ftc.teamcode.Hardware.BuilderSkystoneHardware;
 import org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware;
 import org.firstinspires.ftc.teamcode.NewProgrammers.TestingTensorFlowWebcam;
 import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
@@ -31,7 +32,7 @@ import static org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware.WHEEL_MAX
 import static org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware.WHEEL_MIN_ANGLE;
 import static org.firstinspires.ftc.teamcode.Utility.AngleUtilities.getNormalizedAngle;
 
-@Disabled
+//@Disabled
 @Autonomous(name = "CrawlToSkystone", group = "new_programmer")
 
 public class CrawlToSkystone extends LinearOpMode {
@@ -46,9 +47,9 @@ public class CrawlToSkystone extends LinearOpMode {
     public static final int RIGHT_POSITION = 66;
     public static final int CENTER_POSITION = 50;
 
-    public SkystoneHardware robot = new SkystoneHardware();
+    public BuilderSkystoneHardware robot = new BuilderSkystoneHardware();
 
-    private static final String VUFORIA_KEY ="AYhwTMH/////AAABmR7oFvU9lEJTryl5O3jDSusAPmWSAx5CHlcB/" +
+    private static final String VUFORIA_KEY = "AYhwTMH/////AAABmR7oFvU9lEJTryl5O3jDSusAPmWSAx5CHlcB/" +
             "IUoT+t7S1pJqTo7n3OwM4f2vVULA0T1uZVl9i61kWldhVqxK2+kyBNI4Uld8cYgHaNIQFsL/NsyBrb3Zl+1ZFBR" +
             "tpI5BjPnJkivkDsGU0rAFd+vPkyZt0p3/Uz+50eEwMZrZh499IsfooWkGX1wobjOFeA7DYQU+5ulhc1Rdp4mqjj" +
             "uKrS24Eop0MKJ+PwvNJhnN4LqIWQSfSABmcw9ogaeEsCzJdowrpXAcSo9d+ykJFZuB92iKN16lC9dRG3PABt26o" +
@@ -62,6 +63,7 @@ public class CrawlToSkystone extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         robot.init(hardwareMap);
+        robot.swerveStraight(0, 0);
         /*
         1.) Find skystone
         2.) Get skystone
@@ -100,11 +102,15 @@ public class CrawlToSkystone extends LinearOpMode {
 
         //Step 2 Get Skystone
 
-        while(skyStonePosition < 1){
+        robot.setWheelMotorMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        double fLeftStart = Math.abs(robot.frontLeft.getCurrentPosition());
+        while (skyStonePosition < 1) {
             telemetry.addData("loop is running", "");
             telemetry.update();
 
-            robot.setWheelMotorPower(-.5,-.5,-.5,-.5);
+            //robot.setWheelMotorPower(-.5,-.5,-.5,-.5);
+
+            robot.swerveStraight(0, .4);
 
             skyStonePosition = findSkyStone();
 
@@ -117,7 +123,17 @@ public class CrawlToSkystone extends LinearOpMode {
         telemetry.addData("out of loop", "");
         telemetry.update();
 
-        robot.setWheelMotorPower(.5,.5,.5,.5);
+        double fLeftEnd = Math.abs(robot.frontLeft.getCurrentPosition());
+        double diff = Math.abs(fLeftEnd-fLeftStart);
+        while (opModeIsActive()) {
+            robot.swerveStraight(0,0);
+            telemetry.addData("Start " , fLeftStart);
+            telemetry.addData("End " , fLeftEnd);
+            telemetry.addData("Diff " , diff);
+            telemetry.addData("location", skyStonePosition);
+            telemetry.update();
+        }
+        robot.setWheelMotorPower(.5, .5, .5, .5);
 
         ElapsedTime timer = new ElapsedTime();
 
@@ -125,12 +141,12 @@ public class CrawlToSkystone extends LinearOpMode {
 
         }
 
-        robot.setWheelMotorPower(0,0,0,0);
+        robot.setWheelMotorPower(0, 0, 0, 0);
 
         double currentAngle = robot.getAngle();
         double targetAngle = currentAngle + 90;
 
-        while(robot.wheelsAreBusy()){
+        while (robot.wheelsAreBusy()) {
 
         }
 
@@ -150,8 +166,10 @@ public class CrawlToSkystone extends LinearOpMode {
             Go left, forward, and then left, turn 180 degrees
         10.) Go to step 3
          */
-        while (opModeIsActive()){}
+        while (opModeIsActive()) {
+        }
     }
+
     /**
      * Initialize the Vuforia localization engine.
      */
@@ -198,7 +216,7 @@ public class CrawlToSkystone extends LinearOpMode {
                         recognition.getLeft(), recognition.getTop());
                 telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
                         recognition.getRight(), recognition.getBottom());
-                int centerFrame = recognition.getImageWidth()/2;
+                int centerFrame = recognition.getImageWidth() / 2;
                 float centerStone = (recognition.getRight() + recognition.getLeft()) / 2;
                 telemetry.addData("Center Frame", centerFrame);
                 telemetry.addData("Center Stone", centerStone);
@@ -216,23 +234,25 @@ public class CrawlToSkystone extends LinearOpMode {
         return stonePercentLocation;
     }
 
-    private double convertPositionToGridOffset (int position){
+    private double convertPositionToGridOffset(int position) {
         return 54.4;
     }
 
-    private void moveForward (double inches){
+    private void moveForward(double inches) {
         telemetry.addData("Moved to a position in front of oneself", inches);
     }
-    private void moveLeft (double inches) {
+
+    private void moveLeft(double inches) {
         telemetry.addData("Moved to a position to the left of oneself", inches);
     }
-    private void moveRight (double inches) {
+
+    private void moveRight(double inches) {
         telemetry.addData("Moved to a position to the right of oneself", inches);
     }
 
     public static final int GO_TO_ANGLE_BUFFER = 3;
 
-    public void goToAngle ( double angleStart, double angleGoal){
+    public void goToAngle(double angleStart, double angleGoal) {
 
         robot.swerveTurn(0);
 
@@ -247,7 +267,7 @@ public class CrawlToSkystone extends LinearOpMode {
         while (Math.abs(angleGoal - angleCurrent) > GO_TO_ANGLE_BUFFER && opModeIsActive()) {
             angleCurrent = robot.getAngle();
             double power = getPower(angleCurrent, angleGoal, angleStart);
-            robot.setWheelMotorPower(power, power ,power, power);
+            robot.setWheelMotorPower(power, power, power, power);
 
             telemetry.addData("Start Angle ", "%.1f", angleStart);
             telemetry.addData("Goal Angle  ", "%.1f", angleGoal);
