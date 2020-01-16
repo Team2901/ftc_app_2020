@@ -271,8 +271,13 @@ BaseSkyStoneHardware {
     }
 
     public boolean wheelsAreBusy() {
-        return frontRight.isBusy() || frontLeft.isBusy() || backLeft.isBusy() || backRight.isBusy();
+        int wheelBusy = 0;
+        wheelBusy += (frontLeft.isBusy() ? 1 : 0);
+        wheelBusy += (frontRight.isBusy() ? 1 : 0);
+        wheelBusy += (backLeft.isBusy() ? 1 : 0);
+        wheelBusy += (backRight.isBusy() ? 1 : 0);
 
+        return wheelBusy <= 2;
     }
 
     public void wait(int milliseconds, LinearOpMode opMode) {
