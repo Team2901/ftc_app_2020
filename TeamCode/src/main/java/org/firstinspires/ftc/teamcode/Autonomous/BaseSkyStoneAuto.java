@@ -163,19 +163,31 @@ public abstract class BaseSkyStoneAuto extends LinearOpMode {
     public void SkystonsScanner(int red) {
         float skyStonePosition = findSkyStone();
 
-        // skyStoneGridLocation = convertPositionToGridOffset(skyStonePosition);
-
-
-        //Step 2 Get Skystone
-
-        while(skyStonePosition < 1){
+        robot.setWheelMotorMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        double fLeftStart = Math.abs(robot.frontLeft.getCurrentPosition());
+        while (skyStonePosition < 1) {
             telemetry.addData("loop is running", "");
             telemetry.update();
 
-            robot.setWheelMotorPower(-.5,-.5,-.5,-.5);
+            robot.swerveStraight(0, .4);
 
             skyStonePosition = findSkyStone();
         }
+        telemetry.addData("out of loop", "");
+        telemetry.update();
+
+        double fLeftEnd = Math.abs(robot.frontLeft.getCurrentPosition());
+        double diff = Math.abs(fLeftEnd-fLeftStart);
+        while (opModeIsActive()) {
+            robot.swerveStraight(0,0);
+            telemetry.addData("Start " , fLeftStart);
+            telemetry.addData("End " , fLeftEnd);
+            telemetry.addData("Diff " , diff);
+            telemetry.addData("location", skyStonePosition);
+            telemetry.update();
+        }
+
+        //turning and grabbing the skystone
 
         this.goToAngle(0, 90);
 
@@ -185,7 +197,19 @@ public abstract class BaseSkyStoneAuto extends LinearOpMode {
 
         robot.jaw.setPosition(robot.CLOSED_JAW);
 
+        //lifting skystone off the ground by .5 in
 
+        int targetPosition = 750;
+
+        robot.lift.setTargetPosition(targetPosition);
+        robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        robot.lift.setPower(.5);
+
+        this.moveInches(0, -4, .5);
+
+        //turning robot 90 degrees clockwise
+
+        this.turnTo(-90);
     }
 }
 
