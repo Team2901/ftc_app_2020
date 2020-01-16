@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Gamepad.ImprovedGamepad;
+import org.firstinspires.ftc.teamcode.Hardware.BuilderSkystoneHardware;
 import org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware;
 import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
 
@@ -14,7 +15,7 @@ import static org.firstinspires.ftc.teamcode.Utility.AngleUtilities.getNormalize
 public class OneControllerSkystoneTeleOp extends OpMode {
 
 
-    public static final double WHEEL_POWER_RATIO = .25;
+    public static final double WHEEL_POWER_RATIO = .5;
 
     public final static double WHEEL_SERVO_GEAR_RATIO = .3;
     public final static double WIDTH_OF_ROBOT = 13.5;
@@ -38,7 +39,7 @@ public class OneControllerSkystoneTeleOp extends OpMode {
 
     public final static double WHEEL_MAX_ANGLE = SERVO_MAX_ANGLE * WHEEL_SERVO_GEAR_RATIO;
 
-    SkystoneHardware robot = new SkystoneHardware();
+    BuilderSkystoneHardware robot = new BuilderSkystoneHardware();
 
     @Override
     public void init() {
@@ -118,6 +119,8 @@ public class OneControllerSkystoneTeleOp extends OpMode {
                 robot.swerveWheels.backLeftMotor.targetAngle, robot.swerveWheels.backLeftMotor.modifier));
         telemetry.addData("backRight", String.format("tarAngle: %.2f   mod:%d",
                 robot.swerveWheels.backRightMotor.targetAngle, robot.swerveWheels.backRightMotor.modifier));
+
+        telemetry.addData("right_stick_x", improvedGamepad1.right_stick.x.getValue());
 
         telemetry.update();
     }
