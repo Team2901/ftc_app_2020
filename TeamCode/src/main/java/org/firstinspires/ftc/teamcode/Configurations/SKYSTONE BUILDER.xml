@@ -3,9 +3,9 @@
     <LynxUsbDevice name="Expansion Hub Portal 1" serialNumber="DQ2EJVKC" parentModuleAddress="2">
         <LynxModule name="Expansion Hub 1" port="1">
             <NeveRest3.7v1Gearmotor name="lift" port="0" />
-            <Servo name="jaw" port="0" />
-            <Servo name="crane" port="1" />
-            <Servo name="wrist" port="2" />
+            <Servo name="wrist" port="0" />
+            <Servo name="jaw" port="1" />
+            <Servo name="crane" port="2" />
             <Servo name="bridgeTickler" port="3" />
             <Servo name="leftGrabber" port="4" />
             <Servo name="rightGrabber" port="5" />
