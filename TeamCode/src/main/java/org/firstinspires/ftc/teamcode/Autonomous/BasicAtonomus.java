@@ -12,6 +12,7 @@ public class BasicAtonomus extends BaseSkyStoneAuto {
         waitForStart();
         // fowards 2ft ,turn 90 counterclockwise, go forwards, turn 70
         moveInches(0,12 ,0.1);
+        // Shouldn't it be 24 inches?
         turnTo(90);
         robot.swerveStraight(0,0);
         //Do swerve turn after turn
