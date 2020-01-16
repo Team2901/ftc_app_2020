@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.Autonomous.ToolBox;
 import org.firstinspires.ftc.teamcode.Hardware.BuilderSkystoneHardware;
 
-@Autonomous(name = "Sky_Red_Platform_Park_Inner", group = "RED")
+@Autonomous(name = "Sky_Red_Scanner", group = "RED")
 
 
 
@@ -23,8 +23,13 @@ public class SkystoneScanner extends LinearOpMode {
 
         String initVuforiaErrorMessage = robot.initWebCamera(hardwareMap);
 
-        if (initVuforiaErrorMessage != null) {
-            telemetry.addData("ERROR", initVuforiaErrorMessage);
+        robot.webCamera.activateTfod();
+
+        if (robot.webCamera.hasError()) {
+            telemetry.addData("FAILED!",  robot.webCamera.errorMessage);
+
+        } else {
+            telemetry.addData("Successful!", "");
         }
 
         robot.swerveStraight(0, 0);
