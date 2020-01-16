@@ -30,7 +30,9 @@ public class BuilderSkystoneTeleOp extends OpMode {
 
         if (Math.abs(gamepad1.right_stick_x) > .1) {
             double power = getPower(gamepad1.right_stick_x, 0, gamepad1.left_bumper);
-            robot.swerveTurn(power);
+            robot.swerveTurn(power*Math.signum(gamepad1.right_stick_x));
+
+
         } else if (AngleUtilities.getRadius(joystickPositionX, joystickPositionY) > .2) {
             double power = getPower(joystickPositionX, joystickPositionY, gamepad1.left_bumper);
             double joyWheelAngle = joystickPositionToWheelAngle(joystickPositionX, joystickPositionY);
