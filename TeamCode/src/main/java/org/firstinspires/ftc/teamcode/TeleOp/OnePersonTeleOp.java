@@ -11,16 +11,17 @@ import org.firstinspires.ftc.teamcode.Hardware.BaseSkyStoneHardware;
 import org.firstinspires.ftc.teamcode.Hardware.BuilderSkystoneHardware;
 import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
 
-import static org.firstinspires.ftc.teamcode.Utility.AngleUtilities.getNormalizedAngle;
-
 @SuppressLint("DefaultLocale")
-@TeleOp(name = "Builder Skystone", group = "SKYSTONE")
-public class BuilderSkystoneTeleOp extends OpMode {
+@TeleOp(name= "One Person TeleOp", group = "SKYSTONE")
+public class OnePersonTeleOp extends OpMode {
+
 
     public BuilderSkystoneHardware robot = new BuilderSkystoneHardware();
     public ElapsedTime timer = new ElapsedTime();
     public ImprovedGamepad improvedGamepad1;
     public ImprovedGamepad improvedGamepad2;
+
+    public double wheelPowerRatio = BuilderSkystoneHardware.WHEEL_POWER_RATIO;
 
     @Override
     public void init() {
@@ -33,15 +34,18 @@ public class BuilderSkystoneTeleOp extends OpMode {
     @Override
     public void loop() {
 
+
         improvedGamepad1.update();
         improvedGamepad2.update();
 
+        boolean pause = improvedGamepad1.start.isPressed()|| improvedGamepad1.back.isPressed();
+
         // WHEEL CONTROL
         if (improvedGamepad1.right_stick_x.isPressed()) {
-            double power = getWheelPower(improvedGamepad1.right_stick.x.getValue(), gamepad1.left_bumper);
+            double power = getWheelPower(improvedGamepad1.right_stick.x.getValue(), pause);
             robot.swerveTurn(power);
         } else if (improvedGamepad1.left_stick.isPressed()) {
-            double power = getWheelPower(improvedGamepad1.left_stick.getValue(), gamepad1.left_bumper);
+            double power = getWheelPower(improvedGamepad1.left_stick.getValue(), pause);
             double joyWheelAngle = improvedGamepad1.left_stick.getAngel();
             robot.swerveStraight(joyWheelAngle, power);
         } else {
@@ -49,37 +53,45 @@ public class BuilderSkystoneTeleOp extends OpMode {
         }
 
         //LIFT CONTROL
-        if (gamepad2.left_trigger > .2) {
+        if (gamepad1.left_trigger > .2) {
             robot.lift.setPower(-.5);
-        } else if (gamepad2.right_trigger > .2) {
+        } else if (gamepad1.right_trigger > .2) {
             robot.lift.setPower(1);
         } else {
             robot.lift.setPower(0);
         }
 //CRANE CONTROL
-        if (gamepad2.right_bumper) {
+        if (gamepad1.right_bumper) {
             robot.crane.setPosition(robot.crane.getPosition() + .005);
-        } else if (gamepad2.left_bumper) {
+        } else if (gamepad1.left_bumper) {
             robot.crane.setPosition(robot.crane.getPosition() - .005);
         }
 //WRIST CONTROL
-        if (gamepad2.x) {
+        if (gamepad1.x) {
             robot.wrist.setPosition(robot.wrist.getPosition() + .01);
-        } else if (gamepad2.y) {
+        } else if (gamepad1.y) {
             robot.wrist.setPosition(robot.wrist.getPosition() - .01);
         }
 //JAW CONTROL
-        if (gamepad2.a) {
+        if (gamepad1.a) {
             robot.jaw.setPosition(robot.jaw.getPosition() + .01);
-        } else if (gamepad2.b) {
+        } else if (gamepad1.b) {
             robot.jaw.setPosition(robot.jaw.getPosition() - .01);
         }
 //Waffle Grabber
-        if (gamepad2.dpad_up) {
+        if (gamepad1.dpad_up) {
             robot.setGrabberPositition(.7, .84);
-        } else if (gamepad2.dpad_down) {
+        } else if (gamepad1.dpad_down) {
             robot.setGrabberPositition(0, 0);
         }
+
+        if (improvedGamepad2.right_bumper.isInitialPress()) {
+            wheelPowerRatio += .05;
+        } else if (improvedGamepad2.left_bumper.isInitialPress()) {
+            wheelPowerRatio -= .05;
+        }
+
+        telemetry.addData("wheelPowerRatio", wheelPowerRatio);
 
         telemetry.addData("FL", String.format("angle: %.2f, mod: %d, pos: %.2f",
                 robot.swerveWheels.frontLeftMotor.targetAngle, robot.swerveWheels.frontLeftMotor.modifier, robot.swerveWheels.frontLeftMotor.wheelAngleToServoPosition()));
@@ -107,7 +119,7 @@ public class BuilderSkystoneTeleOp extends OpMode {
         if (pause) {
             return 0;
         } else {
-            return radius * robot.WHEEL_POWER_RATIO;
+            return radius * wheelPowerRatio;
         }
     }
 }

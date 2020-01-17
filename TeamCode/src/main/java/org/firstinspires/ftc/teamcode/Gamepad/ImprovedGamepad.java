@@ -146,4 +146,5 @@ public class ImprovedGamepad {
         // offset by 90 degrees so that forward is angle 0
         return AngleUtilities.getNormalizedAngle(angleDegrees - 90);
     }
+
 }
