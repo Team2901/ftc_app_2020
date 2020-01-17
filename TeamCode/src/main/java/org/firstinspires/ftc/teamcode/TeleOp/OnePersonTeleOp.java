@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Gamepad.ImprovedGamepad;
+import org.firstinspires.ftc.teamcode.Hardware.BaseSkyStoneHardware;
 import org.firstinspires.ftc.teamcode.Hardware.BuilderSkystoneHardware;
 import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
 
@@ -15,11 +16,12 @@ import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
 public class OnePersonTeleOp extends OpMode {
 
 
-    public static final double WHEEL_POWER_RATIO = .5;
     public BuilderSkystoneHardware robot = new BuilderSkystoneHardware();
     public ElapsedTime timer = new ElapsedTime();
     public ImprovedGamepad improvedGamepad1;
     public ImprovedGamepad improvedGamepad2;
+
+    public double wheelPowerRatio = BuilderSkystoneHardware.WHEEL_POWER_RATIO;
 
     @Override
     public void init() {
@@ -38,15 +40,12 @@ public class OnePersonTeleOp extends OpMode {
 
         boolean pause = improvedGamepad1.start.isPressed()|| improvedGamepad1.back.isPressed();
 
-
-
-
         // WHEEL CONTROL
         if (improvedGamepad1.right_stick_x.isPressed()) {
-            double power = getWheelPower(improvedGamepad1.right_stick.x.getValue(), pause == true);
+            double power = getWheelPower(improvedGamepad1.right_stick.x.getValue(), pause);
             robot.swerveTurn(power);
         } else if (improvedGamepad1.left_stick.isPressed()) {
-            double power = getWheelPower(improvedGamepad1.left_stick.getValue(), /*gamepad1.left_bumper*/ pause == true);
+            double power = getWheelPower(improvedGamepad1.left_stick.getValue(), pause);
             double joyWheelAngle = improvedGamepad1.left_stick.getAngel();
             robot.swerveStraight(joyWheelAngle, power);
         } else {
@@ -86,7 +85,13 @@ public class OnePersonTeleOp extends OpMode {
             robot.setGrabberPositition(0, 0);
         }
 
+        if (improvedGamepad2.right_bumper.isInitialPress()) {
+            wheelPowerRatio += .05;
+        } else if (improvedGamepad2.left_bumper.isInitialPress()) {
+            wheelPowerRatio -= .05;
+        }
 
+        telemetry.addData("wheelPowerRatio", wheelPowerRatio);
 
         telemetry.addData("FL", String.format("angle: %.2f, mod: %d, pos: %.2f",
                 robot.swerveWheels.frontLeftMotor.targetAngle, robot.swerveWheels.frontLeftMotor.modifier, robot.swerveWheels.frontLeftMotor.wheelAngleToServoPosition()));
@@ -114,7 +119,7 @@ public class OnePersonTeleOp extends OpMode {
         if (pause) {
             return 0;
         } else {
-            return radius * WHEEL_POWER_RATIO;
+            return radius * wheelPowerRatio;
         }
     }
 }

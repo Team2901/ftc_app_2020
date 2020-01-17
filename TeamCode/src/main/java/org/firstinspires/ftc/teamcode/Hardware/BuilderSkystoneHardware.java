@@ -18,7 +18,8 @@ import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
 
 public class BuilderSkystoneHardware extends BaseSkyStoneHardware{
 
-    public final static double MOTOR_POWER_RATIO = .25;
+    public static final double WHEEL_POWER_RATIO = .5;
+
     public final static double WHEEL_SERVO_GEAR_RATIO = 1.25;
     public final static double WIDTH_OF_ROBOT = 13.5;
     public final static double LENGTH_OF_ROBOT = 13.5;

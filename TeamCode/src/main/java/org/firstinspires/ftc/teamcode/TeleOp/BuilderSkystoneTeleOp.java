@@ -17,7 +17,6 @@ import static org.firstinspires.ftc.teamcode.Utility.AngleUtilities.getNormalize
 @TeleOp(name = "Builder Skystone", group = "SKYSTONE")
 public class BuilderSkystoneTeleOp extends OpMode {
 
-    public static final double WHEEL_POWER_RATIO = .5;
     public BuilderSkystoneHardware robot = new BuilderSkystoneHardware();
     public ElapsedTime timer = new ElapsedTime();
     public ImprovedGamepad improvedGamepad1;
@@ -108,7 +107,7 @@ public class BuilderSkystoneTeleOp extends OpMode {
         if (pause) {
             return 0;
         } else {
-            return radius * WHEEL_POWER_RATIO;
+            return radius * robot.WHEEL_POWER_RATIO;
         }
     }
 }
