@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
+import org.firstinspires.ftc.robotcontroller.internal.MotoLinearOpMode;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.Hardware.BaseSkyStoneHardware;
@@ -19,7 +20,7 @@ import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
 import java.util.List;
 
 @SuppressLint("DefaultLocale")
-public abstract class BaseSkyStoneAuto extends LinearOpMode {
+public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
 
     public BuilderSkystoneHardware robot = new BuilderSkystoneHardware();
     public static final int GO_TO_ANGLE_BUFFER = 5;
@@ -165,11 +166,11 @@ public abstract class BaseSkyStoneAuto extends LinearOpMode {
 
         robot.setWheelMotorMode(DcMotor.RunMode.RUN_USING_ENCODER);
         double fLeftStart = Math.abs(robot.frontLeft.getCurrentPosition());
-        while (skyStonePosition < 1) {
+        while (skyStonePosition < 1 && opModeIsActive()) {
             telemetry.addData("loop is running", "");
             telemetry.update();
 
-            robot.swerveStraight(0, .4);
+            robot.swerveStraight(0, .2);
 
             skyStonePosition = findSkyStone();
         }
@@ -178,14 +179,13 @@ public abstract class BaseSkyStoneAuto extends LinearOpMode {
 
         double fLeftEnd = Math.abs(robot.frontLeft.getCurrentPosition());
         double diff = Math.abs(fLeftEnd-fLeftStart);
-        while (opModeIsActive()) {
             robot.swerveStraight(0,0);
             telemetry.addData("Start " , fLeftStart);
             telemetry.addData("End " , fLeftEnd);
             telemetry.addData("Diff " , diff);
             telemetry.addData("location", skyStonePosition);
             telemetry.update();
-        }
+
 
         //turning and grabbing the skystone
 

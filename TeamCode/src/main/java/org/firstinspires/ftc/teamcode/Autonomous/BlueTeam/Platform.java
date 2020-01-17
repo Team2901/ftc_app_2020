@@ -1,10 +1,11 @@
 package org.firstinspires.ftc.teamcode.Autonomous.BlueTeam;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.Autonomous.BaseSkyStoneAuto;
 
-@Autonomous(name= "BluePlatform")
+@Autonomous(name= "BluePlatform2")
 public class Platform extends BaseSkyStoneAuto {
 
     @Override
@@ -13,7 +14,10 @@ public class Platform extends BaseSkyStoneAuto {
         robot.swerveStraight(0, 0);
         waitForStart();
         //
+        robot.setWheelMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         moveInches(0, -12, 0.4);
+
+
 
         robot.swerveStraight(0, 0);
         //Do swerve turn after turn
@@ -22,7 +26,7 @@ public class Platform extends BaseSkyStoneAuto {
         robot.setGrabberPositition(0, 0);
 
         //turnTo(90);
-        turnTo(70);
+        //turnTo(90);
         while (opModeIsActive()) {
 
         }

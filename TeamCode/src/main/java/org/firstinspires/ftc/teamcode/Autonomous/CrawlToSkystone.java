@@ -110,7 +110,7 @@ public class CrawlToSkystone extends LinearOpMode {
 
             //robot.setWheelMotorPower(-.5,-.5,-.5,-.5);
 
-            robot.swerveStraight(0, .4);
+            robot.swerveStraight(0, .3);
 
             skyStonePosition = findSkyStone();
 

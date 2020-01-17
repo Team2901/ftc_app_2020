@@ -271,7 +271,7 @@ BaseSkyStoneHardware {
     }
 
     public boolean wheelsAreBusy() {
-        return frontRight.isBusy() || frontLeft.isBusy() || backLeft.isBusy() || backRight.isBusy();
+        return frontRight.isBusy() && frontLeft.isBusy() && backLeft.isBusy() && backRight.isBusy();
 
     }
 
