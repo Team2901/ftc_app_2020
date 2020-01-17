@@ -186,6 +186,7 @@ BaseSkyStoneHardware {
         //rightGrabber.setPosition(GRABBER_MIN);
 
         lift = hardwareMap.dcMotor.get("lift");
+        lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         //Initialize all servos
         servoFrontLeft = hardwareMap.servo.get("servoFrontLeft");
@@ -197,7 +198,8 @@ BaseSkyStoneHardware {
         jaw = hardwareMap.servo.get("jaw");
         wrist = hardwareMap.servo.get("wrist");
 
-        crane.setPosition(0);
+        // crane is skipping, dont move it on init
+        //crane.setPosition(.05);
 
         // setting up the gyroscope
         imu = hardwareMap.get(BNO055IMU.class, "imu");

@@ -38,7 +38,7 @@ public class OnePersonTeleOp extends OpMode {
         improvedGamepad1.update();
         improvedGamepad2.update();
 
-        boolean pause = improvedGamepad1.start.isPressed()|| improvedGamepad1.back.isPressed();
+        boolean pause = improvedGamepad1.start.isPressed()|| improvedGamepad1.back.isPressed() || improvedGamepad1.guide.isPressed();
 
         // WHEEL CONTROL
         if (improvedGamepad1.right_stick_x.isPressed()) {
@@ -62,9 +62,9 @@ public class OnePersonTeleOp extends OpMode {
         }
 //CRANE CONTROL
         if (gamepad1.right_bumper) {
-            robot.crane.setPosition(robot.crane.getPosition() + .005);
+            robot.crane.setPosition(robot.crane.getPosition() + .015);
         } else if (gamepad1.left_bumper) {
-            robot.crane.setPosition(robot.crane.getPosition() - .005);
+            robot.crane.setPosition(robot.crane.getPosition() - .015);
         }
 //WRIST CONTROL
         if (gamepad1.x) {
@@ -92,7 +92,7 @@ public class OnePersonTeleOp extends OpMode {
         }
 
         telemetry.addData("wheelPowerRatio", wheelPowerRatio);
-
+telemetry.addData("crane", robot.crane.getPosition());
         telemetry.addData("FL", String.format("angle: %.2f, mod: %d, pos: %.2f",
                 robot.swerveWheels.frontLeftMotor.targetAngle, robot.swerveWheels.frontLeftMotor.modifier, robot.swerveWheels.frontLeftMotor.wheelAngleToServoPosition()));
         telemetry.addData("FR", String.format("angle: %.2f, mod: %d, pos: %.2f",
