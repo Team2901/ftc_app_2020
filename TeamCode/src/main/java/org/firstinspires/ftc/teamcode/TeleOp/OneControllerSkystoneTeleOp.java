@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -11,6 +12,7 @@ import org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware;
 import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
 
 import static org.firstinspires.ftc.teamcode.Utility.AngleUtilities.getNormalizedAngle;
+@Disabled
 @TeleOp(name = "Builder Skystone - One Controller", group = "SKYSTONE")
 public class OneControllerSkystoneTeleOp extends OpMode {
 
