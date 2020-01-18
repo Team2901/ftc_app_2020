@@ -45,14 +45,27 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
 
     public void moveInches (double angle, double inches, double power){
 
+        robot.swerveStraight(angle,0);
         robot.setWheelMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.setWheelMotorMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.setWheelMotorMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
         robot.setWheelTargetPositions((int)(inches*robot.inchesToEncoder));
 
         robot.swerveStraight(angle,power);
+        while (robot.wheelsAreBusy() && opModeIsActive()) {
+            telemetry.addData("FL", String.format("angle: %.2f, mod: %d, pos: %d",
+                    robot.swerveWheels.frontLeftMotor.targetAngle, robot.swerveWheels.frontLeftMotor.modifier, robot.frontLeft.getCurrentPosition()));
+            telemetry.addData("FR", String.format("angle: %.2f, mod: %d, pos: %d",
+                    robot.swerveWheels.frontRightMotor.targetAngle, robot.swerveWheels.frontRightMotor.modifier, robot.frontRight.getCurrentPosition()));
+            telemetry.addData("BL", String.format("angle: %.2f, mod: %d, pos: %d",
+                    robot.swerveWheels.backLeftMotor.targetAngle, robot.swerveWheels.backLeftMotor.modifier, robot.backLeft.getCurrentPosition()));
+            telemetry.addData("BR", String.format("angle: %.2f, mod: %d, pos: %d",
+                    robot.swerveWheels.backRightMotor.targetAngle, robot.swerveWheels.backRightMotor.modifier, robot.backRight.getCurrentPosition()));
 
-        while (robot.wheelsAreBusy() && opModeIsActive());
+            telemetry.update();
+        }
 
         robot.setWheelMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.setWheelMotorMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -161,7 +174,7 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
     }
 
 
-    public void SkystonsScanner(int red) {
+    public void SkytoneScanner(int red) {
         float skyStonePosition = findSkyStone();
 
         robot.setWheelMotorMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -189,7 +202,8 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
 
         //turning and grabbing the skystone
 
-        this.goToAngle(0, 90);
+
+        this.turnTo(90);
 
         robot.jaw.setPosition(robot.OPEN_JAW);
 
@@ -209,7 +223,7 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
 
         //turning robot 90 degrees clockwise
 
-        this.turnTo(-90);
+        this.turnTo(90);
     }
 }
 

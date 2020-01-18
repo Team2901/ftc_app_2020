@@ -30,6 +30,6 @@ public class SkystoneScanner extends BaseSkyStoneAuto {
         telemetry.update();
 
         waitForStart();
-        SkystonsScanner(Color.RED);
+        SkytoneScanner(Color.RED);
     }
 }
