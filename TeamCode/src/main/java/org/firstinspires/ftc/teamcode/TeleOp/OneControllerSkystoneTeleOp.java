@@ -47,7 +47,7 @@ public class OneControllerSkystoneTeleOp extends OpMode {
     public void init() {
         robot.init(hardwareMap);
         //The y position is -1 to correct the joystick directions
-        robot.swerveStraight(0, 0);
+      //  robot.swerveStraight(0, 0);
 
         this.improvedGamepad1 = new ImprovedGamepad(gamepad1, timer, "g1");
         this.improvedGamepad2 = new ImprovedGamepad(gamepad2, timer, "g2");

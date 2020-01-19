@@ -26,7 +26,7 @@ public class OnePersonTeleOp extends OpMode {
     @Override
     public void init() {
         robot.init(hardwareMap);
-        robot.swerveStraight(0, 0);
+       // robot.swerveStraight(0, 0);
         this.improvedGamepad1 = new ImprovedGamepad(gamepad1, timer, "g1");
         this.improvedGamepad2 = new ImprovedGamepad(gamepad2, timer, "g2");
     }

@@ -17,9 +17,6 @@ public class Platform extends BaseSkyStoneAuto {
         robot.setWheelMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         moveInches(0, -12, 0.4);
 
-
-
-        robot.swerveStraight(0, 0);
         //Do swerve turn after turn
         moveInches(90, -34, 0.4);
 

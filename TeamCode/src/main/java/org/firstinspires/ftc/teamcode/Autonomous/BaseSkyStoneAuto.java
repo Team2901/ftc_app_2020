@@ -50,10 +50,9 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
         robot.setWheelMotorMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.setWheelMotorMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-
         robot.setWheelTargetPositions((int)(inches*robot.inchesToEncoder));
 
-        robot.swerveStraight(angle,power);
+        robot.swerveStraight(angle, power);
         while (robot.wheelsAreBusy() && opModeIsActive()) {
             telemetry.addData("FL", String.format("angle: %.2f, mod: %d, pos: %d",
                     robot.swerveWheels.frontLeftMotor.targetAngle, robot.swerveWheels.frontLeftMotor.modifier, robot.frontLeft.getCurrentPosition()));
@@ -70,7 +69,7 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
         robot.setWheelMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.setWheelMotorMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        robot.swerveStraight( angle,0);
+        robot.swerveStraight(angle,0);
     }
 
     public void goToAngle(double angleStart, double angleGoal) {
