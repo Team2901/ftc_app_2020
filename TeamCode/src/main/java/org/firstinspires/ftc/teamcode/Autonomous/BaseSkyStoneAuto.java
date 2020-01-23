@@ -212,7 +212,7 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
 
         //lifting skystone off the ground by .5 in
 
-        int targetPosition = 750;
+        int targetPosition = 72;
 
         robot.lift.setTargetPosition(targetPosition);
         robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
