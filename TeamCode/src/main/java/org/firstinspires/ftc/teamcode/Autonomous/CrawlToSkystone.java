@@ -1,46 +1,31 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
-import org.firstinspires.ftc.teamcode.Hardware.BaseSkyStoneHardware;
 import org.firstinspires.ftc.teamcode.Hardware.BuilderSkystoneHardware;
-import org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware;
-import org.firstinspires.ftc.teamcode.NewProgrammers.TestingTensorFlowWebcam;
 import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
 
 import java.util.List;
-import java.util.Timer;
-
-import static org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware.WHEEL_MAX_ANGLE;
-import static org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware.WHEEL_MIN_ANGLE;
-import static org.firstinspires.ftc.teamcode.Utility.AngleUtilities.getNormalizedAngle;
 
 //@Disabled
 @Autonomous(name = "CrawlToSkystone", group = "new_programmer")
 
-public class CrawlToSkystone extends LinearOpMode {
+public class CrawlToSkystone extends BaseSkyStoneAuto {
 
     private static final String TFOD_MODEL_ASSET = "Skystone.tflite";
     private static final String LABEL_BUTTER = "Stone";
     private static final String LABEL_SKY_BUTTER = "Skystone";
-    private float skyStonePosition;
+    private Float skyStoneCenterPercentDiff;
     private double skyStoneGridLocation;
     private static final double BLOCK_OFFSET = 30.0;
     public static final int LEFT_POSITION = 33;
@@ -95,54 +80,50 @@ public class CrawlToSkystone extends LinearOpMode {
         telemetry.update();
         waitForStart();
 
-        skyStonePosition = findSkyStone();
+        skyStoneCenterPercentDiff = findSkyStone();
 
-        // skyStoneGridLocation = convertPositionToGridOffset(skyStonePosition);
+        // skyStoneGridLocation = convertPositionToGridOffset(skyStoneCenterPercentDiff);
 
 
         //Step 2 Get Skystone
 
         robot.setWheelMotorMode(DcMotor.RunMode.RUN_USING_ENCODER);
         double fLeftStart = Math.abs(robot.frontLeft.getCurrentPosition());
-        while (skyStonePosition < 1) {
+        while (skyStoneCenterPercentDiff==null || Math.abs(skyStoneCenterPercentDiff ) > 10) {
             telemetry.addData("loop is running", "");
             telemetry.update();
 
-            //robot.setWheelMotorPower(-.5,-.5,-.5,-.5);
+            if (skyStoneCenterPercentDiff==null)
+            {
+                robot.swerveStraight(0, 0.3);
+            }
+            else if(skyStoneCenterPercentDiff<0)
+            {
+                robot.swerveStraight(0,-.3);
+            }
+            else
+            {
+                robot.swerveStraight(0, .3);
+            }
 
-            robot.swerveStraight(0, .3);
+            skyStoneCenterPercentDiff=findSkyStone();
 
-            skyStonePosition = findSkyStone();
-
-            //leftDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            //rightDrive.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-            //leftDrive.setTargetPosition(50);
-            //rightDrive.setTargetPosition(50);
         }
+
+
         telemetry.addData("out of loop", "");
         telemetry.update();
 
+        robot.swerveStraight(0,0);
+
         double fLeftEnd = Math.abs(robot.frontLeft.getCurrentPosition());
         double diff = Math.abs(fLeftEnd-fLeftStart);
-        while (opModeIsActive()) {
-            robot.swerveStraight(0,0);
-            telemetry.addData("Start " , fLeftStart);
-            telemetry.addData("End " , fLeftEnd);
-            telemetry.addData("Diff " , diff);
-            telemetry.addData("location", skyStonePosition);
-            telemetry.update();
-        }
-        robot.setWheelMotorPower(.5, .5, .5, .5);
 
-        ElapsedTime timer = new ElapsedTime();
+        turnTo(90);
 
-        while (timer.milliseconds() < 100 && opModeIsActive()) {
-
-        }
-
-        robot.setWheelMotorPower(0, 0, 0, 0);
-
+        robot.jaw.setPosition(robot.OPEN_JAW);
+        this.moveForward(24);
+        
         double currentAngle = robot.getAngle();
         double targetAngle = currentAngle + 90;
 
@@ -200,39 +181,7 @@ public class CrawlToSkystone extends LinearOpMode {
         tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_BUTTER, LABEL_SKY_BUTTER);
     }
 
-    private float findSkyStone() {
 
-        float centerPercentDifference = 0;
-        float stonePercentLocation = 0;
-        List<Recognition> updatedRecognitions = tfod.getUpdatedRecognitions();
-        if (updatedRecognitions != null) {
-            telemetry.addData("# Object Detected", updatedRecognitions.size());
-            // step through the list of recognitions and display boundary info.
-            int i = 0;
-            for (Recognition recognition : updatedRecognitions) {
-                //If x > 380, the skystone is in position three. (Three away from the edge) If x > 620 it is at position 2, and if x > 350 it is in position 1
-                telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
-                telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f",
-                        recognition.getLeft(), recognition.getTop());
-                telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
-                        recognition.getRight(), recognition.getBottom());
-                int centerFrame = recognition.getImageWidth() / 2;
-                float centerStone = (recognition.getRight() + recognition.getLeft()) / 2;
-                telemetry.addData("Center Frame", centerFrame);
-                telemetry.addData("Center Stone", centerStone);
-                float centerDifference = centerStone - centerFrame;
-                telemetry.addData("Difference", centerDifference);
-                centerPercentDifference = (centerDifference / centerFrame) * 100;
-                telemetry.addData("Percent Difference", centerPercentDifference);
-                stonePercentLocation = (centerStone / recognition.getImageWidth() * 100);
-                if (recognition.getLabel().equals(LABEL_SKY_BUTTER))
-                    break;
-            }
-        }
-        telemetry.addData("Skystones Location Debugger", stonePercentLocation);
-        telemetry.update();
-        return stonePercentLocation;
-    }
 
     private double convertPositionToGridOffset(int position) {
         return 54.4;

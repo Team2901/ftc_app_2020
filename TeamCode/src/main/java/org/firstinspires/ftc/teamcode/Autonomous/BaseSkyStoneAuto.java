@@ -19,6 +19,8 @@ import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
 
 import java.util.List;
 
+import static org.firstinspires.ftc.teamcode.Hardware.BaseSkyStoneHardware.LABEL_SKY_BUTTER;
+
 @SuppressLint("DefaultLocale")
 public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
 
@@ -133,13 +135,13 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
         //Step  Six: Stop
     }
 
-    public float findSkyStone() {
 
-        float centerPercentDifference = 0;
+    public Float findSkyStone() {
+
+        Float centerPercentDifference = null;
         float stonePercentLocation = 0;
-
         if (robot.webCamera.tfod == null) {
-            return 50;
+            return (Float.valueOf(0));
         }
 
         List<Recognition> updatedRecognitions = robot.webCamera.tfod.getUpdatedRecognitions();
@@ -149,12 +151,16 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
             int i = 0;
             for (Recognition recognition : updatedRecognitions) {
                 //If x > 380, the skystone is in position three. (Three away from the edge) If x > 620 it is at position 2, and if x > 350 it is in position 1
+                if (!recognition.getLabel().equals(LABEL_SKY_BUTTER)) {
+                    continue;
+                }
+
                 telemetry.addData(String.format("label (%d)", i), recognition.getLabel());
                 telemetry.addData(String.format("  left,top (%d)", i), "%.03f , %.03f",
                         recognition.getLeft(), recognition.getTop());
                 telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
                         recognition.getRight(), recognition.getBottom());
-                int centerFrame = recognition.getImageWidth()/2;
+                int centerFrame = recognition.getImageWidth() / 2;
                 float centerStone = (recognition.getRight() + recognition.getLeft()) / 2;
                 telemetry.addData("Center Frame", centerFrame);
                 telemetry.addData("Center Stone", centerStone);
@@ -163,15 +169,13 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
                 centerPercentDifference = (centerDifference / centerFrame) * 100;
                 telemetry.addData("Percent Difference", centerPercentDifference);
                 stonePercentLocation = (centerStone / recognition.getImageWidth() * 100);
-                if (recognition.getLabel().equals(robot.LABEL_SKY_BUTTER))
-                    break;
+
             }
         }
         telemetry.addData("Skystones Location Debugger", stonePercentLocation);
         telemetry.update();
-        return stonePercentLocation;
+        return centerPercentDifference;
     }
-
 
     public void SkytoneScanner(int red) {
         float skyStonePosition = findSkyStone();
