@@ -18,10 +18,11 @@ public class PotentiometerTest extends OpMode {
     public void loop() {
 
         double angle = (potentiometer.getVoltage()/potentiometer.getMaxVoltage())*270;
-        double badAngle = (potentiometer.getVoltage()/maxOgVoltage);
+        double badAngle = ((potentiometer.getVoltage()/maxOgVoltage)*270);
         telemetry.addData("get Voltage" , potentiometer.getVoltage());
         telemetry.addData("get Max Voltage" , potentiometer.getMaxVoltage());
         telemetry.addData("Angle" , angle);
+        telemetry.addData("Angle with regards to the original max voltage" ,badAngle);
         telemetry.addData("Connection Info" , potentiometer.getConnectionInfo());
         telemetry.update();
 
