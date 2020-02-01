@@ -1,21 +1,15 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
-import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 import org.firstinspires.ftc.teamcode.Hardware.BuilderSkystoneHardware;
 import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
-
-import java.util.List;
 
 //@Disabled
 @Autonomous(name = "CrawlToSkystone", group = "new_programmer")
@@ -64,7 +58,7 @@ public class CrawlToSkystone extends BaseSkyStoneAuto {
         // Step 1 Find Skystone
 
         initVuforia();
-
+// intializing vuforia and tenser flow
         if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
             initTfod();
         } else {
@@ -88,11 +82,12 @@ public class CrawlToSkystone extends BaseSkyStoneAuto {
         //Step 2 Get Skystone
 
         robot.setWheelMotorMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        //geting position before going to skystone
         double fLeftStart = Math.abs(robot.frontLeft.getCurrentPosition());
         while (skyStoneCenterPercentDiff==null || Math.abs(skyStoneCenterPercentDiff ) > 10) {
             telemetry.addData("loop is running", "");
             telemetry.update();
-
+//crawling to find skystone
             if (skyStoneCenterPercentDiff==null)
             {
                 robot.swerveStraight(0, 0.3);
@@ -115,37 +110,31 @@ public class CrawlToSkystone extends BaseSkyStoneAuto {
         telemetry.update();
 
         robot.swerveStraight(0,0);
-
+//fLeftEnd is were we end
         double fLeftEnd = Math.abs(robot.frontLeft.getCurrentPosition());
         double diff = Math.abs(fLeftEnd-fLeftStart);
+//we turn then open jaw then move forward
+        /*3*/ turnTo(90);
 
-        turnTo(90);
+        /*4*/ robot.jaw.setPosition(robot.OPEN_JAW);
+        /*5*/ this.moveForward(24);
+        /*6*/ robot.jaw.setPosition(robot.CLOSED_JAW);
+        /*7*/ this.moveForward(-24);
 
-        robot.jaw.setPosition(robot.OPEN_JAW);
-        this.moveForward(24);
-        
-        double currentAngle = robot.getAngle();
-        double targetAngle = currentAngle + 90;
-
-        while (robot.wheelsAreBusy()) {
-
-        }
+        /*8*/ turnTo(-90);
+        /*9*/ this.moveForward(diff);
 
         /*
-        1.) Move waffle to the middle position
-            Move forward, grab, drag back
-        2.) Move right
-            To go underneath the bridge
-        3.) Find skystone
-            Identify if there are three stones, if not, go to next location
-        4.) Get skystone
-        5.) Move right forward direction
-        6.) Turn 180 degrees clockwise
-        7.) Place block
-        8.) Place Capstone on block
-        9.) Return to starting position
-            Go left, forward, and then left, turn 180 degrees
-        10.) Go to step 3
+        1.) find current position
+        2.) crawl to skystone
+        3.) turn 90
+        4.) open jaw
+        5.) Move right forward 24''
+        6.) close jaw
+        7.) move back 24''
+        8.) turn -90
+        9.) move back how ever much we went forward (useing diff on line 121)
+
          */
         while (opModeIsActive()) {
         }
@@ -201,34 +190,9 @@ public class CrawlToSkystone extends BaseSkyStoneAuto {
 
     public static final int GO_TO_ANGLE_BUFFER = 3;
 
-    public void goToAngle(double angleStart, double angleGoal) {
 
-        robot.swerveTurn(0);
 
-        ElapsedTime timer = new ElapsedTime();
-
-        while (timer.seconds() < 1 && opModeIsActive()) {
-
-        }
-
-        double angleCurrent = angleStart;
-
-        while (Math.abs(angleGoal - angleCurrent) > GO_TO_ANGLE_BUFFER && opModeIsActive()) {
-            angleCurrent = robot.getAngle();
-            double power = getPower(angleCurrent, angleGoal, angleStart);
-            robot.setWheelMotorPower(power, power, power, power);
-
-            telemetry.addData("Start Angle ", "%.1f", angleStart);
-            telemetry.addData("Goal Angle  ", "%.1f", angleGoal);
-            telemetry.addData("Cur Angle   ", "%.1f", angleCurrent);
-            telemetry.addData("Remain Angle", "%.1f", AngleUnit.normalizeDegrees(angleGoal - angleCurrent));
-            telemetry.addData("Power       ", "%.2f", power);
-            telemetry.update();
-            idle();
-        }
-    }
-
-    public double getPower(double absCurrent, double absGoal, double absStart) {
+    public double getCurrentTurnPower(double absCurrent, double absGoal, double absStart, double maxPower) {
         double relCurrent = AngleUtilities.getNormalizedAngle(absCurrent - absStart);
         double relGoal = AngleUtilities.getNormalizedAngle(absGoal - absStart);
         double remainingDistance = AngleUtilities.getNormalizedAngle(relGoal - relCurrent);

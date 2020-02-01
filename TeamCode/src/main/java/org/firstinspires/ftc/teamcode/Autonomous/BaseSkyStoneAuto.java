@@ -3,9 +3,6 @@ package org.firstinspires.ftc.teamcode.Autonomous;
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -13,7 +10,6 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcontroller.internal.MotoLinearOpMode;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
-import org.firstinspires.ftc.teamcode.Hardware.BaseSkyStoneHardware;
 import org.firstinspires.ftc.teamcode.Hardware.BuilderSkystoneHardware;
 import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
 
@@ -40,9 +36,13 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
         }
     }
 
-    public void turnTo (double angle){
+    public void turnTo(double angle) {
+        turnTo(angle, .5);
+    }
 
-        goToAngle(robot.getAngle(), angle);
+    public void turnTo(double angle, double power){
+
+        goToAngle(robot.getAngle(), angle, .5);
     }
 
     public void moveInches (double angle, double inches, double power){
@@ -74,20 +74,20 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
         robot.swerveStraight(angle,0);
     }
 
-    public void goToAngle(double angleStart, double angleGoal) {
+    public void goToAngle(double angleStart, double angleGoal, double power) {
 
         double angleCurrent = angleStart;
 
         while ((Math.abs(angleGoal - angleCurrent) > GO_TO_ANGLE_BUFFER) && opModeIsActive()) {
             angleCurrent = robot.getAngle();
-            double power = getPower(angleCurrent, angleGoal, angleStart)/2;
-            robot.swerveTurn(power);
+            double powerCurrent = getCurrentTurnPower(angleCurrent, angleGoal, angleStart, power);
+            robot.swerveTurn(powerCurrent);
 
             telemetry.addData("Start Angle ", "%.1f", angleStart);
             telemetry.addData("Goal Angle  ", "%.1f", angleGoal);
             telemetry.addData("Cur Angle   ", "%.1f", angleCurrent);
             telemetry.addData("Remain Angle", "%.1f", AngleUnit.normalizeDegrees(angleGoal - angleCurrent));
-            telemetry.addData("Power       ", "%.2f", power);
+            telemetry.addData("Power       ", "%.2f", powerCurrent);
             telemetry.update();
 
         }
@@ -96,14 +96,15 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
         telemetry.update();
     }
 
-    public double getPower(double absCurrent, double absGoal, double absStart) {
+    public double getCurrentTurnPower(double absCurrent, double absGoal, double absStart, double maxPower) {
         double relCurrent = AngleUtilities.getNormalizedAngle(absCurrent - absStart);
         double relGoal = AngleUtilities.getNormalizedAngle(absGoal - absStart);
         double remainingDistance = AngleUtilities.getNormalizedAngle(relGoal - relCurrent);
 
         double basePower = 0.045 * remainingDistance;
         double stallPower = 0.1 * Math.signum(remainingDistance);
-        return Range.clip(basePower + stallPower, -1, 1);
+
+        return Range.clip(basePower + stallPower, -Math.abs(maxPower), Math.abs(maxPower));
     }
 
     public void platformParkInner(int team){
