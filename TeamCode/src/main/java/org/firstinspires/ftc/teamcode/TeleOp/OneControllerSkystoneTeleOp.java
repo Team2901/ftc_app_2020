@@ -30,6 +30,7 @@ public class OneControllerSkystoneTeleOp extends OpMode {
     public final static double FRONT_RIGHT_OFFSET = .13;
     public final static double BACK_LEFT_OFFSET = .1;
     public final static double BACK_RIGHT_OFFSET = .11;
+    public double maxCrane = .68;
 
     double power = 0;
     int step = 0;
@@ -89,9 +90,14 @@ public class OneControllerSkystoneTeleOp extends OpMode {
         if(gamepad1.left_bumper) {
             //GOT THIS OVERLOADED DONT FORGET
             if (gamepad1.right_bumper) {
-                robot.crane.setPosition(robot.crane.getPosition() + .005);
+                if(robot.crane.getPosition() + .001< maxCrane)
+                {
+                    robot.crane.setPosition(robot.crane.getPosition() + .001);
+                }
+
             } else if (gamepad1.left_bumper) {
-                robot.crane.setPosition(robot.crane.getPosition() - .005);
+
+                    robot.crane.setPosition(robot.crane.getPosition() - .001);
             }
 
             if (gamepad1.right_trigger >.3) {
