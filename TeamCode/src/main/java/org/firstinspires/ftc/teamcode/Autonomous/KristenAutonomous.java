@@ -20,6 +20,7 @@ public class KristenAutonomous extends LinearOpMode {
     public static SkystoneHardware robot = new SkystoneHardware();
     public Servo leftGrabber;
     public Servo rightGrabber;
+    public Servo  centerGrabber;
     public static final double LEFT_GRABBER_MIN = 1.0;
     public static final double RIGHT_GRABBER_MAX = 0;
     public static final double LEFT_GRABBER_MAX = 0.35;
@@ -40,9 +41,11 @@ public class KristenAutonomous extends LinearOpMode {
         //rightMotor = hardwareMap.dcMotor.get("right_drive");
         leftGrabber = hardwareMap.get(Servo.class, "Left_grabber");
         rightGrabber = hardwareMap.get(Servo.class, "Right_grabber");
+        centerGrabber = hardwareMap.get(Servo.class, "Center_grabber");
 
         rightGrabber.setPosition (RIGHT_GRABBER_MAX);//0.3
         leftGrabber.setPosition (LEFT_GRABBER_MIN);//0.7
+        centerGrabber.setPosition(0);
         telemetry.addData("Right:" , rightGrabber.getPosition());
         telemetry.addData("Left:" , leftGrabber.getPosition());
         telemetry.update();

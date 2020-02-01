@@ -52,31 +52,35 @@ import com.qualcomm.robotcore.util.Range;
  * Remove or comment out the @Disabled line to add this opmode to the Driver Station OpMode list
  */
 
-@Disabled
-@TeleOp(name="KristenServos V6 : Teleop Tank", group="Kristen")
+
+@TeleOp(name="KristenServos V8 : Teleop Tank", group="Kristen")
 public class KristenServos extends OpMode{
-  //public DcMotor leftDrive;
-  //public DcMotor rightDrive;
+  public DcMotor leftDrive;
+  public DcMotor rightDrive;
   public Servo leftGrabber;
   public Servo rightGrabber;
+  public Servo centerGrabber;
   public static final double LEFT_GRABBER_MAX = 1.00;
   public static final double RIGHT_GRABBER_MIN = 0;
   public double leftGrabberOffset = LEFT_GRABBER_MAX;
   public double rightGrabberOffset = RIGHT_GRABBER_MIN;
+  public double centerGrabberOffset = 0;
   public double GRABBER_SPEED = 0.01;
     @Override
     public void init() {
         /* Initialize the hardware variables.
          * The init() method of the hardware class does all the work here
          */
-        //leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
-        //leftDrive .setDirection(DcMotorSimple.Direction.REVERSE);
-        //rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
+        leftDrive  = hardwareMap.get(DcMotor.class, "left_drive");
+        leftDrive .setDirection(DcMotorSimple.Direction.REVERSE);
+        rightDrive = hardwareMap.get(DcMotor.class, "right_drive");
         leftGrabber = hardwareMap.get(Servo.class, "Left_grabber");
         rightGrabber = hardwareMap.get(Servo.class, "Right_grabber");
+        centerGrabber = hardwareMap.get(Servo.class, "Center_grabber");
 
         leftGrabber.setPosition(LEFT_GRABBER_MAX);
         rightGrabber.setPosition(RIGHT_GRABBER_MIN);
+        centerGrabber.setPosition(0);
 
         // Send telemetry message to signify robot waiting;
         telemetry.addData("Say", "Hello Driver");    //
@@ -109,11 +113,11 @@ public class KristenServos extends OpMode{
         left = -gamepad1.left_stick_y;
         right = -gamepad1.right_stick_y;
 
-        /*
+
         leftDrive.setPower(left);
         rightDrive.setPower(right);
 
-         */
+
 
         if (gamepad1.right_bumper)
             rightGrabberOffset += GRABBER_SPEED;
@@ -137,6 +141,16 @@ public class KristenServos extends OpMode{
 
         // Send telemetry message to signify robot running;
         telemetry.addData ("Left Grabber", "%.2f",leftGrabberOffset);
+
+        if(gamepad1.a)
+            centerGrabberOffset -= GRABBER_SPEED;
+        else if (gamepad1.y)
+            centerGrabberOffset += GRABBER_SPEED;
+        centerGrabberOffset = Range.clip(centerGrabberOffset, 0 , 1 );
+        centerGrabber.setPosition(centerGrabberOffset);
+
+        telemetry.addData("Center Grabber", "%.2f", centerGrabberOffset);
+
 
     }
 
