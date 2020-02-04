@@ -41,6 +41,9 @@ public class SweveServoOffsetSetter extends OpMode {
         try {
             offsets = FileUtilities.readDoubleConfigFile(CONFIG_FILENAME);
         } catch (IOException e) {
+        }
+
+        if (offsets.size() < servoNames.length) {
             offsets = new ArrayList<>();
             for (int i = 0; i < servoNames.length; i++) {
                 offsets.add(0.0);

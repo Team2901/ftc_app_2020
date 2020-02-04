@@ -225,6 +225,13 @@ BaseSkyStoneHardware {
             }
         }
 
+        if (offsets.size() < 4) {
+            offsets = new ArrayList<>();
+            for (int i = 0; i < 4; i++) {
+                offsets.add(0.0);
+            }
+        }
+
         frontLeftOffset = offsets.size() > 0 ? offsets.get(0) : 0.0;
         frontRightOffset = offsets.size() > 1 ? offsets.get(1) : 0.0;
         backLeftOffset = offsets.size() > 2 ? offsets.get(2) : 0.0;
