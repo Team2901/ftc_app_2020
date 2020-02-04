@@ -21,7 +21,7 @@ import static org.firstinspires.ftc.teamcode.Hardware.BaseSkyStoneHardware.LABEL
 @SuppressLint("DefaultLocale")
 public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
 
-    public SkystoneHardware robot = new SkystoneHardware();
+    public BuilderSkystoneHardware robot = new BuilderSkystoneHardware();
     public static final int GO_TO_ANGLE_BUFFER = 5;
 
     @Override
