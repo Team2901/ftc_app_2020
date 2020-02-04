@@ -51,7 +51,7 @@ public class SweveServoOffsetSetter extends OpMode {
             String servoName = servoNames[i];
             Servo servo = hardwareMap.servo.get(servoName);
             servoArrayList.add(servo);
-            servo.setPosition(offsets.get(i));
+            servo.setPosition(offsets.size() > i ? offsets.get(i) : 0.0);
             telemetry.addData("Servo"+i,servoArrayList.get(i));
         }
 

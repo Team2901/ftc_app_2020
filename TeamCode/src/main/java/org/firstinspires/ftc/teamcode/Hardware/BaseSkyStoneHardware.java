@@ -225,10 +225,10 @@ BaseSkyStoneHardware {
             }
         }
 
-        frontLeftOffset = offsets.get(0);
-        frontRightOffset = offsets.get(1);
-        backLeftOffset = offsets.get(2);
-        backRightOffset = offsets.get(3);
+        frontLeftOffset = offsets.size() > 0 ? offsets.get(0) : 0.0;
+        frontRightOffset = offsets.size() > 1 ? offsets.get(1) : 0.0;
+        backLeftOffset = offsets.size() > 2 ? offsets.get(2) : 0.0;
+        backRightOffset = offsets.size() > 3 ? offsets.get(3) : 0.0;
 
         this.swerveWheels = new SwerveWheels();
     }
