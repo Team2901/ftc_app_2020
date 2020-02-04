@@ -11,6 +11,7 @@ import org.firstinspires.ftc.robotcontroller.internal.MotoLinearOpMode;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.Hardware.BuilderSkystoneHardware;
+import org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware;
 import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
 
 import java.util.List;
@@ -20,7 +21,7 @@ import static org.firstinspires.ftc.teamcode.Hardware.BaseSkyStoneHardware.LABEL
 @SuppressLint("DefaultLocale")
 public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
 
-    public BuilderSkystoneHardware robot = new BuilderSkystoneHardware();
+    public SkystoneHardware robot = new SkystoneHardware();
     public static final int GO_TO_ANGLE_BUFFER = 5;
 
     @Override
