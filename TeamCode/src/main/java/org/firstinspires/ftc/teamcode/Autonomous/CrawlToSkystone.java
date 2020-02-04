@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.Hardware.BuilderSkystoneHardware;
 import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
 
 //@Disabled
-@Autonomous(name = "CrawlToSkystone", group = "new_programmer")
+@Autonomous(name = "CrawlToSkystone-Programmer", group = "new_programmer")
 
 public class CrawlToSkystone extends BaseSkyStoneAuto {
 
