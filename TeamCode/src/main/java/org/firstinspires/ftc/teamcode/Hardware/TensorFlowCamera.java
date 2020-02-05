@@ -10,27 +10,27 @@ public class TensorFlowCamera extends BaseCamera {
     public TFObjectDetector tfod;
 
     public String initBackCamera(final HardwareMap hardwareMap,
-                                           final double minimumConfidence,
-                                           final String assetName,
-                                           final String... labels) {
+                                 final double minimumConfidence,
+                                 final String assetName,
+                                 final String... labels) {
 
         super.initBackCamera(hardwareMap, false);
         return initTfod(minimumConfidence, assetName, labels);
     }
 
     public String initWebCamera(final HardwareMap hardwareMap,
-                                          final String configName,
-                                          final double minimumConfidence,
-                                          final String assetName,
-                                          final String... labels) {
+                                final String configName,
+                                final double minimumConfidence,
+                                final String assetName,
+                                final String... labels) {
 
         super.initWebCamera(hardwareMap, configName,false);
         return initTfod(minimumConfidence, assetName, labels);
     }
 
     private String initTfod(final double minimumConfidence,
-                                      final String assetName,
-                                      final String... labels) {
+                            final String assetName,
+                            final String... labels) {
 
         if (tfod == null && vuforia != null) {
 

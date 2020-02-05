@@ -28,8 +28,7 @@ public class TestWebCamera extends LinearOpMode {
         robot.webCamera.activateTfod();
 
         if (robot.webCamera.hasError()) {
-            telemetry.addData("FAILED!",  robot.webCamera.errorMessage);
-
+            telemetry.addData("Failed!",  robot.webCamera.errorMessage);
         } else {
             telemetry.addData("Successful!", "");
         }
@@ -39,6 +38,7 @@ public class TestWebCamera extends LinearOpMode {
 
         waitForStart();
 
+        // Do this to force a crash if the webcam isn't configured correctly
         WebcamName webcamName = hardwareMap.get(WebcamName.class, WEB_CAM_NAME);
         final VuforiaLocalizer.Parameters parameters = VuforiaUtilities.getWebCameraParameters(hardwareMap, webcamName, true);
         robot.webCamera.init(hardwareMap, parameters);

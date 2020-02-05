@@ -11,7 +11,6 @@ import org.firstinspires.ftc.robotcontroller.internal.MotoLinearOpMode;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.Hardware.BuilderSkystoneHardware;
-import org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware;
 import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
 
 import java.util.List;
@@ -21,39 +20,25 @@ import static org.firstinspires.ftc.teamcode.Hardware.BaseSkyStoneHardware.LABEL
 @SuppressLint("DefaultLocale")
 public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
 
-    public BuilderSkystoneHardware robot = new BuilderSkystoneHardware();
     public static final int GO_TO_ANGLE_BUFFER = 5;
-
-    @Override
-    public void runOpMode() throws InterruptedException {
-
-        robot.init(hardwareMap);
-        robot.swerveStraight(0, 0);
-
-        waitForStart();
-
-        while (opModeIsActive()) {
-
-        }
-    }
+    public BuilderSkystoneHardware robot = new BuilderSkystoneHardware();
 
     public void turnTo(double angle) {
         turnTo(angle, .5);
     }
 
-    public void turnTo(double angle, double power){
-
-        goToAngle(robot.getAngle(), angle, .5);
+    public void turnTo(double angle, double power) {
+        goToAngle(robot.getAngle(), angle, power);
     }
 
-    public void moveInches (double angle, double inches, double power){
+    public void moveInches(double angle, double inches, double power) {
 
-        robot.swerveStraight(angle,0);
+        robot.swerveStraight(angle, 0);
         robot.setWheelMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.setWheelMotorMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.setWheelMotorMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        robot.setWheelTargetPositions((int)(inches*robot.inchesToEncoder));
+        robot.setWheelTargetPositions((int) (inches * robot.inchesToEncoder));
 
         robot.swerveStraight(angle, power);
         while (robot.wheelsAreBusy() && opModeIsActive()) {
@@ -72,7 +57,7 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
         robot.setWheelMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.setWheelMotorMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        robot.swerveStraight(angle,0);
+        robot.swerveStraight(angle, 0);
     }
 
     public void goToAngle(double angleStart, double angleGoal, double power) {
@@ -93,7 +78,7 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
 
         }
         robot.swerveTurn(0);
-        telemetry.addData("Is Stopped" , "");
+        telemetry.addData("Is Stopped", "");
         telemetry.update();
     }
 
@@ -108,28 +93,27 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
         return Range.clip(basePower + stallPower, -Math.abs(maxPower), Math.abs(maxPower));
     }
 
-    public void platformParkInner(int team){
+    public void platformParkInner(int team) {
         double colorAngle;
-        if (team == Color.RED){
+        if (team == Color.RED) {
             colorAngle = robot.ROBOT_LEFT_ANGLE;
-        }
-        else {
+        } else {
             colorAngle = robot.ROBOT_RIGHT_ANGLE;
 
         }
         //Step one: turn wheels 90 degrees counterclockwise and go forward 28.5 inches and lower grabbers.
-        moveInches(colorAngle,28.5 , 0.5 );
-        robot.rightGrabber.setPosition (robot.GRABBER_MAX);
+        moveInches(colorAngle, 28.5, 0.5);
+        robot.rightGrabber.setPosition(robot.GRABBER_MAX);
         robot.leftGrabber.setPosition(robot.GRABBER_MAX);
         ElapsedTime timer = new ElapsedTime();
-        while (timer.milliseconds()< 500);
+        while (timer.milliseconds() < 500) ;
 
         //Step two: back up 26 inches and raise grabbers.
-        moveInches(colorAngle,-26 , 0.5);
-        robot.rightGrabber.setPosition (robot.GRABBER_MIN);
+        moveInches(colorAngle, -26, 0.5);
+        robot.rightGrabber.setPosition(robot.GRABBER_MIN);
         robot.leftGrabber.setPosition(robot.GRABBER_MIN);
         //Step three: turn wheels 90 degrees counterclockwise and slide out 2 ft.
-        moveInches(robot.ROBOT_FRONT_ANGLE, -24  , 0.5);
+        moveInches(robot.ROBOT_FRONT_ANGLE, -24, 0.5);
         //Step four: turn wheels to position 90, move forwards 2 ft
         moveInches(colorAngle, 24, 0.5);
         //Step Five: Turn Wheels to 0, move forward 2 ft
@@ -137,13 +121,12 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
         //Step  Six: Stop
     }
 
-
     public Float findSkyStone() {
 
         Float centerPercentDifference = null;
         float stonePercentLocation = 0;
         if (robot.webCamera.tfod == null) {
-            return (Float.valueOf(0));
+            return (0.0f);
         }
 
         List<Recognition> updatedRecognitions = robot.webCamera.tfod.getUpdatedRecognitions();
@@ -180,11 +163,11 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
     }
 
     public void SkytoneScanner(int red) {
-        float skyStonePosition = findSkyStone();
+        Float skyStonePosition = findSkyStone();
 
         robot.setWheelMotorMode(DcMotor.RunMode.RUN_USING_ENCODER);
         double fLeftStart = Math.abs(robot.frontLeft.getCurrentPosition());
-        while (skyStonePosition < 1 && opModeIsActive()) {
+        while ((skyStonePosition == null || Math.abs(skyStonePosition) < 1) && opModeIsActive()) {
             telemetry.addData("loop is running", "");
             telemetry.update();
 
@@ -196,17 +179,15 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
         telemetry.update();
 
         double fLeftEnd = Math.abs(robot.frontLeft.getCurrentPosition());
-        double diff = Math.abs(fLeftEnd-fLeftStart);
-            robot.swerveStraight(0,0);
-            telemetry.addData("Start " , fLeftStart);
-            telemetry.addData("End " , fLeftEnd);
-            telemetry.addData("Diff " , diff);
-            telemetry.addData("location", skyStonePosition);
-            telemetry.update();
-
+        double diff = Math.abs(fLeftEnd - fLeftStart);
+        robot.swerveStraight(0, 0);
+        telemetry.addData("Start ", fLeftStart);
+        telemetry.addData("End ", fLeftEnd);
+        telemetry.addData("Diff ", diff);
+        telemetry.addData("location", skyStonePosition);
+        telemetry.update();
 
         //turning and grabbing the skystone
-
 
         this.turnTo(90);
 
@@ -229,6 +210,22 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
         //turning robot 90 degrees clockwise
 
         this.turnTo(90);
+    }
+
+    public void initAndActivateWebCameraWithTensorFlow() {
+
+        // Init the web camera with TensorFlow
+        robot.initWebCamera(hardwareMap);
+
+        // Activate TensorFlow
+        robot.webCamera.activateTfod();
+
+        // Check for errors
+        if (robot.webCamera.hasError()) {
+            telemetry.addData("Failed!", robot.webCamera.errorMessage);
+        } else {
+            telemetry.addData("Successful!", "");
+        }
     }
 }
 
