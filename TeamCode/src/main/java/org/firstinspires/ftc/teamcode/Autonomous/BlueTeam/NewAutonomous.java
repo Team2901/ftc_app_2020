@@ -7,7 +7,7 @@ import org.firstinspires.ftc.teamcode.Hardware.BaseSkyStoneHardware;
 
 
 
-@Autonomous(name = "New", group = "BlueTeam")
+@Autonomous(name = "New 1", group = "BlueTeam")
 public class NewAutonomous extends BaseSkyStoneAuto {
 
 
@@ -15,15 +15,31 @@ public class NewAutonomous extends BaseSkyStoneAuto {
     public void runOpMode() throws InterruptedException {
         robot.init(hardwareMap);
 
+        telemetry.speak("FUCK","en","US");
+
+
+        robot.crane.setPosition(0);
+
         waitForStart();
 
-        robot.crane.setPosition(.033);
-        robot.jaw.setPosition(robot.OPEN_JAW);
-        this.moveInches(0,31, .4);
-        robot.jaw.setPosition(robot.CLOSED_JAW);
-        robot.lift.setTargetPosition(-103);
-        this.moveInches(0,31, -0.4);
+        robot.crane.setPosition(1);
+        robot.jaw.setPosition(1);
 
+        this.moveInches(0,28, .3);
+        robot.jaw.setPosition(0);
+        robot.lift.setTargetPosition(-103);
+        this.moveInches(0,-24, 0.4);
+
+        turnTo(90, .2);
+
+
+        this.moveInches(0, 98, 0.3);
+        turnTo(-90, .2);
+        robot.lift.setTargetPosition(-206);
+
+
+
+        while(opModeIsActive());
     }
 
 }

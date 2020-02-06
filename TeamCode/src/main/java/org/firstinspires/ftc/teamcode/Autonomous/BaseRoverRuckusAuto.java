@@ -40,7 +40,7 @@ public class BaseRoverRuckusAuto extends LinearOpMode {
     public static final boolean DEFAULT_USE_WEBCAM = true;
     public static final boolean DEFAULT_USE_VUFORIA_NAV = false;
 
-    public static final int GO_TO_ANGLE_BUFFER = 3;
+    public static final int GO_TO_ANGLE_BUFFER = 9;
     public static final int GO_TO_POSITION_BUFFER = 2;
     public static final int TARGET_LIFT_TICKS = 5000;
     public static final double P_DRIVE_COEFF = 0.05;

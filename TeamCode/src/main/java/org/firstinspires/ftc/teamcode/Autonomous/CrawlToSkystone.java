@@ -26,6 +26,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
  *  10) deposit skystone on waffle
  *  11) Park under the skybridge
  */
+
 public class CrawlToSkystone extends BaseSkyStoneAuto {
     private static final String VUFORIA_KEY = "AYhwTMH/////AAABmR7oFvU9lEJTryl5O3jDSusAPmWSAx5CHlcB/" +
             "IUoT+t7S1pJqTo7n3OwM4f2vVULA0T1uZVl9i61kWldhVqxK2+kyBNI4Uld8cYgHaNIQFsL/NsyBrb3Zl+1ZFBR" +
@@ -45,9 +46,10 @@ public class CrawlToSkystone extends BaseSkyStoneAuto {
         initAndActivateWebCameraWithTensorFlow();
 
         // Step 0) Point wheels forward
-        robot.swerveStraight(0, 0);
+       // robot.swerveStraight(0, 0);
 
-        telemetry.addData(">", "Press Play to start op mode");
+       // telemetry.addData(">", "Press Play to start op mode");
+        telemetry.addData(">", "We broke the loop");
         telemetry.update();
 
         // Wait for start
@@ -64,7 +66,7 @@ public class CrawlToSkystone extends BaseSkyStoneAuto {
         while (skyStoneCenterPercentDiff == null || Math.abs(skyStoneCenterPercentDiff) > 10) {
             telemetry.addData("loop is running", "");
             telemetry.update();
-
+/*
             if (skyStoneCenterPercentDiff == null) {
                 // If we don't see a skystone: Move forwards
                 robot.swerveStraight(0, 0.3);
@@ -75,7 +77,7 @@ public class CrawlToSkystone extends BaseSkyStoneAuto {
                 // If the skystone is to the right: Move forwards
                 robot.swerveStraight(0, 0.3);
             }
-
+*/
             // Update the skystone location
             skyStoneCenterPercentDiff = findSkyStone();
         }
@@ -91,6 +93,7 @@ public class CrawlToSkystone extends BaseSkyStoneAuto {
         double diff = (fLeftEnd - fLeftStart);
         double diffInches = diff / robot.inchesToEncoder;
 
+        /*
         // Step 2) Turn to face the skystone
         turnTo(90);
 
@@ -120,7 +123,7 @@ public class CrawlToSkystone extends BaseSkyStoneAuto {
 
         // Step 11) Park under the skybridge
         // TODO
-
+*/
         while (opModeIsActive()) {
         }
     }

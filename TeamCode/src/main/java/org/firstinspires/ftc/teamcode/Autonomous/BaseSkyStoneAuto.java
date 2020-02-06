@@ -20,7 +20,7 @@ import static org.firstinspires.ftc.teamcode.Hardware.BaseSkyStoneHardware.LABEL
 @SuppressLint("DefaultLocale")
 public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
 
-    public static final int GO_TO_ANGLE_BUFFER = 5;
+    public static final int GO_TO_ANGLE_BUFFER = 7;
     public BuilderSkystoneHardware robot = new BuilderSkystoneHardware();
 
     public void turnTo(double angle) {
@@ -67,7 +67,7 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
         while ((Math.abs(angleGoal - angleCurrent) > GO_TO_ANGLE_BUFFER) && opModeIsActive()) {
             angleCurrent = robot.getAngle();
             double powerCurrent = getCurrentTurnPower(angleCurrent, angleGoal, angleStart, power);
-            robot.swerveTurn(powerCurrent);
+            robot.swerveTurn(-powerCurrent);
 
             telemetry.addData("Start Angle ", "%.1f", angleStart);
             telemetry.addData("Goal Angle  ", "%.1f", angleGoal);
@@ -87,8 +87,8 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
         double relGoal = AngleUtilities.getNormalizedAngle(absGoal - absStart);
         double remainingDistance = AngleUtilities.getNormalizedAngle(relGoal - relCurrent);
 
-        double basePower = 0.045 * remainingDistance;
-        double stallPower = 0.1 * Math.signum(remainingDistance);
+        double basePower = 0.025 * remainingDistance;
+        double stallPower = 0.05 * Math.signum(remainingDistance);
 
         return Range.clip(basePower + stallPower, -Math.abs(maxPower), Math.abs(maxPower));
     }
