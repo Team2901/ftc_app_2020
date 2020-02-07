@@ -1,11 +1,13 @@
 package org.firstinspires.ftc.teamcode.Autonomous.BlueTeam;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.Autonomous.BaseSkyStoneAuto;
 
-//@Autonomous(name= "BluePlatform2")
+@Disabled
+@Autonomous(name= "BluePlatform2")
 public class Platform extends BaseSkyStoneAuto {
 
     @Override

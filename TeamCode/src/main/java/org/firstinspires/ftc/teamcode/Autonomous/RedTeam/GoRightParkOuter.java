@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.Autonomous.RedTeam;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.Autonomous.BaseSkyStoneAuto;
 
-//@Autonomous(name = "Sky_Red_Go_Right_Park_Outer", group = "_RED")
+@Disabled
+@Autonomous(name = "Sky_Red_Go_Right_Park_Outer", group = "_RED")
 public class GoRightParkOuter extends BaseSkyStoneAuto {
 
     @Override

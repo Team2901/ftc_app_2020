@@ -1,10 +1,12 @@
 package org.firstinspires.ftc.teamcode.Autonomous.RedTeam;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.Autonomous.BaseSkyStoneAuto;
 
-//@Autonomous(name = "Sky_Red_Go_Left_Park_Inner", group = "_RED")
+@Disabled
+@Autonomous(name = "Sky_Red_Go_Left_Park_Inner", group = "_RED")
 public class GoLeftParkInner extends BaseSkyStoneAuto {
     @Override
     public void runOpMode() throws InterruptedException {
