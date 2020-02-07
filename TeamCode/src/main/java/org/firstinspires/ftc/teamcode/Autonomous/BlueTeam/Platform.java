@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.Autonomous.BaseSkyStoneAuto;
 
-@Autonomous(name= "BluePlatform2")
+//@Autonomous(name= "BluePlatform2")
 public class Platform extends BaseSkyStoneAuto {
 
     @Override

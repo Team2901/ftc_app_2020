@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Autonomous.BaseSkyStoneAuto;
 
-@Autonomous(name = "Sky_Red_Go_Right_Park_Outer", group = "_RED")
+//@Autonomous(name = "Sky_Red_Go_Right_Park_Outer", group = "_RED")
 public class GoRightParkOuter extends BaseSkyStoneAuto {
 
     @Override

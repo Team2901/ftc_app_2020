@@ -41,9 +41,11 @@ public class CrawlToSkystone extends BaseSkyStoneAuto {
 
         // Step 0) Initialize robot and web camera with TensorFlow
         robot.init(hardwareMap);
-        initVuforia();
+
+
 
         initAndActivateWebCameraWithTensorFlow();
+        robot.crane.setPosition(0);
 
         // Step 0) Point wheels forward
        // robot.swerveStraight(0, 0);
@@ -65,11 +67,12 @@ public class CrawlToSkystone extends BaseSkyStoneAuto {
 
         while (skyStoneCenterPercentDiff == null || Math.abs(skyStoneCenterPercentDiff) > 10) {
             telemetry.addData("loop is running", "");
+            telemetry.addData("percent dif." , skyStoneCenterPercentDiff);
             telemetry.update();
-/*
+
             if (skyStoneCenterPercentDiff == null) {
                 // If we don't see a skystone: Move forwards
-                robot.swerveStraight(0, 0.3);
+                robot.swerveStraight(0, -0.2);
             } else if (skyStoneCenterPercentDiff < 0) {
                 // If the skystone is to the left: Move backwards
                 robot.swerveStraight(0, -0.3);
@@ -77,7 +80,7 @@ public class CrawlToSkystone extends BaseSkyStoneAuto {
                 // If the skystone is to the right: Move forwards
                 robot.swerveStraight(0, 0.3);
             }
-*/
+
             // Update the skystone location
             skyStoneCenterPercentDiff = findSkyStone();
         }
@@ -86,34 +89,35 @@ public class CrawlToSkystone extends BaseSkyStoneAuto {
         robot.swerveStraight(0, 0);
 
         telemetry.addData("out of loop", "");
+        telemetry.addData("percent dif.", skyStoneCenterPercentDiff);
         telemetry.update();
-
         // Calculate in inches how far the robot has moved while finding the skystone
         double fLeftEnd = Math.abs(robot.frontLeft.getCurrentPosition());
         double diff = (fLeftEnd - fLeftStart);
         double diffInches = diff / robot.inchesToEncoder;
 
-        /*
+
         // Step 2) Turn to face the skystone
-        turnTo(90);
+        turnTo(-90, .2);
 
         // Step 3) Open the jaw
         robot.jaw.setPosition(robot.OPEN_JAW);
+        robot.crane.setPosition(1);
 
         // Step 4) Move forwards 2 feet towards the skystone
-        this.moveInches(0, 24, .2);
+        this.moveInches(0, 28, .2);
 
         // Step 5) Close the jaw on the skystone
         robot.jaw.setPosition(robot.CLOSED_JAW);
 
         // Step 6) Move backwards 2 feet away from the skystone
-        this.moveInches(0, -24, .2);
+        this.moveInches(0, -26, .2);
 
         // Step 7) Turn to face towards the building zone
-        turnTo(90);
-
+        turnTo(0, .2);
+/*
         // Step 8) Move back to where we were in step 1
-        this.moveInches(0, -diffInches, .2);
+        //this.moveInches(0, -diffInches, .2);
 
         // Step 9) Move forwards to in front of the waffle
         // TODO
@@ -128,19 +132,5 @@ public class CrawlToSkystone extends BaseSkyStoneAuto {
         }
     }
 
-    private void initVuforia() {
 
-            /*
-             * Configure Vuforia by creating a Parameter object, and passing it to the Vuforia engine.
-             */
-            VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
-
-            parameters.vuforiaLicenseKey = VUFORIA_KEY;
-            parameters.cameraName = hardwareMap.get(WebcamName.class, "Webcam 1");
-
-            //  Instantiate the Vuforia engine
-            vuforia = ClassFactory.getInstance().createVuforia(parameters);
-
-
-    }
 }

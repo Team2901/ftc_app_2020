@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Autonomous.BaseSkyStoneAuto;
 
-@Autonomous(name = "Sky_Red_Go_Left_Park_Inner", group = "_RED")
+//@Autonomous(name = "Sky_Red_Go_Left_Park_Inner", group = "_RED")
 public class GoLeftParkInner extends BaseSkyStoneAuto {
     @Override
     public void runOpMode() throws InterruptedException {

@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Autonomous.BaseSkyStoneAuto;
 
-@Autonomous(name = "Sky_Blue_Platform_Park_Inner", group = "BLUE")
+//@Autonomous(name = "Sky_Blue_Platform_Park_Inner", group = "BLUE")
 public class PlatformParkInner extends BaseSkyStoneAuto {
 
     @Override
