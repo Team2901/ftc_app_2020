@@ -1,12 +1,10 @@
-package org.firstinspires.ftc.teamcode.Autonomous;
+package org.firstinspires.ftc.teamcode.Autonomous.RedTeam;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.robotcore.external.ClassFactory;
-import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.teamcode.Autonomous.BaseSkyStoneAuto;
 
 
 /**
@@ -27,8 +25,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
  *  11) Park under the skybridge
  */
 
-@Autonomous(name = "BlueQuarry1StonePark", group = "")
-public class BlueQuarry1StonePark extends BaseSkyStoneAuto {
+@Autonomous(name = "RedQuarry1StonePark", group = "")
+public class RedQuarry1StonePark extends BaseSkyStoneAuto {
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -40,6 +38,7 @@ public class BlueQuarry1StonePark extends BaseSkyStoneAuto {
         initAndActivateWebCameraWithTensorFlow();
         robot.crane.setPosition(0);
         robot.wrist.setPosition(.5);
+        robot.setGrabberPositition(.7,.84);
 
         // Step 0) Point wheels forward
         robot.swerveStraight(0, 0);
@@ -52,7 +51,7 @@ public class BlueQuarry1StonePark extends BaseSkyStoneAuto {
 
         this.moveInches(0, 2, .2);
 
-        robot.swerveStraight(270, 0);
+        robot.swerveStraight(90, 0);
         robot.crane.setPosition(1);
         robot.wrist.setPosition(.5);
         double t = 0;
@@ -75,13 +74,13 @@ public class BlueQuarry1StonePark extends BaseSkyStoneAuto {
 
             if (skyStoneCenterPercentDiff == null) {
                 // If we don't see a skystone: Move forwards
-                robot.swerveStraight(270, 0.2);
+                robot.swerveStraight(90, 0.2);
             } else if (skyStoneCenterPercentDiff < 0) {
                 // If the skystone is to the left: Move backwards
-                robot.swerveStraight(270, 0.3);
+                robot.swerveStraight(90, 0.3);
             } else {
                 // If the skystone is to the right: Move forwards
-                robot.swerveStraight(270, -0.3);
+                robot.swerveStraight(90, -0.3);
             }
 
             // Update the skystone location
@@ -118,13 +117,13 @@ public class BlueQuarry1StonePark extends BaseSkyStoneAuto {
 
 
         robot.swerveTurn(0);
-        turnTo(90, .2);
+        turnTo(270, .2);
 
         robot.swerveStraight(0, 0);
 
         this.moveInches(0, diffInches, .3);
 
-        turnTo(90, .2);
+        turnTo(270, .2);
 
 
         this.moveInches(0, 60, .4);
@@ -142,7 +141,7 @@ public class BlueQuarry1StonePark extends BaseSkyStoneAuto {
 
         moveInches(0, -12, .3);
 
-        turnTo(-90, .2);
+        turnTo(90, .2);
 
         moveInches(0, 40, .3);
 /*

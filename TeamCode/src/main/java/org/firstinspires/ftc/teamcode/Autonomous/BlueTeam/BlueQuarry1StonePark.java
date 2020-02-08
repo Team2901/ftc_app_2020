@@ -1,9 +1,13 @@
-package org.firstinspires.ftc.teamcode.Autonomous;
+package org.firstinspires.ftc.teamcode.Autonomous.BlueTeam;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.teamcode.Autonomous.BaseSkyStoneAuto;
 
 
 /**
@@ -24,8 +28,8 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
  *  11) Park under the skybridge
  */
 
-@Autonomous(name = "RedQuarry1StonePark", group = "")
-public class RedQuarry1StonePark extends BaseSkyStoneAuto {
+@Autonomous(name = "BlueQuarry1StonePark", group = "")
+public class BlueQuarry1StonePark extends BaseSkyStoneAuto {
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -37,6 +41,7 @@ public class RedQuarry1StonePark extends BaseSkyStoneAuto {
         initAndActivateWebCameraWithTensorFlow();
         robot.crane.setPosition(0);
         robot.wrist.setPosition(.5);
+        robot.setGrabberPositition(.7, .84);
 
         // Step 0) Point wheels forward
         robot.swerveStraight(0, 0);
@@ -47,22 +52,22 @@ public class RedQuarry1StonePark extends BaseSkyStoneAuto {
         // Wait for start
         waitForStart();
 
+        // Move forwards 2 inches from the wall to turn wheels
         this.moveInches(0, 2, .2);
 
-        robot.swerveStraight(90, 0);
+        // Make wheels point right
+        robot.swerveStraight(-90, 0);
+
+        // Extend crane
         robot.crane.setPosition(1);
         robot.wrist.setPosition(.5);
-        double t = 0;
-        while (t < 10) {
-            t++;
-        }
+
         // Save the robot's current position prior to search for a skystone
         robot.setWheelMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.setWheelMotorMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        double fLeftStart = Math.abs(robot.frontLeft.getCurrentPosition());
+        double fLeftStart = (robot.frontLeft.getCurrentPosition());
 
         // Step 1) Move forwards/backwards until a skystone location is within 10% of the center of the camera's view
-//stuff
         Float skyStoneCenterPercentDiff = findSkyStone();
 
         while (skyStoneCenterPercentDiff == null || Math.abs(skyStoneCenterPercentDiff) > 3) {
@@ -72,13 +77,13 @@ public class RedQuarry1StonePark extends BaseSkyStoneAuto {
 
             if (skyStoneCenterPercentDiff == null) {
                 // If we don't see a skystone: Move forwards
-                robot.swerveStraight(90, 0.2);
+                robot.swerveStraight(-90, 0.2);
             } else if (skyStoneCenterPercentDiff < 0) {
                 // If the skystone is to the left: Move backwards
-                robot.swerveStraight(90, 0.3);
+                robot.swerveStraight(-90, 0.3);
             } else {
                 // If the skystone is to the right: Move forwards
-                robot.swerveStraight(90, -0.3);
+                robot.swerveStraight(-90, -0.3);
             }
 
             // Update the skystone location
@@ -115,13 +120,13 @@ public class RedQuarry1StonePark extends BaseSkyStoneAuto {
 
 
         robot.swerveTurn(0);
-        turnTo(270, .2);
+        turnTo(90, .2);
 
         robot.swerveStraight(0, 0);
 
         this.moveInches(0, diffInches, .3);
 
-        turnTo(270, .2);
+        turnTo(90, .2);
 
 
         this.moveInches(0, 60, .4);
@@ -139,7 +144,7 @@ public class RedQuarry1StonePark extends BaseSkyStoneAuto {
 
         moveInches(0, -12, .3);
 
-        turnTo(90, .2);
+        turnTo(-90, .2);
 
         moveInches(0, 40, .3);
 /*
