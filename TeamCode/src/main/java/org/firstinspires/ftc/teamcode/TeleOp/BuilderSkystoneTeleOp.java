@@ -58,15 +58,17 @@ public class BuilderSkystoneTeleOp extends OpMode {
         }
 //CRANE CONTROL
         if (gamepad2.right_bumper) {
-            robot.crane.setPosition(robot.crane.getPosition() + .005);
+            robot.crane.setPosition(robot.crane.getPosition() + .015);
         } else if (gamepad2.left_bumper) {
-            robot.crane.setPosition(robot.crane.getPosition() - .005);
+            robot.crane.setPosition(robot.crane.getPosition() - .015);
         }
 //WRIST CONTROL
         if (gamepad2.x) {
             robot.wrist.setPosition(robot.wrist.getPosition() + .01);
         } else if (gamepad2.y) {
             robot.wrist.setPosition(robot.wrist.getPosition() - .01);
+        } else if (gamepad2.start) {
+            robot.wrist.setPosition(.5);
         }
 //JAW CONTROL
         if (gamepad2.a) {
