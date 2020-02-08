@@ -430,13 +430,13 @@ BaseSkyStoneHardware {
     }
 
     public void moveLift (int counts){
-        lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        lift.setTargetPosition(counts);
-        lift.setPower(.3);
-        while(lift.isBusy());
-        lift.setPower(0);
+        frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        frontLeft.setTargetPosition(counts);
+        frontLeft.setPower(.3);
+        while(frontLeft.isBusy());
+        frontLeft.setPower(0);
 
     }
 }
