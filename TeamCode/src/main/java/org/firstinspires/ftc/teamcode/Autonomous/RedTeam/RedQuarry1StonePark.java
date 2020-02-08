@@ -64,7 +64,6 @@ public class RedQuarry1StonePark extends BaseSkyStoneAuto {
         double fLeftStart = Math.abs(robot.frontLeft.getCurrentPosition());
 
         // Step 1) Move forwards/backwards until a skystone location is within 10% of the center of the camera's view
-//stuff
         Float skyStoneCenterPercentDiff = findSkyStone();
 
         while (skyStoneCenterPercentDiff == null || Math.abs(skyStoneCenterPercentDiff) > 3) {
