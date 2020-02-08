@@ -66,7 +66,7 @@ public class BuilderSkystoneHardware extends BaseSkyStoneHardware{
 
 
         //Platform Grabber
-        setGrabberPositition(.7,.84);
+        //setGrabberPositition(.7,.84);
     }
 }
 

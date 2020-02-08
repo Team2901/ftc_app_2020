@@ -9,6 +9,7 @@ public class BasicAtonomus extends BaseSkyStoneAuto {
     public void runOpMode() throws InterruptedException {
         robot.init(hardwareMap);
         robot.swerveStraight(0, 0);
+        robot.setGrabberPositition(.7,.84);
         waitForStart();
         // fowards 2ft ,turn 90 counterclockwise, go forwards, turn 70
         moveInches(0,12 ,0.1);
