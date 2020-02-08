@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Gamepad.ImprovedGamepad;
@@ -29,7 +30,8 @@ public class OnePersonTeleOp extends OpMode {
        // robot.swerveStraight(0, 0);
         this.improvedGamepad1 = new ImprovedGamepad(gamepad1, timer, "g1");
         this.improvedGamepad2 = new ImprovedGamepad(gamepad2, timer, "g2");
-    }
+        robot.lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+       }
 
     @Override
     public void loop() {
@@ -101,6 +103,14 @@ telemetry.addData("crane", robot.crane.getPosition());
                 robot.swerveWheels.backLeftMotor.targetAngle, robot.swerveWheels.backLeftMotor.modifier, robot.swerveWheels.backLeftMotor.wheelAngleToServoPosition()));
         telemetry.addData("BR", String.format("angle: %.2f, mod: %d, pos: %.2f",
                 robot.swerveWheels.backRightMotor.targetAngle, robot.swerveWheels.backRightMotor.modifier, robot.swerveWheels.backRightMotor.wheelAngleToServoPosition()));
+
+
+
+        telemetry.addData("lift position" , robot.lift.getCurrentPosition() );
+        telemetry.addData("Jaw position" , robot.jaw.getPosition() );
+        telemetry.addData("Wrist position" , robot.wrist.getPosition() );
+        telemetry.addData("Crane Position" , robot.crane.getPosition() );
+
 
         telemetry.addData("flo", robot.frontLeftOffset);
         telemetry.addData("fro", robot.frontRightOffset);
