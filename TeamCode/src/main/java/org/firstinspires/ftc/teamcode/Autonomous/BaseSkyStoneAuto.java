@@ -93,6 +93,10 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
         return Range.clip(basePower + stallPower, -Math.abs(maxPower), Math.abs(maxPower));
     }
 
+    public double getCurrentTurnPower(double absCurrent, double absGoal, double maxPower) {
+        return getCurrentTurnPower(absCurrent, absGoal, 0, maxPower);
+    }
+
     public void platformParkInner(int team) {
         double colorAngle;
         if (team == Color.RED) {

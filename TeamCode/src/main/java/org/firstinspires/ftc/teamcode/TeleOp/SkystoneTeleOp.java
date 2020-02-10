@@ -8,13 +8,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Gamepad.ImprovedGamepad;
 import org.firstinspires.ftc.teamcode.Hardware.BuilderSkystoneHardware;
-import org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware;
 
 @SuppressLint("DefaultLocale")
 @TeleOp(name = "Skystone", group = "SKYSTONE")
 public class SkystoneTeleOp extends OpMode {
 
-    public static final double WHEEL_POWER_RATIO = .35;
     public BuilderSkystoneHardware robot = new BuilderSkystoneHardware();
     public ElapsedTime timer = new ElapsedTime();
     public ImprovedGamepad improvedGamepad1;
@@ -26,7 +24,6 @@ public class SkystoneTeleOp extends OpMode {
         robot.swerveStraight(0, 0);
         this.improvedGamepad1 = new ImprovedGamepad(gamepad1, timer, "g1");
         this.improvedGamepad2 = new ImprovedGamepad(gamepad2, timer, "g2");
-
     }
 
     @Override
@@ -34,7 +31,7 @@ public class SkystoneTeleOp extends OpMode {
         improvedGamepad1.update();
         improvedGamepad2.update();
 
-        // WHHEL CONTROL
+        // WHEEL CONTROL
         if (improvedGamepad1.right_stick_x.isPressed()) {
             double power = getWheelPower(improvedGamepad1.right_stick.x.getValue(), gamepad1.left_bumper);
             robot.swerveTurn(power);
@@ -114,7 +111,7 @@ public class SkystoneTeleOp extends OpMode {
         if (pause) {
             return 0;
         } else {
-            return radius * WHEEL_POWER_RATIO;
+            return radius * robot.wheelPowerRatio;
         }
     }
 }

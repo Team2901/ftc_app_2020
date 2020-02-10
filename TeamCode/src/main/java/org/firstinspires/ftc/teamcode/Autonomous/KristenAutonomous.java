@@ -3,13 +3,10 @@ package org.firstinspires.ftc.teamcode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
 
-import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
-import org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware;
+import org.firstinspires.ftc.teamcode.Hardware.ProgrammingSkystoneHardware;
 
 @Disabled
 @Autonomous (name = "Kristen V5 Autonomous", group = "new_programmer")
@@ -17,7 +14,7 @@ public class KristenAutonomous extends LinearOpMode {
 
     //DcMotor leftMotor;
     //DcMotor rightMotor;
-    public static SkystoneHardware robot = new SkystoneHardware();
+    public static ProgrammingSkystoneHardware robot = new ProgrammingSkystoneHardware();
     public Servo leftGrabber;
     public Servo rightGrabber;
     public Servo  centerGrabber;

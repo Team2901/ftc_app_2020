@@ -3,8 +3,6 @@ package org.firstinspires.ftc.teamcode.TeleOp;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
-import org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware;
-
 @TeleOp(name = "Joystick Test", group = "TEST")
 public class TestJoystick extends OpMode {
 

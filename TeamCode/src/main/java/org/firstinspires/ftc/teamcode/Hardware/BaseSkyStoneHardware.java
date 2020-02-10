@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.Hardware;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
@@ -51,6 +50,7 @@ BaseSkyStoneHardware {
     public double frontRightOffset;
     public double backLeftOffset;
     public double backRightOffset;
+    public double wheelPowerRatio;
     public Servo leftGrabber;
     public Servo rightGrabber;
 
@@ -66,8 +66,8 @@ BaseSkyStoneHardware {
                                 double frontRightOffset,
                                 double backLeftOffset,
                                 double backRightOffset,
-                                double inchesToEncoder
-    ) {
+                                double inchesToEncoder,
+                                double wheelPowerRatio) {
         this.inchesToEncoder = inchesToEncoder;
         this.wheelServoGearRatio = wheelServoGearRatio;
         this.widthOfRobot = widthOfRobot;
@@ -78,6 +78,7 @@ BaseSkyStoneHardware {
         this.backLeftOffset = backLeftOffset;
         this.backRightOffset = backRightOffset;
         this.turnAngle = Math.atan(widthOfRobot/lengthOfRobot);
+        this.wheelPowerRatio = wheelPowerRatio;
 
     }
 

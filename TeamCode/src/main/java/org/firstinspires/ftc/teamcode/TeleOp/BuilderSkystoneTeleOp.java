@@ -56,13 +56,15 @@ public class BuilderSkystoneTeleOp extends OpMode {
         } else {
             robot.lift.setPower(0);
         }
-//CRANE CONTROL
+
+        //CRANE CONTROL
         if (gamepad2.right_bumper) {
             robot.crane.setPosition(robot.crane.getPosition() + .015);
         } else if (gamepad2.left_bumper) {
             robot.crane.setPosition(robot.crane.getPosition() - .015);
         }
-//WRIST CONTROL
+
+        //WRIST CONTROL
         if (gamepad2.x) {
             robot.wrist.setPosition(robot.wrist.getPosition() + .01);
         } else if (gamepad2.y) {
@@ -70,13 +72,15 @@ public class BuilderSkystoneTeleOp extends OpMode {
         } else if (gamepad2.start) {
             robot.wrist.setPosition(.5);
         }
-//JAW CONTROL
+
+        //JAW CONTROL
         if (gamepad2.a) {
             robot.jaw.setPosition(robot.jaw.getPosition() + .01);
         } else if (gamepad2.b) {
             robot.jaw.setPosition(robot.jaw.getPosition() - .01);
         }
-//Waffle Grabber
+
+        //Waffle Grabber
         if (gamepad2.dpad_up) {
             robot.setGrabberPositition(.7, .84);
         } else if (gamepad2.dpad_down) {
@@ -99,17 +103,11 @@ public class BuilderSkystoneTeleOp extends OpMode {
         telemetry.update();
     }
 
-    public double joystickPositionToWheelAngle(double joystickPositionX, double joystickPositionY) {
-        double wheelAngleRad = Math.atan2(joystickPositionY, joystickPositionX);
-        double wheelAngle = AngleUtilities.radiansDegreesTranslation(wheelAngleRad) - 90;
-        return AngleUtilities.getPositiveNormalizedAngle(wheelAngle);
-    }
-
     public double getWheelPower(double radius, boolean pause) {
         if (pause) {
             return 0;
         } else {
-            return radius * robot.WHEEL_POWER_RATIO;
+            return radius * robot.wheelPowerRatio;
         }
     }
 }

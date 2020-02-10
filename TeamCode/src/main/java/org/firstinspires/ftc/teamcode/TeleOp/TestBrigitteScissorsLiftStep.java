@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware;
+import org.firstinspires.ftc.teamcode.Hardware.ProgrammingSkystoneHardware;
 
 @Disabled
 @TeleOp(name="TestBrigitteScissorsLiftStep", group = "TEST")
@@ -18,7 +18,7 @@ public class TestBrigitteScissorsLiftStep extends OpMode{
     int step = 0;
     int topStep = 0;
 
-    SkystoneHardware robot = new SkystoneHardware();
+    ProgrammingSkystoneHardware robot = new ProgrammingSkystoneHardware();
 
     @Override
     public void init() {

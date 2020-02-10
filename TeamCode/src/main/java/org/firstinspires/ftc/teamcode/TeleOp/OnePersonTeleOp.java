@@ -22,7 +22,7 @@ public class OnePersonTeleOp extends OpMode {
     public ImprovedGamepad improvedGamepad1;
     public ImprovedGamepad improvedGamepad2;
 
-    public double wheelPowerRatio = BuilderSkystoneHardware.WHEEL_POWER_RATIO;
+    public double wheelPowerRatio = robot.wheelPowerRatio;
 
     @Override
     public void init() {

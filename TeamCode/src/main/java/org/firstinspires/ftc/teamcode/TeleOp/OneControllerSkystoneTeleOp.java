@@ -8,16 +8,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Gamepad.ImprovedGamepad;
 import org.firstinspires.ftc.teamcode.Hardware.BuilderSkystoneHardware;
-import org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware;
 import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
 
-import static org.firstinspires.ftc.teamcode.Utility.AngleUtilities.getNormalizedAngle;
 @Disabled
 @TeleOp(name = "Builder Skystone - One Controller", group = "SKYSTONE")
 public class OneControllerSkystoneTeleOp extends OpMode {
-
-
-    public static final double WHEEL_POWER_RATIO = .35;
 
     public final static double WHEEL_SERVO_GEAR_RATIO = .3;
     public final static double WIDTH_OF_ROBOT = 13.5;
@@ -137,7 +132,7 @@ public class OneControllerSkystoneTeleOp extends OpMode {
         if (pause) {
             return 0;
         } else {
-            return radius * WHEEL_POWER_RATIO;
+            return radius * robot.wheelPowerRatio;
         }
     }
 
