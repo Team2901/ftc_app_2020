@@ -89,6 +89,10 @@ BaseSkyStoneHardware {
         public double maxWheelAngle = 0;
 
         public SwerveWheel(double offset) {
+          setOffset(offset);
+        }
+
+        public void setOffset(double offset) {
             this.offset = offset;
             minWheelAngle = servoPositionToWheelAngle(0);
             maxWheelAngle = servoPositionToWheelAngle(1);
