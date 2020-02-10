@@ -67,24 +67,37 @@ public class BlueQuarry1StonePark extends BaseSkyStoneAuto {
         robot.setWheelMotorMode(DcMotor.RunMode.RUN_USING_ENCODER);
         double fLeftStart = (robot.frontLeft.getCurrentPosition());
 
+        double lastPower = 0;
+        int chargeDirectionCount = 0;
         // Step 1) Move forwards/backwards until a skystone location is within 10% of the center of the camera's view
         Float skyStoneCenterPercentDiff = findSkyStone();
 
         while (skyStoneCenterPercentDiff == null || Math.abs(skyStoneCenterPercentDiff) > 3) {
             telemetry.addData("loop is running", "");
             telemetry.addData("percent dif.", skyStoneCenterPercentDiff);
+            telemetry.addData("chargeDirectionCount", chargeDirectionCount);
             telemetry.update();
 
+            double power;
             if (skyStoneCenterPercentDiff == null) {
                 // If we don't see a skystone: Move forwards
                 robot.swerveStraight(-90, 0.2);
+                power = .2;
             } else if (skyStoneCenterPercentDiff < 0) {
                 // If the skystone is to the left: Move backwards
                 robot.swerveStraight(-90, 0.3);
+                power = .3;
             } else {
                 // If the skystone is to the right: Move forwards
                 robot.swerveStraight(-90, -0.3);
+                power = -.3;
             }
+
+            if (Math.signum(power) != Math.signum(lastPower)) {
+                chargeDirectionCount++;
+            }
+
+            lastPower = power;
 
             // Update the skystone location
             skyStoneCenterPercentDiff = findSkyStone();

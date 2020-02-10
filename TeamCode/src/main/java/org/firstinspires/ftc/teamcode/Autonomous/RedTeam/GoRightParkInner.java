@@ -5,7 +5,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.Autonomous.BaseSkyStoneAuto;
 
-
 @Autonomous(name = "Sky_Red_Go_Right_Park_Inner", group = "_RED")
 public class GoRightParkInner extends BaseSkyStoneAuto {
 
