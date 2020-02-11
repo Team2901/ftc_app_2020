@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Gamepad.ImprovedGamepad;
+import org.firstinspires.ftc.teamcode.Hardware.BaseSkyStoneHardware;
 import org.firstinspires.ftc.teamcode.Hardware.BuilderSkystoneHardware;
 import org.firstinspires.ftc.teamcode.Utility.FileUtilities;
 
@@ -24,11 +25,7 @@ public class SweveServoOffsetSetter extends OpMode {
 
     Servo servoUnderTest;
 
-    String[] servoNames = {"servoFrontLeft","servoFrontRight","servoBackLeft","servoBackRight"};
-
     int servoIndex;
-
-    ArrayList<Servo> servoArrayList = new ArrayList<>();
 
     List<Double> offsets = new ArrayList<>();
 
@@ -43,19 +40,17 @@ public class SweveServoOffsetSetter extends OpMode {
         } catch (IOException e) {
         }
 
-        if (offsets.size() < servoNames.length) {
+        if (offsets.size() < robot.swerveWheels.length) {
             offsets = new ArrayList<>();
-            for (int i = 0; i < servoNames.length; i++) {
+            for (int i = 0; i < robot.swerveWheels.length; i++) {
                 offsets.add(0.0);
             }
         }
 
-        for(int i = 0; i < servoNames.length; i++){
-            String servoName = servoNames[i];
-            Servo servo = hardwareMap.servo.get(servoName);
-            servoArrayList.add(servo);
+        for(int i = 0; i < robot.swerveWheels.length; i++){
+            BaseSkyStoneHardware.SwerveWheel swerveWheel = robot.swerveWheels[i];
+            Servo servo = swerveWheel.servo;
             servo.setPosition(offsets.size() > i ? offsets.get(i) : 0.0);
-            telemetry.addData("Servo"+i,servoArrayList.get(i));
         }
 
         telemetry.update();
@@ -67,17 +62,17 @@ public class SweveServoOffsetSetter extends OpMode {
 
         if(this.impGamepad.dpad_right.isInitialPress()){
             servoIndex++;
-            if(servoIndex >= servoArrayList.size()){
+            if(servoIndex >= robot.swerveWheels.length){
                 servoIndex = 0;
             }
         } else if(this.impGamepad.dpad_left.isInitialPress()) {
             servoIndex--;
             if(servoIndex < 0){
-                servoIndex = servoArrayList.size() - 1;
+                servoIndex = robot.swerveWheels.length - 1;
             }
         }
 
-        servoUnderTest = servoArrayList.get(servoIndex);
+        servoUnderTest = robot.swerveWheels[servoIndex].servo;
 
         if(servoUnderTest != null){
             if(this.impGamepad.left_bumper.isInitialPress()){
@@ -97,7 +92,7 @@ public class SweveServoOffsetSetter extends OpMode {
             telemetry.addData("Left trigger","-0.01");
             telemetry.addData("Right trigger","+0.01");
             telemetry.addData("Position", servoUnderTest.getPosition());
-            telemetry.addData("Servo name",servoNames[servoIndex]);
+            telemetry.addData("Servo name",robot.swerveWheels[servoIndex].name);
         }
 
         telemetry.addData("D Pad Right/Left", "Increment/decrement servos");
