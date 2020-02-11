@@ -146,14 +146,14 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
                 telemetry.addData(String.format("  right,bottom (%d)", i), "%.03f , %.03f",
                         recognition.getRight(), recognition.getBottom());
                 int centerFrame = recognition.getImageWidth() / 2;
-                float centerStone = (recognition.getRight() + recognition.getLeft()) / 2;
+                float centerSkyStone = (recognition.getRight() + recognition.getLeft()) / 2;
                 telemetry.addData("Center Frame", centerFrame);
-                telemetry.addData("Center Stone", centerStone);
-                float centerDifference = centerStone - centerFrame;
+                telemetry.addData("Center Stone", centerSkyStone);
+                float centerDifference = centerSkyStone - centerFrame;
                 telemetry.addData("Difference", centerDifference);
                 centerPercentDifference = (centerDifference / centerFrame) * 100;
                 telemetry.addData("Percent Difference", centerPercentDifference);
-                stonePercentLocation = (centerStone / recognition.getImageWidth() * 100);
+                stonePercentLocation = (centerSkyStone / recognition.getImageWidth() * 100);
 
             }
         }
