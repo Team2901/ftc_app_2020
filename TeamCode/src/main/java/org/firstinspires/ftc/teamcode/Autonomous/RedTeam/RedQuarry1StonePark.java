@@ -29,7 +29,7 @@ import org.firstinspires.ftc.teamcode.Autonomous.BaseSkyStoneAuto;
 public class RedQuarry1StonePark extends BaseSkyStoneAuto {
 
     final static int CONFIDENCE_PERCENTAGE = 5;
-    
+
     @Override
     public void runOpMode() throws InterruptedException {
 
