@@ -21,6 +21,9 @@ public class BuilderSkystoneTeleOp extends OpMode {
     public ElapsedTime timer = new ElapsedTime();
     public ImprovedGamepad improvedGamepad1;
     public ImprovedGamepad improvedGamepad2;
+    public static final int ABSOLUTE_MODE = 0;
+    public static final int RELATIVE_MODE = 1;
+    public int mode = ABSOLUTE_MODE;
 
     @Override
     public void init() {
@@ -43,7 +46,12 @@ public class BuilderSkystoneTeleOp extends OpMode {
         } else if (improvedGamepad1.left_stick.isPressed()) {
             double power = getWheelPower(improvedGamepad1.left_stick.getValue(), gamepad1.left_bumper);
             double joyWheelAngle = improvedGamepad1.left_stick.getAngel();
-            robot.swerveStraight(joyWheelAngle, power);
+            if (mode == ABSOLUTE_MODE) {
+                robot.swerveStraightAbsolute(joyWheelAngle, power);
+            }
+            else {
+                robot.swerveStraight(joyWheelAngle, power);
+            }
         } else {
             robot.setWheelMotorPower(0, 0, 0, 0);
         }
@@ -84,13 +92,13 @@ public class BuilderSkystoneTeleOp extends OpMode {
         }
 
         telemetry.addData("FL", String.format("angle: %.2f, mod: %d, pos: %.2f",
-                robot.swerveWheels.frontLeftMotor.targetAngle, robot.swerveWheels.frontLeftMotor.modifier, robot.swerveWheels.frontLeftMotor.wheelAngleToServoPosition()));
+                robot.frontLeftMotor.targetAngle, robot.frontLeftMotor.modifier, robot.frontLeftMotor.wheelAngleToServoPosition()));
         telemetry.addData("FR", String.format("angle: %.2f, mod: %d, pos: %.2f",
-                robot.swerveWheels.frontRightMotor.targetAngle, robot.swerveWheels.frontRightMotor.modifier, robot.swerveWheels.frontRightMotor.wheelAngleToServoPosition()));
+                robot.frontRightMotor.targetAngle, robot.frontRightMotor.modifier, robot.frontRightMotor.wheelAngleToServoPosition()));
         telemetry.addData("BL", String.format("angle: %.2f, mod: %d, pos: %.2f",
-                robot.swerveWheels.backLeftMotor.targetAngle, robot.swerveWheels.backLeftMotor.modifier, robot.swerveWheels.backLeftMotor.wheelAngleToServoPosition()));
+                robot.backLeftMotor.targetAngle, robot.backLeftMotor.modifier, robot.backLeftMotor.wheelAngleToServoPosition()));
         telemetry.addData("BR", String.format("angle: %.2f, mod: %d, pos: %.2f",
-                robot.swerveWheels.backRightMotor.targetAngle, robot.swerveWheels.backRightMotor.modifier, robot.swerveWheels.backRightMotor.wheelAngleToServoPosition()));
+                robot.backRightMotor.targetAngle, robot.backRightMotor.modifier, robot.backRightMotor.wheelAngleToServoPosition()));
 
         telemetry.addData("flo", robot.frontLeftOffset);
         telemetry.addData("fro", robot.frontRightOffset);
