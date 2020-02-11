@@ -110,7 +110,7 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
         Float centerPercentDifference = null;
         float stonePercentLocation = 0;
         if (robot.webCamera.tfod == null) {
-            return (0.0f);
+            return null;
         }
 
         List<Recognition> updatedRecognitions = robot.webCamera.tfod.getUpdatedRecognitions();
