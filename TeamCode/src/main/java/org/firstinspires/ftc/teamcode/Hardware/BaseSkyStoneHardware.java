@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -29,6 +30,11 @@ public class BaseSkyStoneHardware {
 
     String CONFIG_FILENAME = "servo_offset_config.txt";
     List<Double> offsets = new ArrayList<>();
+
+
+// TODO
+    final double basePowerRatio = 0.025;
+    final double stallPowerRatio = 0; // 0.05;
 
     public static final double GRABBER_MIN = 0.25;
     public static final double GRABBER_MAX = 0.75;
@@ -442,15 +448,15 @@ public class BaseSkyStoneHardware {
         setWheelMotorPower(frontLeftPower, frontRightPower, backLeftPower, backRightPower);
     }
 
-    public void moveLift (int counts){
-        frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        frontLeft.setTargetPosition(counts);
-        frontLeft.setPower(.3);
-        while(frontLeft.isBusy());
-        frontLeft.setPower(0);
+    public double getCurrentTurnPower(double absCurrent, double absGoal, double absStart, double maxPower) {
+        double relCurrent = AngleUtilities.getNormalizedAngle(absCurrent - absStart);
+        double relGoal = AngleUtilities.getNormalizedAngle(absGoal - absStart);
+        double remainingDistance = AngleUtilities.getNormalizedAngle(relGoal - relCurrent);
 
+        double basePower = basePowerRatio * remainingDistance;
+        double stallPower = stallPowerRatio * Math.signum(remainingDistance);
+
+        return Range.clip(basePower + stallPower, -Math.abs(maxPower), Math.abs(maxPower));
     }
 }
 
