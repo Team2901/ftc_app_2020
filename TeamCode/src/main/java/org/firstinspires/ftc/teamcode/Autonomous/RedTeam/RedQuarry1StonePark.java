@@ -28,6 +28,8 @@ import org.firstinspires.ftc.teamcode.Autonomous.BaseSkyStoneAuto;
 @Autonomous(name = "RedQuarry1StonePark", group = "")
 public class RedQuarry1StonePark extends BaseSkyStoneAuto {
 
+    final static int CONFIDENCE_PERCENTAGE = 5;
+    
     @Override
     public void runOpMode() throws InterruptedException {
 
@@ -66,7 +68,8 @@ public class RedQuarry1StonePark extends BaseSkyStoneAuto {
         // Step 1) Move forwards/backwards until a skystone location is within 10% of the center of the camera's view
         Float skyStoneCenterPercentDiff = findSkyStone();
 
-        while (skyStoneCenterPercentDiff == null || Math.abs(skyStoneCenterPercentDiff) > 3) {
+        while (skyStoneCenterPercentDiff == null /* don't see skystone yet */
+                || Math.abs(skyStoneCenterPercentDiff) > CONFIDENCE_PERCENTAGE /* overshot or undershot */) {
             telemetry.addData("loop is running", "");
             telemetry.addData("percent dif.", skyStoneCenterPercentDiff);
             telemetry.update();
