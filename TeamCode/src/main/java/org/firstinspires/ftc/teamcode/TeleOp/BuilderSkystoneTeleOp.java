@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Gamepad.ImprovedGamepad;
@@ -23,7 +24,10 @@ public class BuilderSkystoneTeleOp extends OpMode {
     public ImprovedGamepad improvedGamepad2;
     public static final int ABSOLUTE_MODE = 0;
     public static final int RELATIVE_MODE = 1;
+    public static final int OFFSET_MODE = 2;
     public int mode = ABSOLUTE_MODE;
+    Servo servoUnderTest;
+    int servoIndex;
 
     @Override
     public void init() {
@@ -38,22 +42,69 @@ public class BuilderSkystoneTeleOp extends OpMode {
 
         improvedGamepad1.update();
         improvedGamepad2.update();
+        
+        if (mode == ABSOLUTE_MODE || mode == RELATIVE_MODE) {
 
-        // WHEEL CONTROL
-        if (improvedGamepad1.right_stick_x.isPressed()) {
-            double power = getWheelPower(improvedGamepad1.right_stick.x.getValue(), gamepad1.left_bumper);
-            robot.swerveTurn(power);
-        } else if (improvedGamepad1.left_stick.isPressed()) {
-            double power = getWheelPower(improvedGamepad1.left_stick.getValue(), gamepad1.left_bumper);
-            double joyWheelAngle = improvedGamepad1.left_stick.getAngel();
-            if (mode == ABSOLUTE_MODE) {
-                robot.swerveStraightAbsolute(joyWheelAngle, power);
+            // WHEEL CONTROL
+            if (improvedGamepad1.right_stick_x.isPressed()) {
+                double power = getWheelPower(improvedGamepad1.right_stick.x.getValue(), gamepad1.left_bumper);
+                robot.swerveTurn(power);
+            } else if (improvedGamepad1.left_stick.isPressed()) {
+                double power = getWheelPower(improvedGamepad1.left_stick.getValue(), gamepad1.left_bumper);
+                double joyWheelAngle = improvedGamepad1.left_stick.getAngel();
+                if (mode == ABSOLUTE_MODE) {
+                    robot.swerveStraightAbsolute(joyWheelAngle, power);
+                } else {
+                    robot.swerveStraight(joyWheelAngle, power);
+                }
+            } else {
+                robot.setWheelMotorPower(0, 0, 0, 0);
             }
-            else {
-                robot.swerveStraight(joyWheelAngle, power);
+        }
+        else {
+            robot.swerveStraight(0,0);
+            improvedGamepad1.update();
+
+            if(this.improvedGamepad1.dpad_right.isInitialPress()){
+                servoIndex++;
+                if(servoIndex >= robot.swerveWheels.length){
+                    servoIndex = 0;
+                }
+            } else if(this.improvedGamepad1.dpad_left.isInitialPress()) {
+                servoIndex--;
+                if(servoIndex < 0){
+                    servoIndex = robot.swerveWheels.length - 1;
+                }
             }
-        } else {
-            robot.setWheelMotorPower(0, 0, 0, 0);
+
+            servoUnderTest = robot.swerveWheels[servoIndex].servo;
+
+            if(servoUnderTest != null){
+                if(this.improvedGamepad1.left_bumper.isInitialPress()){
+                    servoUnderTest.setPosition(servoUnderTest.getPosition()-0.1);
+                } else if(this.improvedGamepad1.right_bumper.isInitialPress()){
+                    servoUnderTest.setPosition(servoUnderTest.getPosition()+0.1);
+                } else if(this.improvedGamepad1.left_trigger.isInitialPress()){
+                    servoUnderTest.setPosition(servoUnderTest.getPosition()-0.01);
+                } else if(this.improvedGamepad1.right_trigger.isInitialPress()) {
+                    servoUnderTest.setPosition(servoUnderTest.getPosition()+0.01);
+                }
+
+                if (improvedGamepad1.b.isInitialPress()) {
+
+                    robot.swerveWheels[servoIndex].setOffset(servoUnderTest.getPosition());
+
+                }
+
+                telemetry.addData("Left bumper","-0.1");
+                telemetry.addData("Right bumper","+0.1");
+                telemetry.addData("Left trigger","-0.01");
+                telemetry.addData("Right trigger","+0.01");
+                telemetry.addData("Position", servoUnderTest.getPosition());
+                telemetry.addData("Servo name",robot.swerveWheels[servoIndex].name);
+            }
+
+            telemetry.addData("D Pad Right/Left", "Increment/decrement servos");
         }
 
         //LIFT CONTROL
