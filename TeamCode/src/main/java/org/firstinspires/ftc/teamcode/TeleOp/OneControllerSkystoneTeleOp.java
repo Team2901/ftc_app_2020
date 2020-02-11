@@ -115,13 +115,13 @@ public class OneControllerSkystoneTeleOp extends OpMode {
         telemetry.addData("jaw Position: ", robot.jaw.getPosition());
 
         telemetry.addData("frontLeft", String.format("tarAngle: %.2f   mod:%d",
-                robot.swerveWheels.frontLeftMotor.targetAngle, robot.swerveWheels.frontLeftMotor.modifier));
+                robot.frontLeftSwerveWheel.targetAngle, robot.frontLeftSwerveWheel.modifier));
         telemetry.addData("frontRight", String.format("tarAngle: %.2f   mod:%d",
-                robot.swerveWheels.frontRightMotor.targetAngle, robot.swerveWheels.frontRightMotor.modifier));
+                robot.frontRightSwerveWheel.targetAngle, robot.frontRightSwerveWheel.modifier));
         telemetry.addData("backLeft", String.format("tarAngle: %.2f   mod:%d",
-                robot.swerveWheels.backLeftMotor.targetAngle, robot.swerveWheels.backLeftMotor.modifier));
+                robot.backLeftSwerveWheel.targetAngle, robot.backLeftSwerveWheel.modifier));
         telemetry.addData("backRight", String.format("tarAngle: %.2f   mod:%d",
-                robot.swerveWheels.backRightMotor.targetAngle, robot.swerveWheels.backRightMotor.modifier));
+                robot.backRightSwerveWheel.targetAngle, robot.backRightSwerveWheel.modifier));
 
         telemetry.addData("right_stick_x", improvedGamepad1.right_stick.x.getValue());
 

@@ -26,9 +26,6 @@ public class TestHardware extends OpMode {
             , "crane", "wrist", "leftGrabber", "rightGrabber"};
 
     int motorIndex;
-
-    Servo[] servos = {robot.servoFrontLeft,robot.servoFrontRight,robot.servoBackLeft,robot.servoBackRight
-    , robot.jaw, robot.crane, robot.wrist, robot.leftGrabber, robot.rightGrabber};
     int servoIndex;
 
     ArrayList<DcMotor> motorArrayList = new ArrayList<>();

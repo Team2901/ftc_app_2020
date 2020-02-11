@@ -54,10 +54,10 @@ public class KristenAutonomous extends LinearOpMode {
         robot.moveStraight(0.5 , TARGET_COUNT);
         while(robot.wheelsAreBusy()){
             idle();
-            telemetry.addData("Front Left Position" , robot.frontLeft.getCurrentPosition());
-            telemetry.addData("Front Right Position" , robot.frontRight.getCurrentPosition());
-            telemetry.addData("Back Left Position" , robot.backLeft.getCurrentPosition());
-            telemetry.addData("Back Right Position" , robot.backRight.getCurrentPosition());
+            telemetry.addData("", robot.frontLeftSwerveWheel.toString());
+            telemetry.addData("", robot.frontRightSwerveWheel.toString());
+            telemetry.addData("", robot.backLeftSwerveWheel.toString());
+            telemetry.addData("", robot.backRightSwerveWheel.toString());
             telemetry.update();
         }
 

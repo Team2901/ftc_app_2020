@@ -12,10 +12,6 @@ public class BuilderSkystoneHardware extends BaseSkyStoneHardware{
     public final static double WIDTH_OF_ROBOT = 13.5;
     public final static double LENGTH_OF_ROBOT = 13.5;
     public final static int SERVO_MAX_ANGLE = 280;
-    public final static double FRONT_LEFT_OFFSET = 0.3205;
-    public final static double FRONT_RIGHT_OFFSET = .34;
-    public final static double BACK_LEFT_OFFSET = .4;
-    public final static double BACK_RIGHT_OFFSET = 0.16;
     public final static double INCHES_TO_ENCODER = 22;
     public final static double WHEEL_POWER_RATIO = 0.5;
 
@@ -24,10 +20,6 @@ public class BuilderSkystoneHardware extends BaseSkyStoneHardware{
                 LENGTH_OF_ROBOT,
                 WHEEL_SERVO_GEAR_RATIO,
                 SERVO_MAX_ANGLE,
-                FRONT_LEFT_OFFSET,
-                FRONT_RIGHT_OFFSET,
-                BACK_LEFT_OFFSET,
-                BACK_RIGHT_OFFSET,
                 INCHES_TO_ENCODER,
                 WHEEL_POWER_RATIO);
     }
