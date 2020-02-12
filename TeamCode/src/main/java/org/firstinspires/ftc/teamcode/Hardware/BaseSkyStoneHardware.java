@@ -28,8 +28,8 @@ import static org.firstinspires.ftc.teamcode.Utility.AngleUtilities.getNormalize
 @SuppressLint("DefaultLocale")
 public class BaseSkyStoneHardware {
 
-    String CONFIG_FILENAME = "servo_offset_config.txt";
-    List<Double> offsets = new ArrayList<>();
+    public String CONFIG_FILENAME = "servo_offset_config.txt";
+    public List<Double> offsets = new ArrayList<>();
 
 
 // TODO
@@ -226,6 +226,22 @@ public class BaseSkyStoneHardware {
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
 
+        readServoOffsets();
+
+        frontLeftSwerveWheel.servo = servoFrontLeft;
+        frontLeftSwerveWheel.motor = frontLeft;
+
+        frontRightSwerveWheel.servo = servoFrontRight;
+        frontRightSwerveWheel.motor = frontRight;
+
+        backLeftSwerveWheel.servo = servoBackLeft;
+        backLeftSwerveWheel.motor = backLeft;
+
+        backRightSwerveWheel.servo = servoBackRight;
+        backRightSwerveWheel.motor = backRight;
+    }
+
+    public void readServoOffsets() {
         try {
             offsets = FileUtilities.readDoubleConfigFile(CONFIG_FILENAME);
         } catch (IOException e) {
@@ -239,20 +255,18 @@ public class BaseSkyStoneHardware {
         }
 
         frontLeftSwerveWheel.setOffset(offsets.size() > 0 ? offsets.get(0) : 0.0);
-        frontLeftSwerveWheel.servo = servoFrontLeft;
-        frontLeftSwerveWheel.motor = frontLeft;
-
         frontRightSwerveWheel.setOffset(offsets.size() > 1 ? offsets.get(1) : 0.0);
-        frontRightSwerveWheel.servo = servoFrontRight;
-        frontRightSwerveWheel.motor = frontRight;
-
         backLeftSwerveWheel.setOffset(offsets.size() > 2 ? offsets.get(2) : 0.0);
-        backLeftSwerveWheel.servo = servoBackLeft;
-        backLeftSwerveWheel.motor = backLeft;
-
         backRightSwerveWheel.setOffset(offsets.size() > 3 ? offsets.get(3) : 0.0);
-        backRightSwerveWheel.servo = servoBackRight;
-        backRightSwerveWheel.motor = backRight;
+    }
+
+    public String writeOffsets() {
+        try {
+            FileUtilities.writeConfigFile(CONFIG_FILENAME, offsets);
+        } catch (Exception e) {
+            return String.format("Error writing to file. %s", e.getMessage());
+        }
+        return null;
     }
 
     public String initWebCamera(HardwareMap hardwareMap) {

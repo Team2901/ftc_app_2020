@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Gamepad.ImprovedGamepad;
@@ -12,11 +11,8 @@ import org.firstinspires.ftc.teamcode.Hardware.BaseSkyStoneHardware;
 import org.firstinspires.ftc.teamcode.Hardware.BuilderSkystoneHardware;
 import org.firstinspires.ftc.teamcode.Utility.FileUtilities;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @SuppressLint("DefaultLocale")
-@TeleOp(name = "Builder Skystone", group = "SKYSTONE")
+@TeleOp(name = "Builder Skystone Mtoebes", group = "SKYSTONE")
 public class BuilderSkystoneTeleOp extends OpMode {
 
     String CONFIG_FILENAME = "servo_offset_config.txt";
@@ -27,12 +23,7 @@ public class BuilderSkystoneTeleOp extends OpMode {
     public ImprovedGamepad improvedGamepad2;
 
     public ControlMode mode = ControlMode.ABSOLUTE;
-
     int servoUnderTestIndex;
-
-    ArrayList<Servo> servoArrayList = new ArrayList<>();
-
-    List<Double> offsets = new ArrayList<>();
 
     public enum ControlMode {
         ABSOLUTE, RELATIVE, OFFSET_SETTER;
@@ -54,7 +45,6 @@ public class BuilderSkystoneTeleOp extends OpMode {
     @Override
     public void init() {
         robot.init(hardwareMap);
-        //robot.swerveStraight(0, 0);
         this.improvedGamepad1 = new ImprovedGamepad(gamepad1, timer, "g1");
         this.improvedGamepad2 = new ImprovedGamepad(gamepad2, timer, "g2");
     }
@@ -69,11 +59,14 @@ public class BuilderSkystoneTeleOp extends OpMode {
 
             switch (mode) {
                 case ABSOLUTE:
-                    mode = ControlMode.RELATIVE; break;
+                    mode = ControlMode.RELATIVE;
+                    break;
                 case RELATIVE:
-                    mode = ControlMode.OFFSET_SETTER; break;
+                    mode = ControlMode.OFFSET_SETTER;
+                    break;
                 default:
-                    mode = ControlMode.ABSOLUTE; break;
+                    mode = ControlMode.ABSOLUTE;
+                    break;
             }
 
             telemetry.speak(String.format("Mode %d %s", mode.ordinal(), mode.toString()));
@@ -81,89 +74,90 @@ public class BuilderSkystoneTeleOp extends OpMode {
 
         telemetry.addData("Mode", mode);
 
-        if (mode == ControlMode.ABSOLUTE || mode == ControlMode.RELATIVE) {
+        if (mode == ControlMode.ABSOLUTE) {
 
-            // WHEEL CONTROL
-            if (improvedGamepad1.right_stick_x.isPressed()) {
+            if (improvedGamepad1.right_stick.isPressed()
+                    || improvedGamepad1.a.isPressed()
+                    || improvedGamepad1.b.isPressed()
+                    || improvedGamepad1.x.isPressed()
+                    || improvedGamepad1.y.isPressed()) {
 
-                double joyWheelAngle = improvedGamepad1.right_stick.getAngel();
+                final double angleGoal;
+                if (improvedGamepad1.a.isPressed()) {
+                    angleGoal = 180;
+                } else if (improvedGamepad1.b.isPressed()) {
+                    angleGoal = -90;
+                } else if (improvedGamepad1.x.isPressed()) {
+                    angleGoal = 90;
+                } else if (improvedGamepad1.y.isPressed()) {
+                    angleGoal = 0;
+                } else {
+                    angleGoal = improvedGamepad1.right_stick.getAngel();
+                }
+
+                double angleCurrent = robot.getAngle();
 
                 double rawPower;
-
-                if (mode == ControlMode.ABSOLUTE) {
-                    double angleCurrent = robot.getAngle();
-                    double angleGoal = improvedGamepad1.right_stick.getAngel();
-
-                    if (Math.abs(angleGoal - angleCurrent) > 5) {
-                        rawPower = -robot.getCurrentTurnPower(robot.getAngle(), joyWheelAngle, 0, 1);
-                    } else {
-                        rawPower = 0;
-                    }
+                if (Math.abs(angleGoal - angleCurrent) > 5) {
+                    rawPower = -robot.getCurrentTurnPower(robot.getAngle(), angleGoal, 0, 1);
                 } else {
-                    rawPower = improvedGamepad1.right_stick.getValue();
+                    rawPower = 0;
                 }
 
                 double power = getWheelPower(rawPower, gamepad1.left_bumper);
+
+                telemetry.addData("angleGoal", angleGoal);
+                telemetry.addData("angleCurrent", angleCurrent);
+                telemetry.addData("rawPower", rawPower);
+                telemetry.addData("turn power", power);
+
+                robot.swerveTurn(power);
+
+            } else if (improvedGamepad1.a.isPressed()) {
+
+            } else if (improvedGamepad1.left_stick.isPressed()) {
+
+                double leftSickAngle = improvedGamepad1.left_stick.getAngel();
+                double power = getWheelPower(improvedGamepad1.left_stick.getValue(), gamepad1.left_bumper);
+
+                telemetry.addData("leftStickAngle", leftSickAngle);
+                telemetry.addData("straight power", power);
+
+                robot.swerveStraight(leftSickAngle, power);
+
+            } else {
+                robot.setWheelMotorPower(0, 0, 0, 0);
+            }
+        } else if (mode == ControlMode.RELATIVE) {
+
+            // WHEEL CONTROL
+            if (improvedGamepad1.right_stick.isPressed()) {
+
+                double rawPower = improvedGamepad1.right_stick.getValue();
+                double power = getWheelPower(rawPower, gamepad1.left_bumper);
+
+                telemetry.addData("rawPower", rawPower);
+                telemetry.addData("turn power", power);
+
                 robot.swerveTurn(power);
 
             } else if (improvedGamepad1.left_stick.isPressed()) {
-                double power = getWheelPower(improvedGamepad1.left_stick.getValue(), gamepad1.left_bumper);
-                double joyWheelAngle = improvedGamepad1.left_stick.getAngel();
 
-                if (mode == ControlMode.ABSOLUTE) {
-                    robot.swerveStraight(joyWheelAngle, power);
-                } else {
-                    robot.swerveStraightRelative(joyWheelAngle, power);
-                }
+                double leftSickAngle = improvedGamepad1.left_stick.getAngel();
+                double power = getWheelPower(improvedGamepad1.left_stick.getValue(), gamepad1.left_bumper);
+
+                telemetry.addData("leftStickAngle", leftSickAngle);
+                telemetry.addData("straight power", power);
+
+                robot.swerveStraightRelative(leftSickAngle, power);
+
             } else {
                 robot.setWheelMotorPower(0, 0, 0, 0);
             }
 
-            //LIFT CONTROL
-            if (gamepad2.left_trigger > .2) {
-                robot.lift.setPower(-.5);
-            } else if (gamepad2.right_trigger > .2) {
-                robot.lift.setPower(1);
-            } else {
-                robot.lift.setPower(0);
-            }
+        } else if (mode == ControlMode.OFFSET_SETTER) {
 
-            //CRANE CONTROL
-            if (gamepad2.right_bumper) {
-                robot.crane.setPosition(robot.crane.getPosition() + .015);
-            } else if (gamepad2.left_bumper) {
-                robot.crane.setPosition(robot.crane.getPosition() - .015);
-            }
-
-            //WRIST CONTROL
-            if (gamepad2.x) {
-                robot.wrist.setPosition(robot.wrist.getPosition() + .01);
-            } else if (gamepad2.y) {
-                robot.wrist.setPosition(robot.wrist.getPosition() - .01);
-            } else if (gamepad2.start) {
-                robot.wrist.setPosition(.5);
-            }
-
-            //JAW CONTROL
-            if (gamepad2.a) {
-                robot.jaw.setPosition(robot.jaw.getPosition() + .01);
-            } else if (gamepad2.b) {
-                robot.jaw.setPosition(robot.jaw.getPosition() - .01);
-            }
-
-            //Waffle Grabber
-            if (gamepad2.dpad_up) {
-                robot.setGrabberPositition(.7, .84);
-            } else if (gamepad2.dpad_down) {
-                robot.setGrabberPositition(0, 0);
-            }
-
-            telemetry.addData("", robot.frontLeftSwerveWheel.toString());
-            telemetry.addData("", robot.frontRightSwerveWheel.toString());
-            telemetry.addData("", robot.backLeftSwerveWheel.toString());
-            telemetry.addData("", robot.backRightSwerveWheel.toString());
-
-        } else {
+            robot.setWheelMotorPower(0, 0, 0, 0);
 
             boolean underTestChange = false;
 
@@ -190,7 +184,7 @@ public class BuilderSkystoneTeleOp extends OpMode {
 
                 if (this.improvedGamepad1.a.isInitialPress()) {
                     swerveWheelUnderTest.setOffset(targetPosition);
-                    offsets.set(servoUnderTestIndex, targetPosition);
+                    robot.offsets.set(servoUnderTestIndex, targetPosition);
                     telemetry.speak("Offset Updated");
                 } else if (this.improvedGamepad1.left_bumper.isInitialPress()) {
                     targetPosition -= 0.1;
@@ -213,20 +207,69 @@ public class BuilderSkystoneTeleOp extends OpMode {
             telemetry.addData("D Pad Right/Left", "Increment/decrement servos");
         }
 
+        //LIFT CONTROL
+        if (gamepad2.left_trigger > .2) {
+            robot.lift.setPower(-.5);
+        } else if (gamepad2.right_trigger > .2) {
+            robot.lift.setPower(1);
+        } else {
+            robot.lift.setPower(0);
+        }
+
+        //CRANE CONTROL
+        if (gamepad2.right_bumper) {
+            robot.crane.setPosition(robot.crane.getPosition() + .015);
+        } else if (gamepad2.left_bumper) {
+            robot.crane.setPosition(robot.crane.getPosition() - .015);
+        }
+
+        //WRIST CONTROL
+        if (gamepad2.x) {
+            robot.wrist.setPosition(robot.wrist.getPosition() + .01);
+        } else if (gamepad2.y) {
+            robot.wrist.setPosition(robot.wrist.getPosition() - .01);
+        } else if (gamepad2.start) {
+            robot.wrist.setPosition(.5);
+        }
+
+        //JAW CONTROL
+        if (gamepad2.a) {
+            robot.jaw.setPosition(robot.jaw.getPosition() + .01);
+        } else if (gamepad2.b) {
+            robot.jaw.setPosition(robot.jaw.getPosition() - .01);
+        }
+
+        //Waffle Grabber
+        if (gamepad2.dpad_up) {
+            robot.setGrabberPositition(.7, .84);
+        } else if (gamepad2.dpad_down) {
+            robot.setGrabberPositition(0, 0);
+        }
+
+        telemetry.addData("Angle", robot.getAngle());
+        telemetry.addData("", robot.frontLeftSwerveWheel.toString());
+        telemetry.addData("", robot.frontRightSwerveWheel.toString());
+        telemetry.addData("", robot.backLeftSwerveWheel.toString());
+        telemetry.addData("", robot.backRightSwerveWheel.toString());
+
+        telemetry.addData("lift", String.format("power: %.2f encoder: %d", robot.lift.getPower(), robot.lift.getCurrentPosition()));
+        telemetry.addData("crane", String.format("pos: %.2f", robot.crane.getPosition()));
+        telemetry.addData("wrist", String.format("pos: %.2f", robot.wrist.getPosition()));
+        telemetry.addData("jaw", String.format("pos: %.2f", robot.jaw.getPosition()));
+        telemetry.addData("grabber", String.format("L_pos: %.2f R_pos: %.2f", robot.leftGrabber.getPosition(), robot.rightGrabber.getPosition()));
+
         telemetry.update();
     }
-
 
     @Override
     public void stop() {
 
         super.stop();
 
-        try {
-            FileUtilities.writeConfigFile(CONFIG_FILENAME, offsets);
-            telemetry.addData("Success writing to file", "");
-        } catch (Exception e) {
-            throw new RuntimeException("Error writing to file", e);
+        String errorMessage = robot.writeOffsets();
+
+       if (errorMessage != null) {
+            throw new RuntimeException(errorMessage);
         }
     }
 
