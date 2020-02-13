@@ -56,10 +56,10 @@ public class RedQuarry1StonePark extends BaseSkyStoneAuto {
         robot.swerveStraight(90, 0);
         robot.crane.setPosition(1);
         robot.wrist.setPosition(.5);
-        double t = 0;
+        /*double t = 0;
         while (t < 10) {
             t++;
-        }
+        }*/
         // Save the robot's current position prior to search for a skystone
         robot.setWheelMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.setWheelMotorMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -89,7 +89,10 @@ public class RedQuarry1StonePark extends BaseSkyStoneAuto {
             skyStoneCenterPercentDiff = findSkyStone();
         }
 
-        // Robot is now in front of a skystone, stop moving
+        //Centering robot claw on skystone
+        this.moveInches(90, 24, -0.3);
+
+        // Robot claw is now in front of a skystone, stop moving
         robot.swerveStraight(0, 0);
 
         telemetry.addData("out of loop", "");
