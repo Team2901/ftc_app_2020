@@ -113,8 +113,6 @@ public class BuilderSkystoneTeleOp extends OpMode {
 
                 robot.swerveTurn(power);
 
-            } else if (improvedGamepad1.a.isPressed()) {
-
             } else if (improvedGamepad1.left_stick.isPressed()) {
 
                 double leftSickAngle = improvedGamepad1.left_stick.getAngel();
