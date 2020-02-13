@@ -12,6 +12,8 @@ import org.firstinspires.ftc.teamcode.Hardware.BaseSkyStoneHardware;
 import org.firstinspires.ftc.teamcode.Hardware.BuilderSkystoneHardware;
 import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
 
+import java.util.ArrayList;
+
 import static org.firstinspires.ftc.teamcode.Utility.AngleUtilities.getNormalizedAngle;
 
 @SuppressLint("DefaultLocale")
@@ -25,9 +27,10 @@ public class BuilderSkystoneTeleOp extends OpMode {
     public static final int ABSOLUTE_MODE = 0;
     public static final int RELATIVE_MODE = 1;
     public static final int OFFSET_MODE = 2;
-    public int mode = ABSOLUTE_MODE;
+    public int mode = RELATIVE_MODE;
     Servo servoUnderTest;
     int servoIndex;
+    public String driveModeNames[] = {"ABSOLUTE_MODE, RELATIVE_MODE, OFFSET_MODE"};
 
     @Override
     public void init() {
@@ -42,6 +45,14 @@ public class BuilderSkystoneTeleOp extends OpMode {
 
         improvedGamepad1.update();
         improvedGamepad2.update();
+
+        if(this.improvedGamepad1.y.isInitialPress()){
+            mode++;
+            if(mode > 2){
+                mode = 0;
+            }
+            telemetry.addData("Current Drive Mode", driveModeNames[mode]);
+        }
         
         if (mode == ABSOLUTE_MODE || mode == RELATIVE_MODE) {
 
@@ -62,6 +73,7 @@ public class BuilderSkystoneTeleOp extends OpMode {
             }
         }
         else {
+            //THIS IS OFFSET MODE
             robot.swerveStraight(0,0);
             improvedGamepad1.update();
 
