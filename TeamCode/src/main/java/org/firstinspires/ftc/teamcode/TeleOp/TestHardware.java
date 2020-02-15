@@ -105,7 +105,6 @@ public class TestHardware extends OpMode {
             telemetry.addData("Current position", motorUnderTest.getCurrentPosition());
             telemetry.addData("Power", motorUnderTest.getPower());
             telemetry.addData("Motor name", motorNames[motorIndex]);
-            telemetry.addData("Motor object",motorUnderTest);
         }
 
         telemetry.addData("D Pad Up/Down", "Increment/decrement motors");

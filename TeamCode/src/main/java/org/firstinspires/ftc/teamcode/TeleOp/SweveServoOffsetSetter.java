@@ -27,32 +27,14 @@ public class SweveServoOffsetSetter extends OpMode {
 
     int servoIndex;
 
-    List<Double> offsets = new ArrayList<>();
-
     @Override
     public void init() {
         impGamepad = new ImprovedGamepad(this.gamepad1, this.timer, "GP");
 
         robot.init(hardwareMap);
 
-        try {
-            offsets = FileUtilities.readDoubleConfigFile(CONFIG_FILENAME);
-        } catch (IOException e) {
-        }
-
-        if (offsets.size() < robot.swerveWheels.length) {
-            offsets = new ArrayList<>();
-            for (int i = 0; i < robot.swerveWheels.length; i++) {
-                offsets.add(0.0);
-            }
-        }
-
-        for(int i = 0; i < robot.swerveWheels.length; i++){
-            BaseSkyStoneHardware.SwerveWheel swerveWheel = robot.swerveWheels[i];
-            Servo servo = swerveWheel.servo;
-            servo.setPosition(offsets.size() > i ? offsets.get(i) : 0.0);
-        }
-
+        robot.swerveStraight(0,0);
+        
         telemetry.update();
     }
 
@@ -85,7 +67,7 @@ public class SweveServoOffsetSetter extends OpMode {
                 servoUnderTest.setPosition(servoUnderTest.getPosition()+0.01);
             }
 
-            offsets.set(servoIndex, servoUnderTest.getPosition());
+            robot.offsets.set(servoIndex, servoUnderTest.getPosition());
 
             telemetry.addData("Left bumper","-0.1");
             telemetry.addData("Right bumper","+0.1");
@@ -106,11 +88,9 @@ public class SweveServoOffsetSetter extends OpMode {
 
         super.stop();
 
-        try {
-            FileUtilities.writeConfigFile(CONFIG_FILENAME, offsets);
-            telemetry.addData("Success writing to file", "");
-        } catch (Exception e) {
-            throw new RuntimeException("Error writing to file", e);
+        String errorMsg = robot.writeOffsets();
+        if (errorMsg != null) {
+            throw new RuntimeException(errorMsg);
         }
     }
 }

@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Gamepad.ImprovedGamepad;
-import org.firstinspires.ftc.teamcode.Hardware.BaseSkyStoneHardware;
 import org.firstinspires.ftc.teamcode.Hardware.BuilderSkystoneHardware;
 import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
 
@@ -96,26 +95,23 @@ public class OnePersonTeleOp extends OpMode {
         telemetry.addData("wheelPowerRatio", wheelPowerRatio);
 telemetry.addData("crane", robot.crane.getPosition());
         telemetry.addData("FL", String.format("angle: %.2f, mod: %d, pos: %.2f",
-                robot.frontLeftMotor.targetAngle, robot.frontLeftMotor.modifier, robot.frontLeftMotor.wheelAngleToServoPosition()));
+                robot.frontLeftSwerveWheel.targetAngle, robot.frontLeftSwerveWheel.modifier, robot.frontLeftSwerveWheel.wheelAngleToServoPosition()));
         telemetry.addData("FR", String.format("angle: %.2f, mod: %d, pos: %.2f",
-                robot.frontRightMotor.targetAngle, robot.frontRightMotor.modifier, robot.frontRightMotor.wheelAngleToServoPosition()));
+                robot.frontRightSwerveWheel.targetAngle, robot.frontRightSwerveWheel.modifier, robot.frontRightSwerveWheel.wheelAngleToServoPosition()));
         telemetry.addData("BL", String.format("angle: %.2f, mod: %d, pos: %.2f",
-                robot.backLeftMotor.targetAngle, robot.backLeftMotor.modifier, robot.backLeftMotor.wheelAngleToServoPosition()));
+                robot.backLeftSwerveWheel.targetAngle, robot.backLeftSwerveWheel.modifier, robot.backLeftSwerveWheel.wheelAngleToServoPosition()));
         telemetry.addData("BR", String.format("angle: %.2f, mod: %d, pos: %.2f",
-                robot.backRightMotor.targetAngle, robot.backRightMotor.modifier, robot.backRightMotor.wheelAngleToServoPosition()));
-
-
+                robot.backRightSwerveWheel.targetAngle, robot.backRightSwerveWheel.modifier, robot.backRightSwerveWheel.wheelAngleToServoPosition()));
 
         telemetry.addData("lift position" , robot.lift.getCurrentPosition() );
         telemetry.addData("Jaw position" , robot.jaw.getPosition() );
         telemetry.addData("Wrist position" , robot.wrist.getPosition() );
         telemetry.addData("Crane Position" , robot.crane.getPosition() );
 
-
-        telemetry.addData("flo", robot.frontLeftOffset);
-        telemetry.addData("fro", robot.frontRightOffset);
-        telemetry.addData("blo", robot.backLeftOffset);
-        telemetry.addData("bro", robot.backRightOffset);
+        telemetry.addData("", robot.frontLeftSwerveWheel.toString());
+        telemetry.addData("", robot.frontRightSwerveWheel.toString());
+        telemetry.addData("", robot.backLeftSwerveWheel.toString());
+        telemetry.addData("", robot.backRightSwerveWheel.toString());
         telemetry.update();
     }
 

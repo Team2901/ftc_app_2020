@@ -8,10 +8,8 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Gamepad.ImprovedGamepad;
 import org.firstinspires.ftc.teamcode.Hardware.BuilderSkystoneHardware;
-import org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware;
 import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
 
-import static org.firstinspires.ftc.teamcode.Utility.AngleUtilities.getNormalizedAngle;
 @Disabled
 @TeleOp(name = "Builder Skystone - One Controller", group = "SKYSTONE")
 public class OneControllerSkystoneTeleOp extends OpMode {
@@ -120,13 +118,13 @@ public class OneControllerSkystoneTeleOp extends OpMode {
         telemetry.addData("jaw Position: ", robot.jaw.getPosition());
 
         telemetry.addData("frontLeft", String.format("tarAngle: %.2f   mod:%d",
-                robot.frontLeftMotor.targetAngle, robot.frontLeftMotor.modifier));
+                robot.frontLeftSwerveWheel.targetAngle, robot.frontLeftSwerveWheel.modifier));
         telemetry.addData("frontRight", String.format("tarAngle: %.2f   mod:%d",
-                robot.frontRightMotor.targetAngle, robot.frontRightMotor.modifier));
+                robot.frontRightSwerveWheel.targetAngle, robot.frontRightSwerveWheel.modifier));
         telemetry.addData("backLeft", String.format("tarAngle: %.2f   mod:%d",
-                robot.backLeftMotor.targetAngle, robot.backLeftMotor.modifier));
+                robot.backLeftSwerveWheel.targetAngle, robot.backLeftSwerveWheel.modifier));
         telemetry.addData("backRight", String.format("tarAngle: %.2f   mod:%d",
-                robot.backRightMotor.targetAngle, robot.backRightMotor.modifier));
+                robot.backRightSwerveWheel.targetAngle, robot.backRightSwerveWheel.modifier));
 
         telemetry.addData("right_stick_x", improvedGamepad1.right_stick.x.getValue());
 

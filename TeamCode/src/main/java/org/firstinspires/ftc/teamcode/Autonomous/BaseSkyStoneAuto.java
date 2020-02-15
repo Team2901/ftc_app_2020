@@ -43,13 +43,13 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
         robot.swerveStraight(angle, power);
         while (robot.wheelsAreBusy() && opModeIsActive()) {
             telemetry.addData("FL", String.format("angle: %.2f, mod: %d, pos: %d",
-                    robot.frontLeftMotor.targetAngle, robot.frontLeftMotor.modifier, robot.frontLeft.getCurrentPosition()));
+                    robot.frontLeftSwerveWheel.targetAngle, robot.frontLeftSwerveWheel.modifier, robot.frontLeft.getCurrentPosition()));
             telemetry.addData("FR", String.format("angle: %.2f, mod: %d, pos: %d",
-                    robot.frontRightMotor.targetAngle, robot.frontRightMotor.modifier, robot.frontRight.getCurrentPosition()));
+                    robot.frontRightSwerveWheel.targetAngle, robot.frontRightSwerveWheel.modifier, robot.frontRight.getCurrentPosition()));
             telemetry.addData("BL", String.format("angle: %.2f, mod: %d, pos: %d",
-                    robot.backLeftMotor.targetAngle, robot.backLeftMotor.modifier, robot.backLeft.getCurrentPosition()));
+                    robot.backLeftSwerveWheel.targetAngle, robot.backLeftSwerveWheel.modifier, robot.backLeft.getCurrentPosition()));
             telemetry.addData("BR", String.format("angle: %.2f, mod: %d, pos: %d",
-                    robot.backRightMotor.targetAngle, robot.backRightMotor.modifier, robot.backRight.getCurrentPosition()));
+                    robot.backRightSwerveWheel.targetAngle, robot.backRightSwerveWheel.modifier, robot.backRight.getCurrentPosition()));
 
             telemetry.update();
         }

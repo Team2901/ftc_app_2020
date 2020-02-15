@@ -8,13 +8,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Gamepad.ImprovedGamepad;
-import org.firstinspires.ftc.teamcode.Hardware.BaseSkyStoneHardware;
 import org.firstinspires.ftc.teamcode.Hardware.BuilderSkystoneHardware;
 import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
-
-import java.util.ArrayList;
-
-import static org.firstinspires.ftc.teamcode.Utility.AngleUtilities.getNormalizedAngle;
 
 @SuppressLint("DefaultLocale")
 @TeleOp(name = "Builder Skystone", group = "SKYSTONE")
@@ -51,9 +46,13 @@ public class BuilderSkystoneTeleOp extends OpMode {
             if(mode > 2){
                 mode = 0;
             }
+
+            if (mode == OFFSET_MODE) {
+                robot.swerveStraight(0,0);
+            }
         }
 
-        telemetry.addData("Current Drive Mode", driveModeNames[mode]);
+        telemetry.addData("Current Drive Mode", mode);
 
         if (mode == ABSOLUTE_MODE || mode == RELATIVE_MODE) {
 
@@ -75,7 +74,6 @@ public class BuilderSkystoneTeleOp extends OpMode {
         }
         else {
             //THIS IS OFFSET MODE
-            robot.swerveStraight(0,0);
             improvedGamepad1.update();
 
             if(this.improvedGamepad1.dpad_right.isInitialPress()){
@@ -103,11 +101,7 @@ public class BuilderSkystoneTeleOp extends OpMode {
                     servoUnderTest.setPosition(servoUnderTest.getPosition()+0.01);
                 }
 
-                if (improvedGamepad1.b.isInitialPress()) {
-
-                    robot.swerveWheels[servoIndex].setOffset(servoUnderTest.getPosition());
-
-                }
+                robot.swerveWheels[servoIndex].setOffset(servoUnderTest.getPosition());
 
                 telemetry.addData("Left bumper","-0.1");
                 telemetry.addData("Right bumper","+0.1");
@@ -155,26 +149,12 @@ public class BuilderSkystoneTeleOp extends OpMode {
             robot.setGrabberPositition(0, 0);
         }
 
-        telemetry.addData("FL", String.format("angle: %.2f, mod: %d, pos: %.2f",
-                robot.frontLeftMotor.targetAngle, robot.frontLeftMotor.modifier, robot.frontLeftMotor.wheelAngleToServoPosition()));
-        telemetry.addData("FR", String.format("angle: %.2f, mod: %d, pos: %.2f",
-                robot.frontRightMotor.targetAngle, robot.frontRightMotor.modifier, robot.frontRightMotor.wheelAngleToServoPosition()));
-        telemetry.addData("BL", String.format("angle: %.2f, mod: %d, pos: %.2f",
-                robot.backLeftMotor.targetAngle, robot.backLeftMotor.modifier, robot.backLeftMotor.wheelAngleToServoPosition()));
-        telemetry.addData("BR", String.format("angle: %.2f, mod: %d, pos: %.2f",
-                robot.backRightMotor.targetAngle, robot.backRightMotor.modifier, robot.backRightMotor.wheelAngleToServoPosition()));
+        telemetry.addData("", robot.frontLeftSwerveWheel.toString());
+        telemetry.addData("", robot.frontRightSwerveWheel.toString());
+        telemetry.addData("", robot.backLeftSwerveWheel.toString());
+        telemetry.addData("", robot.backRightSwerveWheel.toString());
 
-        telemetry.addData("flo", robot.frontLeftOffset);
-        telemetry.addData("fro", robot.frontRightOffset);
-        telemetry.addData("blo", robot.backLeftOffset);
-        telemetry.addData("bro", robot.backRightOffset);
         telemetry.update();
-    }
-
-    public double joystickPositionToWheelAngle(double joystickPositionX, double joystickPositionY) {
-        double wheelAngleRad = Math.atan2(joystickPositionY, joystickPositionX);
-        double wheelAngle = AngleUtilities.radiansDegreesTranslation(wheelAngleRad) - 90;
-        return AngleUtilities.getPositiveNormalizedAngle(wheelAngle);
     }
 
     public double getWheelPower(double radius, boolean pause) {
@@ -182,6 +162,17 @@ public class BuilderSkystoneTeleOp extends OpMode {
             return 0;
         } else {
             return radius * robot.WHEEL_POWER_RATIO;
+        }
+    }
+
+    @Override
+    public void stop() {
+
+        super.stop();
+
+        String errorMsg = robot.writeOffsets();
+        if (errorMsg != null) {
+            throw new RuntimeException(errorMsg);
         }
     }
 }

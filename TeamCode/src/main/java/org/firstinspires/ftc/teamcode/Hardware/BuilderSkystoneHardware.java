@@ -1,20 +1,9 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
-import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
-
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
 
 public class BuilderSkystoneHardware extends BaseSkyStoneHardware{
 
@@ -37,10 +26,6 @@ public class BuilderSkystoneHardware extends BaseSkyStoneHardware{
                 LENGTH_OF_ROBOT,
                 WHEEL_SERVO_GEAR_RATIO,
                 SERVO_MAX_ANGLE,
-                FRONT_LEFT_OFFSET,
-                FRONT_RIGHT_OFFSET,
-                BACK_LEFT_OFFSET,
-                BACK_RIGHT_OFFSET,
                 INCHES_TO_ENCODER);
     }
 

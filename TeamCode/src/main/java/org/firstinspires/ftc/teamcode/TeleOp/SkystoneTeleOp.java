@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Gamepad.ImprovedGamepad;
 import org.firstinspires.ftc.teamcode.Hardware.BuilderSkystoneHardware;
-import org.firstinspires.ftc.teamcode.Hardware.SkystoneHardware;
 
 @SuppressLint("DefaultLocale")
 @TeleOp(name = "Skystone", group = "SKYSTONE")
@@ -86,18 +85,18 @@ public class SkystoneTeleOp extends OpMode {
 
 
         telemetry.addData("FL", String.format("angle: %.2f, mod: %d, pos: %.2f",
-                robot.frontLeftMotor.targetAngle, robot.frontLeftMotor.modifier, robot.frontLeftMotor.wheelAngleToServoPosition()));
+                robot.frontLeftSwerveWheel.targetAngle, robot.frontLeftSwerveWheel.modifier, robot.frontLeftSwerveWheel.wheelAngleToServoPosition()));
         telemetry.addData("FR", String.format("angle: %.2f, mod: %d, pos: %.2f",
-                robot.frontRightMotor.targetAngle, robot.frontRightMotor.modifier, robot.frontRightMotor.wheelAngleToServoPosition()));
+                robot.frontRightSwerveWheel.targetAngle, robot.frontRightSwerveWheel.modifier, robot.frontRightSwerveWheel.wheelAngleToServoPosition()));
         telemetry.addData("BL", String.format("angle: %.2f, mod: %d, pos: %.2f",
-                robot.backLeftMotor.targetAngle, robot.backLeftMotor.modifier, robot.backLeftMotor.wheelAngleToServoPosition()));
+                robot.backLeftSwerveWheel.targetAngle, robot.backLeftSwerveWheel.modifier, robot.backLeftSwerveWheel.wheelAngleToServoPosition()));
         telemetry.addData("BR", String.format("angle: %.2f, mod: %d, pos: %.2f",
-                robot.backRightMotor.targetAngle, robot.backRightMotor.modifier, robot.backRightMotor.wheelAngleToServoPosition()));
+                robot.backRightSwerveWheel.targetAngle, robot.backRightSwerveWheel.modifier, robot.backRightSwerveWheel.wheelAngleToServoPosition()));
 
-        telemetry.addData("frontLeftMotor", String.format("min: %f max:%f", robot.frontLeftMotor.minWheelAngle, robot.frontLeftMotor.maxWheelAngle));
-        telemetry.addData("frontRightMotor", String.format("min: %f max:%f", robot.frontRightMotor.minWheelAngle, robot.frontRightMotor.maxWheelAngle));
-        telemetry.addData("backLeftMotor", String.format("min: %f max:%f", robot.backLeftMotor.minWheelAngle, robot.backLeftMotor.maxWheelAngle));
-        telemetry.addData("backRightMotor", String.format("min: %f max:%f", robot.backRightMotor.minWheelAngle, robot.backRightMotor.maxWheelAngle));
+        telemetry.addData("frontLeftSwerveWheel", String.format("min: %f max:%f", robot.frontLeftSwerveWheel.minWheelAngle, robot.frontLeftSwerveWheel.maxWheelAngle));
+        telemetry.addData("frontRightSwerveWheel", String.format("min: %f max:%f", robot.frontRightSwerveWheel.minWheelAngle, robot.frontRightSwerveWheel.maxWheelAngle));
+        telemetry.addData("backLeftSwerveWheel", String.format("min: %f max:%f", robot.backLeftSwerveWheel.minWheelAngle, robot.backLeftSwerveWheel.maxWheelAngle));
+        telemetry.addData("backRightSwerveWheel", String.format("min: %f max:%f", robot.backRightSwerveWheel.minWheelAngle, robot.backRightSwerveWheel.maxWheelAngle));
 
         telemetry.addData("x  ", improvedGamepad1.left_stick.x.getValue());
         telemetry.addData("y  ", improvedGamepad1.left_stick.y.getValue());

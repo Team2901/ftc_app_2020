@@ -25,10 +25,6 @@ public class SkystoneHardware extends BaseSkyStoneHardware {
                 LENGTH_OF_ROBOT,
                 WHEEL_SERVO_GEAR_RATIO,
                 SERVO_MAX_ANGLE,
-                FRONT_LEFT_OFFSET,
-                FRONT_RIGHT_OFFSET,
-                BACK_LEFT_OFFSET,
-                BACK_RIGHT_OFFSET,
                 0
               );
     }

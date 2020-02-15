@@ -1,14 +1,17 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
+import android.annotation.SuppressLint;
+
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
@@ -23,12 +26,15 @@ import java.util.List;
 
 import static org.firstinspires.ftc.teamcode.Utility.AngleUtilities.getNormalizedAngle;
 
-
-public class
-BaseSkyStoneHardware {
+@SuppressLint("DefaultLocale")
+public class BaseSkyStoneHardware {
 
     String CONFIG_FILENAME = "servo_offset_config.txt";
-    List<Double> offsets = new ArrayList<>();
+    public List<Double> offsets = new ArrayList<>();
+
+    // TODO
+    final double basePowerRatio = 0.025;
+    final double stallPowerRatio = 0; // 0.05;
 
     public static final double GRABBER_MIN = 0.25;
     public static final double GRABBER_MAX = 0.75;
@@ -47,10 +53,6 @@ BaseSkyStoneHardware {
     public double lengthOfRobot;
     public double turnAngle;
     public double servoMaxAngle;
-    public double frontLeftOffset;
-    public double frontRightOffset;
-    public double backLeftOffset;
-    public double backRightOffset;
     public Servo leftGrabber;
     public Servo rightGrabber;
 
@@ -62,23 +64,13 @@ BaseSkyStoneHardware {
                                 double lengthOfRobot,
                                 double wheelServoGearRatio,
                                 double servoMaxAngle,
-                                double frontLeftOffset,
-                                double frontRightOffset,
-                                double backLeftOffset,
-                                double backRightOffset,
-                                double inchesToEncoder
-    ) {
+                                double inchesToEncoder) {
         this.inchesToEncoder = inchesToEncoder;
         this.wheelServoGearRatio = wheelServoGearRatio;
         this.widthOfRobot = widthOfRobot;
         this.lengthOfRobot = lengthOfRobot;
         this.servoMaxAngle = servoMaxAngle;
-        this.frontLeftOffset = frontLeftOffset;
-        this.frontRightOffset = frontRightOffset;
-        this.backLeftOffset = backLeftOffset;
-        this.backRightOffset = backRightOffset;
         this.turnAngle = Math.atan(widthOfRobot/lengthOfRobot);
-
     }
 
     public class SwerveWheel {
@@ -138,14 +130,19 @@ BaseSkyStoneHardware {
             return (wheelServoGearRatio*servoMaxAngle)*(servoPosition-offset);
 
         }
+
+        @Override
+        public String toString() {
+            return String.format("%s angle: %.2f, mod: %d, pos: %.2f, offset: %.2f encoder: %d", name, targetAngle, modifier, wheelAngleToServoPosition(), offset, motor.getCurrentPosition());
+        }
     }
 
-    public SwerveWheel frontLeftMotor = new SwerveWheel("FL");
-    public SwerveWheel frontRightMotor = new SwerveWheel("FR");
-    public SwerveWheel backLeftMotor = new SwerveWheel("BL");
-    public SwerveWheel backRightMotor = new SwerveWheel("BR");
+    public SwerveWheel frontLeftSwerveWheel = new SwerveWheel("FL");
+    public SwerveWheel frontRightSwerveWheel = new SwerveWheel("FR");
+    public SwerveWheel backLeftSwerveWheel = new SwerveWheel("BL");
+    public SwerveWheel backRightSwerveWheel = new SwerveWheel("BR");
 
-    public SwerveWheel[] swerveWheels = {frontLeftMotor, frontRightMotor, backLeftMotor, backRightMotor};
+    public SwerveWheel[] swerveWheels = {frontLeftSwerveWheel, frontRightSwerveWheel, backLeftSwerveWheel, backRightSwerveWheel};
 
     public HardwareMap hardwareMap;
 
@@ -184,20 +181,15 @@ BaseSkyStoneHardware {
         backLeft = hardwareMap.dcMotor.get("backLeft");
         backRight = hardwareMap.dcMotor.get("backRight");
 
-        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        setWheelMotorMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         leftGrabber = hwMap.get(Servo.class, "leftGrabber");
         rightGrabber = hwMap.get(Servo.class, "rightGrabber");
         leftGrabber.setDirection(Servo.Direction.REVERSE);
 
-        /*Servos Aren't lined up so these aren't the same*/
-        //leftGrabber.setPosition(GRABBER_MIN);
-        //rightGrabber.setPosition(GRABBER_MIN);
-
         lift = hardwareMap.dcMotor.get("lift");
+        lift.setDirection(DcMotorSimple.Direction.REVERSE);
+        lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         //Initialize all servos
@@ -208,6 +200,9 @@ BaseSkyStoneHardware {
 
         crane = hardwareMap.servo.get("crane");
         jaw = hardwareMap.servo.get("jaw");
+
+        jaw.setDirection(Servo.Direction.REVERSE);
+
         wrist = hardwareMap.servo.get("wrist");
 
         // crane is skipping, dont move it on init
@@ -244,26 +239,47 @@ BaseSkyStoneHardware {
             }
         }
 
-        frontLeftOffset = offsets.size() > 0 ? offsets.get(0) : 0.0;
-        frontRightOffset = offsets.size() > 1 ? offsets.get(1) : 0.0;
-        backLeftOffset = offsets.size() > 2 ? offsets.get(2) : 0.0;
-        backRightOffset = offsets.size() > 3 ? offsets.get(3) : 0.0;
+        readServoOffsets();
 
-        frontLeftMotor.setOffset(frontLeftOffset);
-        frontLeftMotor.servo = servoFrontLeft;
-        frontLeftMotor.motor = frontLeft;
+        frontLeftSwerveWheel.servo = servoFrontLeft;
+        frontLeftSwerveWheel.motor = frontLeft;
 
-        frontRightMotor.setOffset(frontRightOffset);
-        frontRightMotor.servo = servoFrontRight;
-        frontRightMotor.motor = frontRight;
+        frontRightSwerveWheel.servo = servoFrontRight;
+        frontRightSwerveWheel.motor = frontRight;
 
-        backLeftMotor.setOffset(backLeftOffset);
-        backLeftMotor.servo = servoBackLeft;
-        backLeftMotor.motor = backLeft;
+        backLeftSwerveWheel.servo = servoBackLeft;
+        backLeftSwerveWheel.motor = backLeft;
 
-        backRightMotor.setOffset(backRightOffset);
-        backRightMotor.servo = servoBackRight;
-        backRightMotor.motor = backRight;
+        backRightSwerveWheel.servo = servoBackRight;
+        backRightSwerveWheel.motor = backRight;
+    }
+
+    public void readServoOffsets() {
+        try {
+            offsets = FileUtilities.readDoubleConfigFile(CONFIG_FILENAME);
+        } catch (IOException e) {
+            offsets = new ArrayList<>();
+        }
+
+        for (int i = 0; i < swerveWheels.length; i++) {
+            if (offsets.size() < i) {
+                offsets.add(0.0);
+            }
+        }
+
+        frontLeftSwerveWheel.setOffset(offsets.size() > 0 ? offsets.get(0) : 0.0);
+        frontRightSwerveWheel.setOffset(offsets.size() > 1 ? offsets.get(1) : 0.0);
+        backLeftSwerveWheel.setOffset(offsets.size() > 2 ? offsets.get(2) : 0.0);
+        backRightSwerveWheel.setOffset(offsets.size() > 3 ? offsets.get(3) : 0.0);
+    }
+
+    public String writeOffsets() {
+        try {
+            FileUtilities.writeConfigFile(CONFIG_FILENAME, offsets);
+        } catch (Exception e) {
+            return String.format("Error writing to file. %s", e.getMessage());
+        }
+        return null;
     }
 
     public String initWebCamera(HardwareMap hardwareMap) {
@@ -368,10 +384,10 @@ BaseSkyStoneHardware {
     }
 
     public void setWheelTargetPositions(int position){
-        frontLeft.setTargetPosition(position*frontLeftMotor.modifier);
-        frontRight.setTargetPosition(position*frontRightMotor.modifier);
-        backLeft.setTargetPosition(position*backLeftMotor.modifier);
-        backRight.setTargetPosition(position*backRightMotor.modifier);
+        frontLeft.setTargetPosition(position* frontLeftSwerveWheel.modifier);
+        frontRight.setTargetPosition(position* frontRightSwerveWheel.modifier);
+        backLeft.setTargetPosition(position* backLeftSwerveWheel.modifier);
+        backRight.setTargetPosition(position* backRightSwerveWheel.modifier);
     }
 
     public void angleCheck(double goal, BaseSkyStoneHardware.SwerveWheel swerveWheel) {
@@ -439,22 +455,22 @@ BaseSkyStoneHardware {
 
     public void swerveMove(double fLAngle, double fRAngle, double bLAngle, double bRAngle, double power) {
 
-        angleCheck(fLAngle, frontLeftMotor);
-        angleCheck(fRAngle, frontRightMotor);
-        angleCheck(bLAngle, backLeftMotor);
-        angleCheck(bRAngle, backRightMotor);
+        angleCheck(fLAngle, frontLeftSwerveWheel);
+        angleCheck(fRAngle, frontRightSwerveWheel);
+        angleCheck(bLAngle, backLeftSwerveWheel);
+        angleCheck(bRAngle, backRightSwerveWheel);
 
-        double servoPositionfL = frontLeftMotor.wheelAngleToServoPosition();
-        double servoPositionfR = frontRightMotor.wheelAngleToServoPosition();
-        double servoPositionbL = backLeftMotor.wheelAngleToServoPosition();
-        double servoPositionbR = backRightMotor.wheelAngleToServoPosition();
+        double servoPositionfL = frontLeftSwerveWheel.wheelAngleToServoPosition();
+        double servoPositionfR = frontRightSwerveWheel.wheelAngleToServoPosition();
+        double servoPositionbL = backLeftSwerveWheel.wheelAngleToServoPosition();
+        double servoPositionbR = backRightSwerveWheel.wheelAngleToServoPosition();
 
         setWheelServoPosition(servoPositionfL, servoPositionfR, servoPositionbL, servoPositionbR);
 
-        double frontLeftPower = frontLeftMotor.modifier * power;
-        double frontRightPower = frontRightMotor.modifier * power;
-        double backLeftPower = backLeftMotor.modifier * power;
-        double backRightPower = backRightMotor.modifier * power;
+        double frontLeftPower = frontLeftSwerveWheel.modifier * power;
+        double frontRightPower = frontRightSwerveWheel.modifier * power;
+        double backLeftPower = backLeftSwerveWheel.modifier * power;
+        double backRightPower = backRightSwerveWheel.modifier * power;
 
         setWheelMotorPower(frontLeftPower, frontRightPower, backLeftPower, backRightPower);
     }
@@ -468,6 +484,17 @@ BaseSkyStoneHardware {
         while(frontLeft.isBusy());
         frontLeft.setPower(0);
 
+    }
+
+    public double getCurrentTurnPower(double absCurrent, double absGoal, double absStart, double maxPower) {
+        double relCurrent = AngleUtilities.getNormalizedAngle(absCurrent - absStart);
+        double relGoal = AngleUtilities.getNormalizedAngle(absGoal - absStart);
+        double remainingDistance = AngleUtilities.getNormalizedAngle(relGoal - relCurrent);
+
+        double basePower = basePowerRatio * remainingDistance;
+        double stallPower = stallPowerRatio * Math.signum(remainingDistance);
+
+        return Range.clip(basePower + stallPower, -Math.abs(maxPower), Math.abs(maxPower));
     }
 }
 
