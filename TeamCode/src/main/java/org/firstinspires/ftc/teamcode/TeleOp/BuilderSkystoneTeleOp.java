@@ -51,9 +51,10 @@ public class BuilderSkystoneTeleOp extends OpMode {
             if(mode > 2){
                 mode = 0;
             }
-            telemetry.addData("Current Drive Mode", driveModeNames[mode]);
         }
-        
+
+        telemetry.addData("Current Drive Mode", driveModeNames[mode]);
+
         if (mode == ABSOLUTE_MODE || mode == RELATIVE_MODE) {
 
             // WHEEL CONTROL
