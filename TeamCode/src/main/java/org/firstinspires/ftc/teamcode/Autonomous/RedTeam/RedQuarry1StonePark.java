@@ -117,24 +117,17 @@ public class RedQuarry1StonePark extends BaseSkyStoneAuto {
         // Step 5) Close the jaw on the skystone
         robot.jaw.setPosition(robot.CLOSED_JAW);
 
-
         this.moveInches(0, -5, .2);
 
-
-        robot.swerveTurn(0);
         turnTo(270, .2);
-
-        robot.swerveStraight(0, 0);
 
         this.moveInches(0, diffInches, .3);
 
         turnTo(270, .2);
 
-
         this.moveInches(0, 60, .4);
 
         //robot.moveLift(50 );
-
 
         turnTo(0, .2);
 
