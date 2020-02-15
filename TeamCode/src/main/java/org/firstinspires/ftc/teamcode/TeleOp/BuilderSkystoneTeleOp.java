@@ -116,12 +116,19 @@ public class BuilderSkystoneTeleOp extends OpMode {
 
         //LIFT CONTROL
         if (gamepad2.left_trigger > .2) {
-            robot.lift.setPower(-.5);
+            robot.lift.setPower(-1);
         } else if (gamepad2.right_trigger > .2) {
-            robot.lift.setPower(1);
+            // Don't let the lift go below 0 encoder ticks
+            if (robot.lift.getCurrentPosition() > 0) {
+                robot.lift.setPower(.5);
+            } else {
+                robot.lift.setPower(0);
+            }
         } else {
             robot.lift.setPower(0);
         }
+
+
 //CRANE CONTROL
         if (gamepad2.right_bumper) {
             robot.crane.setPosition(robot.crane.getPosition() + .015);
@@ -153,6 +160,7 @@ public class BuilderSkystoneTeleOp extends OpMode {
         telemetry.addData("", robot.frontRightSwerveWheel.toString());
         telemetry.addData("", robot.backLeftSwerveWheel.toString());
         telemetry.addData("", robot.backRightSwerveWheel.toString());
+        telemetry.addData("lift pos", robot.lift.getCurrentPosition());
 
         telemetry.update();
     }
