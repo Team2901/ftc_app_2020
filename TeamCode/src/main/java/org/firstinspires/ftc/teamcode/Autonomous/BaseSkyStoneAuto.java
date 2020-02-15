@@ -62,9 +62,11 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
 
     public void goToAngle(double angleStart, double angleGoal, double power) {
 
+        robot.swerveTurn(0);
+
         double angleCurrent = angleStart;
 
-        while ((Math.abs(angleGoal - angleCurrent) > GO_TO_ANGLE_BUFFER) && opModeIsActive()) {
+        while ((Math.abs(AngleUtilities.getNormalizedAngle(angleGoal - angleCurrent)) > GO_TO_ANGLE_BUFFER) && opModeIsActive()) {
             angleCurrent = robot.getAngle();
             double powerCurrent = getCurrentTurnPower(angleCurrent, angleGoal, angleStart, power);
             robot.swerveTurn(-powerCurrent);
