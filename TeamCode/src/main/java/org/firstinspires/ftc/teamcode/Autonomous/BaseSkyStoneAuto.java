@@ -60,6 +60,35 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
         robot.swerveStraight(angle, 0);
     }
 
+    public void moveInchesAbsolute(double angle, double inches, double power) {
+
+        robot.swerveStraightAbsolute(angle, 0);
+        robot.setWheelMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.setWheelMotorMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.setWheelMotorMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        robot.setWheelTargetPositions((int) (inches * robot.inchesToEncoder));
+
+        robot.swerveStraightAbsolute(angle, power);
+        while (robot.wheelsAreBusy() && opModeIsActive()) {
+            telemetry.addData("FL", String.format("angle: %.2f, mod: %d, pos: %d",
+                    robot.frontLeftSwerveWheel.targetAngle, robot.frontLeftSwerveWheel.modifier, robot.frontLeft.getCurrentPosition()));
+            telemetry.addData("FR", String.format("angle: %.2f, mod: %d, pos: %d",
+                    robot.frontRightSwerveWheel.targetAngle, robot.frontRightSwerveWheel.modifier, robot.frontRight.getCurrentPosition()));
+            telemetry.addData("BL", String.format("angle: %.2f, mod: %d, pos: %d",
+                    robot.backLeftSwerveWheel.targetAngle, robot.backLeftSwerveWheel.modifier, robot.backLeft.getCurrentPosition()));
+            telemetry.addData("BR", String.format("angle: %.2f, mod: %d, pos: %d",
+                    robot.backRightSwerveWheel.targetAngle, robot.backRightSwerveWheel.modifier, robot.backRight.getCurrentPosition()));
+
+            telemetry.update();
+        }
+
+        robot.setWheelMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.setWheelMotorMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        robot.swerveStraightAbsolute(angle, 0);
+    }
+
     public void goToAngle(double angleStart, double angleGoal, double power) {
 
         robot.swerveTurn(0);
