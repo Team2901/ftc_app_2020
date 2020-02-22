@@ -131,7 +131,7 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
             return (0.0f);
         }
 
-        List<Recognition> updatedRecognitions = robot.webCamera.tfod.getUpdatedRecognitions();
+        List<Recognition> updatedRecognitions = robot.webCamera.tfod.getRecognitions();
         if (updatedRecognitions != null) {
             telemetry.addData("# Object Detected", updatedRecognitions.size());
             // step through the list of recognitions and display boundary info.
