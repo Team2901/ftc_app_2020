@@ -90,7 +90,7 @@ public class RedQuarry1StonePark extends BaseSkyStoneAuto {
         }
 
         //Centering robot claw on skystone
-        this.moveInches(90, 24, -0.3);
+        this.moveInches(90, 6, 0.3);
 
         // Robot claw is now in front of a skystone, stop moving
         robot.swerveStraight(0, 0);

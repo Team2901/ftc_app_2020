@@ -19,7 +19,7 @@ public class BuilderSkystoneHardware extends BaseSkyStoneHardware{
     public final static double FRONT_RIGHT_OFFSET = .34;
     public final static double BACK_LEFT_OFFSET = .4;
     public final static double BACK_RIGHT_OFFSET = 0.16;
-    public final static double INCHES_TO_ENCODER = 22;
+    public final static double INCHES_TO_ENCODER = 23;
 
     public BuilderSkystoneHardware(){
         super (WIDTH_OF_ROBOT,
