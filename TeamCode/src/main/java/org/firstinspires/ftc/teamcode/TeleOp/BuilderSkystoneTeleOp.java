@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Gamepad.ImprovedGamepad;
 import org.firstinspires.ftc.teamcode.Hardware.BuilderSkystoneHardware;
-import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
 
 @SuppressLint("DefaultLocale")
 @TeleOp(name = "Builder Skystone", group = "SKYSTONE")
@@ -41,10 +40,20 @@ public class BuilderSkystoneTeleOp extends OpMode {
         improvedGamepad1.update();
         improvedGamepad2.update();
 
-        if(this.improvedGamepad1.y.isInitialPress()){
-            mode++;
-            if(mode > 2){
-                mode = 0;
+        if(this.improvedGamepad1.dpad_up.isInitialPress() || this.improvedGamepad1.dpad_down.isInitialPress()){
+            if (this.improvedGamepad1.dpad_up.isInitialPress()) {
+                mode++;
+
+                if(mode > 2){
+                    mode = 0;
+                }
+
+            } else {
+                mode--;
+
+                if (mode < 0) {
+                    mode = 2;
+                }
             }
 
             if (mode == OFFSET_MODE) {
@@ -54,29 +63,72 @@ public class BuilderSkystoneTeleOp extends OpMode {
 
         telemetry.addData("Current Drive Mode", mode);
 
-        if (mode == ABSOLUTE_MODE || mode == RELATIVE_MODE) {
+
+        if (mode == ABSOLUTE_MODE) {
+
+            if (improvedGamepad1.right_stick.isPressed()
+                    || improvedGamepad1.a.isPressed()
+                    || improvedGamepad1.b.isPressed()
+                    || improvedGamepad1.x.isPressed()
+                    || improvedGamepad1.y.isPressed()) {
+
+                final double maxPower;
+                final double angleGoal;
+                if (improvedGamepad1.a.isPressed()) {
+                    angleGoal = 180;
+                    maxPower = .5;
+                } else if (improvedGamepad1.b.isPressed()) {
+                    angleGoal = -90;
+                    maxPower = .5;
+                } else if (improvedGamepad1.x.isPressed()) {
+                    angleGoal = 90;
+                    maxPower = .5;
+                } else if (improvedGamepad1.y.isPressed()) {
+                    angleGoal = 0;
+                    maxPower = .5;
+                } else {
+                    angleGoal = improvedGamepad1.right_stick.getAngel();
+                    maxPower = improvedGamepad1.right_stick.getValue();
+                }
+
+                double angleCurrent = robot.getAngle();
+
+                double rawPower;
+                if (Math.abs(angleGoal - angleCurrent) > 2) {
+                    rawPower = robot.getCurrentTurnPower(robot.getAngle(), angleGoal, 0, maxPower);
+                } else {
+                    rawPower = 0;
+                }
+
+                double power = getWheelPower(rawPower, gamepad1.left_bumper);
+
+                telemetry.addData("angleGoal", angleGoal);
+                telemetry.addData("angleCurrent", angleCurrent);
+                telemetry.addData("rawPower", rawPower);
+                telemetry.addData("turn power", power);
+
+                robot.swerveTurn(power);
+            } else if (improvedGamepad1.left_stick.isPressed()) {
+                double power = getWheelPower(improvedGamepad1.left_stick.getValue(), gamepad1.left_bumper);
+                double joyWheelAngle = improvedGamepad1.left_stick.getAngel();
+                robot.swerveStraightAbsolute(joyWheelAngle, power);
+            } else {
+                robot.setWheelMotorPower(0, 0, 0, 0);
+            }
+        }
+
+        else if (mode == RELATIVE_MODE) {
 
             // WHEEL CONTROL
             if (improvedGamepad1.right_stick_x.isPressed()) {
-                double power;
-                if (mode == ABSOLUTE_MODE) {
-                    double joyWheelAngle = improvedGamepad1.right_stick.getAngel();
-                    double joyRadius = getWheelPower(improvedGamepad1.right_stick.getValue(), gamepad1.left_bumper);
-                     power = robot.getCurrentTurnPower(robot.getAngle(),joyWheelAngle, joyRadius);
-                } else {
-                    power = getWheelPower(improvedGamepad1.right_stick.x.getValue(), gamepad1.left_bumper);
-                }
-
+                double power = getWheelPower(improvedGamepad1.right_stick.x.getValue(), gamepad1.left_bumper);
                 robot.swerveTurn(power);
 
             } else if (improvedGamepad1.left_stick.isPressed()) {
                 double power = getWheelPower(improvedGamepad1.left_stick.getValue(), gamepad1.left_bumper);
                 double joyWheelAngle = improvedGamepad1.left_stick.getAngel();
-                if (mode == ABSOLUTE_MODE) {
-                    robot.swerveStraightAbsolute(joyWheelAngle, power);
-                } else {
-                    robot.swerveStraight(joyWheelAngle, power);
-                }
+                robot.swerveStraight(joyWheelAngle, power);
+
             } else {
                 robot.setWheelMotorPower(0, 0, 0, 0);
             }
