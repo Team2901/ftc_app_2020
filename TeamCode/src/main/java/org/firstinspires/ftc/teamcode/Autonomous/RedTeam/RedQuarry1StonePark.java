@@ -38,7 +38,7 @@ public class RedQuarry1StonePark extends BaseSkyStoneAuto {
 
 
         initAndActivateWebCameraWithTensorFlow();
-        robot.crane.setPosition(0);
+        //robot.crane.setPosition(0);
         robot.wrist.setPosition(.5);
         robot.setGrabberPositition(.7,.84);
 
@@ -54,8 +54,8 @@ public class RedQuarry1StonePark extends BaseSkyStoneAuto {
         this.moveInchesAbsolute(0, 5, .2);
 
         robot.swerveStraightAbsolute(90, 0);
-        robot.crane.setPosition(1);
-        robot.wrist.setPosition(.5);
+        //robot.crane.setPosition(1);
+        //robot.wrist.setPosition(.5);
         /*double t = 0;
         while (t < 10) {
             t++;
@@ -89,10 +89,12 @@ public class RedQuarry1StonePark extends BaseSkyStoneAuto {
 
             // Update the skystone location
             skyStoneCenterPercentDiff = findSkyStone();
-            skyStoneOffsetPercentDiff = skyStoneCenterPercentDiff == null ? null : skyStoneCenterPercentDiff + 55;
+            skyStoneOffsetPercentDiff = skyStoneCenterPercentDiff == null ? null : skyStoneCenterPercentDiff + 45;
         }
 
         robot.swerveStraightAbsolute(0, 0);
+        turnTo(0);
+        robot.wait(50, this);
 
         telemetry.addData("out of loop", "");
         telemetry.addData("percent dif.", skyStoneCenterPercentDiff);
@@ -109,7 +111,7 @@ public class RedQuarry1StonePark extends BaseSkyStoneAuto {
 
         // Step 3) Open the jaw
         robot.jaw.setPosition(robot.OPEN_JAW);
-        robot.crane.setPosition(1);
+        //robot.crane.setPosition(1);
 
         // Step 4) Move forwards 2 feet towards the skystone
         this.moveInchesAbsolute(0, 32, .2);
@@ -120,17 +122,35 @@ public class RedQuarry1StonePark extends BaseSkyStoneAuto {
         //back up so we don't hit bridge
         this.moveInchesAbsolute(0, -15, .2);
 
+        while(!gamepad1.left_stick_button && opModeIsActive()){}
+
+        robot.wait(1000, this);
+        turnTo(0);
+        robot.wait(1000, this);
         this.moveInchesAbsolute(270, diffInches, .3);
 
-        this.moveInchesAbsolute(270, 72, .4);
+        while(!gamepad1.left_stick_button && opModeIsActive()){}
+
+        robot.wait(1000, this);
+        turnTo(0);
+        robot.wait(1000, this);
+        this.moveInchesAbsolute(270, 50, .4);
 
         //robot.moveLift(50 );
 
+        while(!gamepad1.left_stick_button && opModeIsActive()){}
+
         moveInchesAbsolute(0, 22, .3);
+
+        while(!gamepad1.left_stick_button && opModeIsActive()){}
 
         robot.jaw.setPosition(robot.OPEN_JAW);
 
+        while(!gamepad1.left_stick_button && opModeIsActive()){}
+
         moveInchesAbsolute(0, -22, .3);
+
+        while(!gamepad1.left_stick_button && opModeIsActive()){}
 
         moveInchesAbsolute(90, 40, .3);
 /*
