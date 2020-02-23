@@ -139,8 +139,6 @@ public class BuilderSkystoneTeleOp extends OpMode {
 
             robot.setWheelMotorPower(0, 0, 0, 0);
 
-            improvedGamepad1.update();
-
             if(this.improvedGamepad1.dpad_right.isInitialPress()){
                 servoIndex++;
                 if(servoIndex >= robot.swerveWheels.length){
@@ -157,12 +155,16 @@ public class BuilderSkystoneTeleOp extends OpMode {
 
             if(servoUnderTest != null){
                 if(this.improvedGamepad1.left_bumper.isInitialPress()){
+                    telemetry.addData("PRESSED LEFT BUMPER","");
                     servoUnderTest.setPosition(servoUnderTest.getPosition()-0.1);
                 } else if(this.improvedGamepad1.right_bumper.isInitialPress()){
+                    telemetry.addData("PRESSED RIGHT BUMPER","");
                     servoUnderTest.setPosition(servoUnderTest.getPosition()+0.1);
                 } else if(this.improvedGamepad1.left_trigger.isInitialPress()){
+                    telemetry.addData("PRESSED LEFT TRIGGER","");
                     servoUnderTest.setPosition(servoUnderTest.getPosition()-0.01);
                 } else if(this.improvedGamepad1.right_trigger.isInitialPress()) {
+                    telemetry.addData("PRESSED RIGHT TRIGGER","");
                     servoUnderTest.setPosition(servoUnderTest.getPosition()+0.01);
                 }
 

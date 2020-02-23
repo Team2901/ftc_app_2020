@@ -502,7 +502,7 @@ public class BaseSkyStoneHardware {
         double basePower = basePowerRatio * remainingDistance;
         double stallPower = stallPowerRatio * Math.signum(remainingDistance);
 
-        return Range.clip(basePower + stallPower, -Math.abs(maxPower), Math.abs(maxPower));
+        return -Range.clip(basePower + stallPower, -Math.abs(maxPower), Math.abs(maxPower));
     }
 }
 
