@@ -57,12 +57,12 @@ public class BuilderSkystoneTeleOp extends OpMode {
         if (mode == ABSOLUTE_MODE || mode == RELATIVE_MODE) {
 
             // WHEEL CONTROL
-            if (improvedGamepad1.right_stick_x.isPressed()) {
+            if (improvedGamepad1.right_stick.isPressed()) {
                 double power;
                 if (mode == ABSOLUTE_MODE) {
                     double joyWheelAngle = improvedGamepad1.right_stick.getAngel();
                     double joyRadius = getWheelPower(improvedGamepad1.right_stick.getValue(), gamepad1.left_bumper);
-                     power = robot.getCurrentTurnPower(robot.getAngle(),joyWheelAngle, joyRadius);
+                    power = robot.getCurrentTurnPower(robot.getAngle(),joyWheelAngle, joyRadius);
                 } else {
                     power = getWheelPower(improvedGamepad1.right_stick.x.getValue(), gamepad1.left_bumper);
                 }
