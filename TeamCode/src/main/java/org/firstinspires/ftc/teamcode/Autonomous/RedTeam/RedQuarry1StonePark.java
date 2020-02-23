@@ -51,7 +51,7 @@ public class RedQuarry1StonePark extends BaseSkyStoneAuto {
         // Wait for start
         waitForStart();
 
-        this.moveInchesAbsolute(0, 2, .2);
+        this.moveInchesAbsolute(0, 5, .2);
 
         robot.swerveStraightAbsolute(90, 0);
         robot.crane.setPosition(1);
@@ -117,25 +117,20 @@ public class RedQuarry1StonePark extends BaseSkyStoneAuto {
         // Step 5) Close the jaw on the skystone
         robot.jaw.setPosition(robot.CLOSED_JAW);
 
-        this.moveInchesAbsolute(0, -5, .2);
-
-        turnTo(270, .2);
+        //back up so we don't hit bridge
+        this.moveInchesAbsolute(0, -15, .2);
 
         this.moveInchesAbsolute(270, diffInches, .3);
 
-        this.moveInchesAbsolute(270, 60, .4);
+        this.moveInchesAbsolute(270, 72, .4);
 
         //robot.moveLift(50 );
 
-        turnTo(0, .2);
-
-        moveInchesAbsolute(0, 12, .3);
+        moveInchesAbsolute(0, 22, .3);
 
         robot.jaw.setPosition(robot.OPEN_JAW);
 
-        moveInchesAbsolute(0, -12, .3);
-
-        turnTo(90, .2);
+        moveInchesAbsolute(0, -22, .3);
 
         moveInchesAbsolute(90, 40, .3);
 /*

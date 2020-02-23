@@ -41,8 +41,8 @@ public class BaseSkyStoneHardware {
     public static final double ROBOT_FRONT_ANGLE = 0;
     public static final double ROBOT_RIGHT_ANGLE = -90;
     public static final double ROBOT_LEFT_ANGLE = 90;
-    public static final double OPEN_JAW = 1;
-    public static final double CLOSED_JAW = 0;
+    public static final double OPEN_JAW = 0;
+    public static final double CLOSED_JAW = 1;
     public static final double LIFT_STEP = 750;
 
     public static final String WEB_CAM_NAME = "Webcam 1";
