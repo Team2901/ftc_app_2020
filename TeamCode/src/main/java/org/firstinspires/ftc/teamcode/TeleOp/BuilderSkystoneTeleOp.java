@@ -24,7 +24,7 @@ public class BuilderSkystoneTeleOp extends OpMode {
     public int mode = RELATIVE_MODE;
     Servo servoUnderTest;
     int servoIndex;
-    public String driveModeNames[] = {"ABSOLUTE_MODE, RELATIVE_MODE, OFFSET_MODE"};
+    public String[] driveModeNames = {"ABSOLUTE_MODE, RELATIVE_MODE, OFFSET_MODE"};
 
     @Override
     public void init() {
@@ -41,16 +41,22 @@ public class BuilderSkystoneTeleOp extends OpMode {
         improvedGamepad2.update();
 
         if(this.improvedGamepad1.dpad_up.isInitialPress() || this.improvedGamepad1.dpad_down.isInitialPress()){
+
+            // Update the offsets when leaving the mode
+            if (mode == OFFSET_MODE) {
+                robot.swerveWheels[0].setOffset(robot.swerveWheels[0].servo.getPosition());
+                robot.swerveWheels[1].setOffset(robot.swerveWheels[1].servo.getPosition());
+                robot.swerveWheels[2].setOffset(robot.swerveWheels[2].servo.getPosition());
+                robot.swerveWheels[3].setOffset(robot.swerveWheels[3].servo.getPosition());
+            }
+
             if (this.improvedGamepad1.dpad_up.isInitialPress()) {
                 mode++;
-
                 if(mode > 2){
                     mode = 0;
                 }
-
             } else {
                 mode--;
-
                 if (mode < 0) {
                     mode = 2;
                 }
@@ -115,9 +121,7 @@ public class BuilderSkystoneTeleOp extends OpMode {
             } else {
                 robot.setWheelMotorPower(0, 0, 0, 0);
             }
-        }
-
-        else if (mode == RELATIVE_MODE) {
+        } else if (mode == RELATIVE_MODE) {
 
             // WHEEL CONTROL
             if (improvedGamepad1.right_stick_x.isPressed()) {
@@ -132,9 +136,10 @@ public class BuilderSkystoneTeleOp extends OpMode {
             } else {
                 robot.setWheelMotorPower(0, 0, 0, 0);
             }
-        }
-        else {
-            //THIS IS OFFSET MODE
+        } else if (mode == OFFSET_MODE) {
+
+            robot.setWheelMotorPower(0, 0, 0, 0);
+
             improvedGamepad1.update();
 
             if(this.improvedGamepad1.dpad_right.isInitialPress()){
@@ -162,8 +167,6 @@ public class BuilderSkystoneTeleOp extends OpMode {
                     servoUnderTest.setPosition(servoUnderTest.getPosition()+0.01);
                 }
 
-                robot.swerveWheels[servoIndex].setOffset(servoUnderTest.getPosition());
-
                 telemetry.addData("Left bumper","-0.1");
                 telemetry.addData("Right bumper","+0.1");
                 telemetry.addData("Left trigger","-0.01");
@@ -173,6 +176,8 @@ public class BuilderSkystoneTeleOp extends OpMode {
             }
 
             telemetry.addData("D Pad Right/Left", "Increment/decrement servos");
+        } else {
+            robot.setWheelMotorPower(0, 0, 0, 0);
         }
 
         //LIFT CONTROL
@@ -189,14 +194,14 @@ public class BuilderSkystoneTeleOp extends OpMode {
             robot.lift.setPower(0);
         }
 
-
-//CRANE CONTROL
+        //CRANE CONTROL
         if (gamepad2.right_bumper) {
             robot.crane.setPosition(robot.crane.getPosition() + .015);
         } else if (gamepad2.left_bumper) {
             robot.crane.setPosition(robot.crane.getPosition() - .015);
         }
-//WRIST CONTROL
+
+        //WRIST CONTROL
         if (gamepad2.x) {
             robot.wrist.setPosition(robot.wrist.getPosition() + .01);
         } else if (gamepad2.y) {
@@ -204,13 +209,15 @@ public class BuilderSkystoneTeleOp extends OpMode {
         } else if (gamepad2.start) {
             robot.wrist.setPosition(.5);
         }
-//JAW CONTROL
+
+        //JAW CONTROL
         if (gamepad2.a) {
             robot.jaw.setPosition(robot.jaw.getPosition() + .01);
         } else if (gamepad2.b) {
             robot.jaw.setPosition(robot.jaw.getPosition() - .01);
         }
-//Waffle Grabber
+
+        //Waffle Grabber
         if (gamepad2.dpad_up) {
             robot.setGrabberPositition(.7, .84);
         } else if (gamepad2.dpad_down) {
