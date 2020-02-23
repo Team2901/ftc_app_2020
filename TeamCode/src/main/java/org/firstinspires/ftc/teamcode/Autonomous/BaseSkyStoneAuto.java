@@ -97,7 +97,7 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
 
         while ((Math.abs(AngleUtilities.getNormalizedAngle(angleGoal - angleCurrent)) > GO_TO_ANGLE_BUFFER) && opModeIsActive()) {
             angleCurrent = robot.getAngle();
-            double powerCurrent = getCurrentTurnPower(angleCurrent, angleGoal, angleStart, power);
+            double powerCurrent = robot.getCurrentTurnPower(angleCurrent, angleGoal, angleStart, power);
             robot.swerveTurn(-powerCurrent);
 
             telemetry.addData("Start Angle ", "%.1f", angleStart);
@@ -111,17 +111,6 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
         robot.swerveTurn(0);
         telemetry.addData("Is Stopped", "");
         telemetry.update();
-    }
-
-    public double getCurrentTurnPower(double absCurrent, double absGoal, double absStart, double maxPower) {
-        double relCurrent = AngleUtilities.getNormalizedAngle(absCurrent - absStart);
-        double relGoal = AngleUtilities.getNormalizedAngle(absGoal - absStart);
-        double remainingDistance = AngleUtilities.getNormalizedAngle(relGoal - relCurrent);
-
-        double basePower = 0.025 * remainingDistance;
-        double stallPower = 0.05 * Math.signum(remainingDistance);
-
-        return Range.clip(basePower + stallPower, -Math.abs(maxPower), Math.abs(maxPower));
     }
 
     public void platformParkInner(int team) {
