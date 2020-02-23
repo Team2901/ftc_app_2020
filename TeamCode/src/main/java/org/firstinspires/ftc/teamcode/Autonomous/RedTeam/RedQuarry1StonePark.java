@@ -67,7 +67,7 @@ public class RedQuarry1StonePark extends BaseSkyStoneAuto {
 
         // Step 1) Move forwards/backwards until a skystone location is within 10% of the center of the camera's view
         Float skyStoneCenterPercentDiff = findSkyStone();
-        Float skyStoneOffsetPercentDiff = skyStoneCenterPercentDiff == null ? null : skyStoneCenterPercentDiff + 55;
+        Float skyStoneOffsetPercentDiff = skyStoneCenterPercentDiff == null ? null : skyStoneCenterPercentDiff + 45;
 
         while (skyStoneOffsetPercentDiff == null /* don't see skystone yet */
                 || Math.abs(skyStoneOffsetPercentDiff) > CONFIDENCE_PERCENTAGE /* overshot or undershot */) {
