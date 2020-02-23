@@ -93,9 +93,11 @@ public class RedQuarry1StonePark extends BaseSkyStoneAuto {
         }
 
         robot.swerveStraightAbsolute(0, 0);
-        turnTo(0);
-        robot.wait(50, this);
-
+        if (robot.getAngle() != 0) {
+            robot.wait(1000, this);
+            turnTo(0);
+            robot.wait(1000, this);
+        }
         telemetry.addData("out of loop", "");
         telemetry.addData("percent dif.", skyStoneCenterPercentDiff);
         telemetry.addData("percent offset", skyStoneOffsetPercentDiff);
@@ -124,23 +126,27 @@ public class RedQuarry1StonePark extends BaseSkyStoneAuto {
 
         while(!gamepad1.left_stick_button && opModeIsActive()){}
 
-        robot.wait(1000, this);
-        turnTo(0);
-        robot.wait(1000, this);
+        if (robot.getAngle()!= 0) {
+            robot.wait(1000, this);
+            turnTo(0);
+            robot.wait(1000, this);
+        }
         this.moveInchesAbsolute(270, diffInches, .3);
 
         while(!gamepad1.left_stick_button && opModeIsActive()){}
 
-        robot.wait(1000, this);
-        turnTo(0);
-        robot.wait(1000, this);
-        this.moveInchesAbsolute(270, 50, .4);
+        if (robot.getAngle() != 0) {
+            robot.wait(1000, this);
+            turnTo(0);
+            robot.wait(1000, this);
+        }
+        this.moveInchesAbsolute(270, 72, .4);
 
         //robot.moveLift(50 );
 
         while(!gamepad1.left_stick_button && opModeIsActive()){}
 
-        moveInchesAbsolute(0, 22, .3);
+        moveInchesAbsolute(0, 28, .3);
 
         while(!gamepad1.left_stick_button && opModeIsActive()){}
 
