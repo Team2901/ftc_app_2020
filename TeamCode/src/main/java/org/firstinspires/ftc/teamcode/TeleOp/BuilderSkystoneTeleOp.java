@@ -67,8 +67,7 @@ public class BuilderSkystoneTeleOp extends OpMode {
             }
         }
 
-        telemetry.addData("Current Drive Mode", mode);
-
+        telemetry.addData("Current Drive Mode", driveModeNames[mode]);
 
         if (mode == ABSOLUTE_MODE) {
 
