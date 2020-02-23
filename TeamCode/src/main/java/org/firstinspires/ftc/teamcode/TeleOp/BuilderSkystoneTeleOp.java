@@ -24,7 +24,7 @@ public class BuilderSkystoneTeleOp extends OpMode {
     public int mode = RELATIVE_MODE;
     Servo servoUnderTest;
     int servoIndex;
-    public String driveModeNames[] = {"ABSOLUTE_MODE, RELATIVE_MODE, OFFSET_MODE"};
+    public String [] driveModeNames = {"ABSOLUTE_MODE, RELATIVE_MODE, OFFSET_MODE"};
 
     @Override
     public void init() {
@@ -61,8 +61,7 @@ public class BuilderSkystoneTeleOp extends OpMode {
             }
         }
 
-        telemetry.addData("Current Drive Mode", mode);
-
+        telemetry.addData("Current Drive Mode", driveModeNames[mode]);
 
         if (mode == ABSOLUTE_MODE) {
 
