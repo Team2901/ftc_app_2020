@@ -94,7 +94,7 @@ public class BuilderSkystoneTeleOp extends OpMode {
 
                 double rawPower;
                 if (Math.abs(angleGoal - angleCurrent) > 2) {
-                    rawPower = robot.getCurrentTurnPower(robot.getAngle(), angleGoal, 0, maxPower);
+                    rawPower = robot.getCurrentTurnPower(robot.getAngle(), angleGoal, maxPower);
                 } else {
                     rawPower = 0;
                 }
