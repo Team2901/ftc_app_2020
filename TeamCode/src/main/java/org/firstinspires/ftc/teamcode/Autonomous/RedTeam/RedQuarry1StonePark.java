@@ -93,7 +93,7 @@ public class RedQuarry1StonePark extends BaseSkyStoneAuto {
         }
 
         robot.swerveStraightAbsolute(0, 0);
-        if (robot.getAngle() != 0) {
+        if (Math.abs(robot.getAngle()) > 5) {
             robot.wait(1000, this);
             turnTo(0);
             robot.wait(1000, this);
@@ -126,7 +126,7 @@ public class RedQuarry1StonePark extends BaseSkyStoneAuto {
 
         while(!gamepad1.left_stick_button && opModeIsActive()){}
 
-        if (robot.getAngle()!= 0) {
+        if (Math.abs(robot.getAngle()) > 5) {
             robot.wait(1000, this);
             turnTo(0);
             robot.wait(1000, this);
@@ -135,7 +135,7 @@ public class RedQuarry1StonePark extends BaseSkyStoneAuto {
 
         while(!gamepad1.left_stick_button && opModeIsActive()){}
 
-        if (robot.getAngle() != 0) {
+        if (Math.abs(robot.getAngle()) > 5) {
             robot.wait(1000, this);
             turnTo(0);
             robot.wait(1000, this);
