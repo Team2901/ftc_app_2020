@@ -496,5 +496,13 @@ public class BaseSkyStoneHardware {
 
         return Range.clip(basePower + stallPower, -Math.abs(maxPower), Math.abs(maxPower));
     }
+    public double getCurrentTurnPower(double absCurrent, double absGoal, double maxPower) {
+        double remainingDistance = AngleUtilities.getNormalizedAngle(absGoal - absCurrent);
+
+        double basePower = basePowerRatio * remainingDistance;
+        double stallPower = stallPowerRatio * Math.signum(remainingDistance);
+
+        return Range.clip(basePower + stallPower, -Math.abs(maxPower), Math.abs(maxPower));
+    }
 }
 
