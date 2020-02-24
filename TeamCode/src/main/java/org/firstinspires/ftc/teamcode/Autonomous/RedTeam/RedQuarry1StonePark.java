@@ -7,6 +7,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.teamcode.Autonomous.BaseSkyStoneAuto;
 
 
+
 /**
  *  Steps
  *  0) initialize robot and web camera with TensorFlow, point wheels forward
@@ -48,6 +49,7 @@ public class RedQuarry1StonePark extends BaseSkyStoneAuto {
         telemetry.addData(">", "Press Play to start op mode");
         telemetry.update();
 
+        robot.opMode=this;
         // Wait for start
         waitForStart();
 
