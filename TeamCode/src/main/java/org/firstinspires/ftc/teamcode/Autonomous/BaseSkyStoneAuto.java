@@ -9,6 +9,9 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcontroller.internal.MotoLinearOpMode;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.Hardware.BuilderSkystoneHardware;
 import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
@@ -30,6 +33,14 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
     public void turnTo(double angle, double power) {
         goToAngle(robot.getAngle(), angle, power);
     }
+    public static double getIMUAngle(double x, double y) {
+
+        double angleRad = Math.atan2(y, x);
+        double angleDegrees = AngleUtilities.radiansDegreesTranslation(angleRad);
+
+        return AngleUtilities.getNormalizedAngle(angleDegrees);
+    }
+
 
     public void moveInches(double angle, double inches, double power) {
 
