@@ -7,6 +7,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.teamcode.Autonomous.BaseSkyStoneAuto;
 
 
+
 /**
  *  Steps
  *  0) initialize robot and web camera with TensorFlow, point wheels forward
@@ -38,23 +39,24 @@ public class RedQuarry1StonePark extends BaseSkyStoneAuto {
 
 
         initAndActivateWebCameraWithTensorFlow();
-        robot.crane.setPosition(0);
+        //robot.crane.setPosition(0);
         robot.wrist.setPosition(.5);
         robot.setGrabberPositition(.7,.84);
 
         // Step 0) Point wheels forward
-        robot.swerveStraight(0, 0);
+        robot.swerveStraightAbsolute(0, 0);
 
         telemetry.addData(">", "Press Play to start op mode");
         telemetry.update();
 
+        robot.opMode=this;
         // Wait for start
         waitForStart();
 
-        this.moveInches(0, 2, .2);
+        this.moveInchesAbsolute(0, 5, .2);
 
-        robot.swerveStraight(90, 0);
-        robot.crane.setPosition(1);
+        robot.swerveStraightAbsolute(90, 0);
+       // robot.crane.setPosition(1);
         robot.wrist.setPosition(.5);
         /*double t = 0;
         while (t < 10) {
@@ -67,36 +69,38 @@ public class RedQuarry1StonePark extends BaseSkyStoneAuto {
 
         // Step 1) Move forwards/backwards until a skystone location is within 10% of the center of the camera's view
         Float skyStoneCenterPercentDiff = findSkyStone();
+        Float skyStoneOffsetPercentDiff = skyStoneCenterPercentDiff== null ? null : skyStoneCenterPercentDiff + 55;
 
-        while (skyStoneCenterPercentDiff == null /* don't see skystone yet */
-                || Math.abs(skyStoneCenterPercentDiff) > CONFIDENCE_PERCENTAGE /* overshot or undershot */) {
+        while (skyStoneOffsetPercentDiff == null /* don't see skystone yet */
+                || Math.abs(skyStoneOffsetPercentDiff) > CONFIDENCE_PERCENTAGE /* overshot or undershot */) {
             telemetry.addData("loop is running", "");
             telemetry.addData("percent dif.", skyStoneCenterPercentDiff);
+            telemetry.addData("offset", skyStoneOffsetPercentDiff);
             telemetry.update();
 
-            if (skyStoneCenterPercentDiff == null) {
+            if (skyStoneOffsetPercentDiff == null) {
                 // If we don't see a skystone: Move forwards
-                robot.swerveStraight(90, 0.2);
-            } else if (skyStoneCenterPercentDiff < 0) {
+                robot.swerveStraightAbsolute(90, 0.2);
+            } else if (skyStoneOffsetPercentDiff < 0) {
                 // If the skystone is to the left: Move backwards
-                robot.swerveStraight(90, 0.3);
+                robot.swerveStraightAbsolute(90, 0.3);
             } else {
                 // If the skystone is to the right: Move forwards
-                robot.swerveStraight(90, -0.3);
+                robot.swerveStraightAbsolute(90, -0.3);
             }
 
             // Update the skystone location
             skyStoneCenterPercentDiff = findSkyStone();
+            skyStoneOffsetPercentDiff = skyStoneCenterPercentDiff== null ? null : skyStoneCenterPercentDiff + 55;
+
         }
 
-        //Centering robot claw on skystone
-        this.moveInches(90, 6, 0.3);
 
-        // Robot claw is now in front of a skystone, stop moving
-        robot.swerveStraight(0, 0);
+        robot.swerveStraightAbsolute(0, 0);
 
         telemetry.addData("out of loop", "");
         telemetry.addData("percent dif.", skyStoneCenterPercentDiff);
+        telemetry.addData("off set", skyStoneOffsetPercentDiff);
         telemetry.update();
         // Calculate in inches how far the robot has moved while finding the skystone
         double fLeftEnd = Math.abs(robot.frontLeft.getCurrentPosition());
@@ -109,39 +113,33 @@ public class RedQuarry1StonePark extends BaseSkyStoneAuto {
 
         // Step 3) Open the jaw
         robot.jaw.setPosition(robot.OPEN_JAW);
-        robot.crane.setPosition(1);
+       // robot.crane.setPosition(1);
 
         // Step 4) Move forwards 2 feet towards the skystone
-        this.moveInches(0, 32, .2);
+        this.moveInchesAbsolute(0, 28, .2);
 
         // Step 5) Close the jaw on the skystone
-        robot.jaw.setPosition(robot.CLOSED_JAW);
+        /*robot.jaw.setPosition(robot.CLOSED_JAW);
 
-        this.moveInches(0, -5, .2);
+        //move back so we don't hit bridge
+        this.moveInchesAbsolute(0, -20, .2);
 
-        turnTo(270, .2);
 
-        this.moveInches(0, diffInches, .3);
+        this.moveInchesAbsolute(270, diffInches, .3);
 
-        turnTo(270, .2);
-
-        this.moveInches(0, 60, .4);
+        this.moveInchesAbsolute(270, 60+12, .4);
 
         //robot.moveLift(50 );
 
-        turnTo(0, .2);
-
-        moveInches(0, 12, .3);
+        moveInchesAbsolute(0, 12+5, .3);
 
         robot.jaw.setPosition(robot.OPEN_JAW);
 
-        turnTo(0, .2);
 
-        moveInches(0, -12, .3);
+        moveInchesAbsolute(0, -12-5, .3);
 
-        turnTo(90, .2);
 
-        moveInches(0, 40, .3);
+        moveInchesAbsolute(90, 40, .3);
 /*
         // Step 8) Move back to where we were in step 1
 

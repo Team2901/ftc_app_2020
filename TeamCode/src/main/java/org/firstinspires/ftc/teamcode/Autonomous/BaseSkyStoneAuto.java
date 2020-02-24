@@ -9,6 +9,9 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcontroller.internal.MotoLinearOpMode;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.Hardware.BuilderSkystoneHardware;
 import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
@@ -30,6 +33,14 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
     public void turnTo(double angle, double power) {
         goToAngle(robot.getAngle(), angle, power);
     }
+    public static double getIMUAngle(double x, double y) {
+
+        double angleRad = Math.atan2(y, x);
+        double angleDegrees = AngleUtilities.radiansDegreesTranslation(angleRad);
+
+        return AngleUtilities.getNormalizedAngle(angleDegrees);
+    }
+
 
     public void moveInches(double angle, double inches, double power) {
 
@@ -37,6 +48,7 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
         robot.setWheelMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.setWheelMotorMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.setWheelMotorMode(DcMotor.RunMode.RUN_TO_POSITION);
+
 
         robot.setWheelTargetPositions((int) (inches * robot.inchesToEncoder));
 
@@ -59,6 +71,34 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
 
         robot.swerveStraight(angle, 0);
     }
+    public void moveInchesAbsolute (double angle, double inches, double power) {
+
+        robot.swerveStraightAbsolute(angle, 0);
+        robot.setWheelMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.setWheelMotorMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.setWheelMotorMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        robot.setWheelTargetPositions((int) (inches * robot.inchesToEncoder));
+
+        robot.swerveStraightAbsolute(angle, power);
+        while (robot.wheelsAreBusy() && opModeIsActive()) {
+            telemetry.addData("FL", String.format("angle: %.2f, mod: %d, pos: %d",
+                    robot.frontLeftSwerveWheel.targetAngle, robot.frontLeftSwerveWheel.modifier, robot.frontLeft.getCurrentPosition()));
+            telemetry.addData("FR", String.format("angle: %.2f, mod: %d, pos: %d",
+                    robot.frontRightSwerveWheel.targetAngle, robot.frontRightSwerveWheel.modifier, robot.frontRight.getCurrentPosition()));
+            telemetry.addData("BL", String.format("angle: %.2f, mod: %d, pos: %d",
+                    robot.backLeftSwerveWheel.targetAngle, robot.backLeftSwerveWheel.modifier, robot.backLeft.getCurrentPosition()));
+            telemetry.addData("BR", String.format("angle: %.2f, mod: %d, pos: %d",
+                    robot.backRightSwerveWheel.targetAngle, robot.backRightSwerveWheel.modifier, robot.backRight.getCurrentPosition()));
+            robot.printRawAngle();
+            telemetry.update();
+        }
+
+        robot.setWheelMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.setWheelMotorMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        robot.swerveStraightAbsolute(angle, 0);
+    }
 
     public void goToAngle(double angleStart, double angleGoal, double power) {
 
@@ -68,6 +108,7 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
 
         while ((Math.abs(AngleUtilities.getNormalizedAngle(angleGoal - angleCurrent)) > GO_TO_ANGLE_BUFFER) && opModeIsActive()) {
             angleCurrent = robot.getAngle();
+
             double powerCurrent = getCurrentTurnPower(angleCurrent, angleGoal, angleStart, power);
             robot.swerveTurn(-powerCurrent);
 
@@ -229,5 +270,6 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
             telemetry.addData("Successful!", "");
         }
     }
+
 }
 

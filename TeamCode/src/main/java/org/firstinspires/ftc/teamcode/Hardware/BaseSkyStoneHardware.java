@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -19,6 +20,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
 import org.firstinspires.ftc.teamcode.Utility.FileUtilities;
+
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -41,11 +43,13 @@ public class BaseSkyStoneHardware {
     public static final double ROBOT_FRONT_ANGLE = 0;
     public static final double ROBOT_RIGHT_ANGLE = -90;
     public static final double ROBOT_LEFT_ANGLE = 90;
-    public static final double OPEN_JAW = 1;
-    public static final double CLOSED_JAW = 0;
+    public static final double OPEN_JAW = 0;
+    public static final double CLOSED_JAW = 1;
     public static final double LIFT_STEP = 750;
 
     public static final String WEB_CAM_NAME = "Webcam 1";
+
+    public OpMode opMode;
 
     public final double inchesToEncoder;
     public double wheelServoGearRatio;
@@ -71,6 +75,8 @@ public class BaseSkyStoneHardware {
         this.lengthOfRobot = lengthOfRobot;
         this.servoMaxAngle = servoMaxAngle;
         this.turnAngle = Math.atan(widthOfRobot/lengthOfRobot);
+        double x= 0;
+        double y = 0;
     }
 
     public class SwerveWheel {
@@ -92,6 +98,7 @@ public class BaseSkyStoneHardware {
         public SwerveWheel (String name){
             this.name = name;
         }
+       // this.AngleUtilities.getAngle()= getAngle;
 
         public void setOffset(double offset) {
             this.offset = offset;
@@ -289,10 +296,19 @@ public class BaseSkyStoneHardware {
     public double getRawAngle() {
         Orientation orientation = gyroscope.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         return AngleUtilities.getNormalizedAngle(orientation.firstAngle);
+
     }
 
     public double getAngle() {
         return AngleUtilities.getNormalizedAngle(getRawAngle() + offset);
+
+    }
+    public static double getIMUAngle(double x, double y) {
+
+        double angleRad = Math.atan2(y, x);
+        double angleDegrees = AngleUtilities.radiansDegreesTranslation(angleRad);
+
+        return AngleUtilities.getNormalizedAngle(angleDegrees);
     }
 
     public void setWheelMotorPower(double frontLeftPower, double frontRightPower, double backLeftPower, double backRightPower) {
@@ -496,5 +512,15 @@ public class BaseSkyStoneHardware {
 
         return Range.clip(basePower + stallPower, -Math.abs(maxPower), Math.abs(maxPower));
     }
+    public void printRawAngle() {
+        Orientation orientation = gyroscope.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        // return AngleUtilities.getNormalizedAngle(orientation.firstAngle);
+        opMode.telemetry.addData("z/forwards", orientation.firstAngle );
+        opMode.telemetry.addData("y/sideways",orientation.secondAngle);
+
+
+
+    }
+
 }
 
