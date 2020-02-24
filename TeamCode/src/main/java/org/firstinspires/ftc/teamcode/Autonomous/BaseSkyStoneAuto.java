@@ -60,6 +60,35 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
         robot.swerveStraight(angle, 0);
     }
 
+    public void moveInchesAbsolute(double angle, double inches, double power) {
+
+        robot.swerveStraightAbsolute(angle, 0);
+        robot.setWheelMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.setWheelMotorMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        robot.setWheelMotorMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        robot.setWheelTargetPositions((int) (inches * robot.inchesToEncoder));
+
+        robot.swerveStraightAbsolute(angle, power);
+        while (robot.wheelsAreBusy() && opModeIsActive()) {
+            telemetry.addData("FL", String.format("angle: %.2f, mod: %d, pos: %d",
+                    robot.frontLeftSwerveWheel.targetAngle, robot.frontLeftSwerveWheel.modifier, robot.frontLeft.getCurrentPosition()));
+            telemetry.addData("FR", String.format("angle: %.2f, mod: %d, pos: %d",
+                    robot.frontRightSwerveWheel.targetAngle, robot.frontRightSwerveWheel.modifier, robot.frontRight.getCurrentPosition()));
+            telemetry.addData("BL", String.format("angle: %.2f, mod: %d, pos: %d",
+                    robot.backLeftSwerveWheel.targetAngle, robot.backLeftSwerveWheel.modifier, robot.backLeft.getCurrentPosition()));
+            telemetry.addData("BR", String.format("angle: %.2f, mod: %d, pos: %d",
+                    robot.backRightSwerveWheel.targetAngle, robot.backRightSwerveWheel.modifier, robot.backRight.getCurrentPosition()));
+
+            telemetry.update();
+        }
+
+        robot.setWheelMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        robot.setWheelMotorMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        robot.swerveStraightAbsolute(angle, 0);
+    }
+
     public void goToAngle(double angleStart, double angleGoal, double power) {
 
         robot.swerveTurn(0);
@@ -68,8 +97,8 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
 
         while ((Math.abs(AngleUtilities.getNormalizedAngle(angleGoal - angleCurrent)) > GO_TO_ANGLE_BUFFER) && opModeIsActive()) {
             angleCurrent = robot.getAngle();
-            double powerCurrent = getCurrentTurnPower(angleCurrent, angleGoal, angleStart, power);
-            robot.swerveTurn(-powerCurrent);
+            double powerCurrent = robot.getCurrentTurnPower(angleCurrent, angleGoal, angleStart, power);
+            robot.swerveTurn(powerCurrent);
 
             telemetry.addData("Start Angle ", "%.1f", angleStart);
             telemetry.addData("Goal Angle  ", "%.1f", angleGoal);
@@ -82,17 +111,6 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
         robot.swerveTurn(0);
         telemetry.addData("Is Stopped", "");
         telemetry.update();
-    }
-
-    public double getCurrentTurnPower(double absCurrent, double absGoal, double absStart, double maxPower) {
-        double relCurrent = AngleUtilities.getNormalizedAngle(absCurrent - absStart);
-        double relGoal = AngleUtilities.getNormalizedAngle(absGoal - absStart);
-        double remainingDistance = AngleUtilities.getNormalizedAngle(relGoal - relCurrent);
-
-        double basePower = 0.025 * remainingDistance;
-        double stallPower = 0.05 * Math.signum(remainingDistance);
-
-        return Range.clip(basePower + stallPower, -Math.abs(maxPower), Math.abs(maxPower));
     }
 
     public void platformParkInner(int team) {
