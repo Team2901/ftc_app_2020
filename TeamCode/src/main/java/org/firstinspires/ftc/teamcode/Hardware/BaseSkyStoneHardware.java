@@ -518,7 +518,8 @@ public class BaseSkyStoneHardware {
     public void printRawAngle() {
         Orientation orientation = gyroscope.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         // return AngleUtilities.getNormalizedAngle(orientation.firstAngle);
-        opMode.telemetry.addData("z/forwards", orientation.firstAngle );
-        opMode.telemetry.addData("y/sideways",orientation.secondAngle);
+        opMode.telemetry.addData("z/forwards", orientation.firstAngle);
+        opMode.telemetry.addData("y/sideways", orientation.secondAngle);
+    }
 }
 
