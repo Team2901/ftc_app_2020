@@ -109,6 +109,11 @@ public class BaseSkyStoneHardware {
             this.modifier = modifier;
         }
 
+        public void setTargetAndModifier(double[] targetAngleAndModifier) {
+            this.targetAngle = targetAngleAndModifier[0];
+            this.modifier = (int) targetAngleAndModifier[1];
+        }
+
         public double wheelAngleToServoPosition(double wheelAngle) {
             /*
             y=mx+b
@@ -438,6 +443,45 @@ public class BaseSkyStoneHardware {
         swerveWheel.setTargetAndModifier(targetAngle, modifier);
     }
 
+    public double[] getWheelTargetAndModifier(double goal, BaseSkyStoneHardware.SwerveWheel swerveWheel) {
+
+        double start = swerveWheel.targetAngle;
+
+        goal = getNormalizedAngle(goal);
+
+        double dAngleForward = getNormalizedAngle(goal - start);
+        double targetAngleForward = dAngleForward + start;
+        boolean forwardPossible = (swerveWheel.minWheelAngle <= targetAngleForward && targetAngleForward <= swerveWheel.maxWheelAngle);
+
+        double dAngleBackward = getNormalizedAngle(dAngleForward + 180);
+        double targetAngleBackward = dAngleBackward + start;
+        boolean backwardPossible = (swerveWheel.minWheelAngle <= targetAngleBackward && targetAngleBackward <= swerveWheel.maxWheelAngle);
+
+        boolean goForward;
+
+        if (forwardPossible && backwardPossible) {
+            goForward = (Math.abs(dAngleForward) < Math.abs(dAngleBackward));
+        } else {
+            goForward = forwardPossible;
+        }
+
+        double targetAngle;
+        int modifier;
+
+        if (goForward) {
+            targetAngle = targetAngleForward;
+            modifier = 1;
+
+        } else {
+            targetAngle = targetAngleBackward;
+            modifier = -1;
+        }
+
+        double[] targetAndModifier = {targetAngle, modifier};
+
+        return targetAndModifier;
+    }
+
     public double joystickPositionToWheelAngle(double joystickPositionX, double joystickPositionY) {
         double wheelAngleRad = Math.atan2(joystickPositionY, joystickPositionX);
         double wheelAngle = AngleUtilities.radiansDegreesTranslation(wheelAngleRad) - 90;
@@ -452,6 +496,11 @@ public class BaseSkyStoneHardware {
     public void swerveStraightAbsolute(double joyWheelAngle, double power) {
         double absoluteAngle = joyWheelAngle - getAngle();
         swerveMove(absoluteAngle, absoluteAngle, absoluteAngle, absoluteAngle, power);
+    }
+
+    public boolean swerveStraightAbsolute(double joyWheelAngle, double power, boolean forwardOnly) {
+        double absoluteAngle = joyWheelAngle - getAngle();
+        return swerveMove(absoluteAngle, absoluteAngle, absoluteAngle, absoluteAngle, power, forwardOnly);
     }
 
     public void swerveTurn(double power) {
@@ -484,6 +533,48 @@ public class BaseSkyStoneHardware {
         double backRightPower = backRightSwerveWheel.modifier * power;
 
         setWheelMotorPower(frontLeftPower, frontRightPower, backLeftPower, backRightPower);
+    }
+
+    public boolean swerveMove(double fLAngle, double fRAngle, double bLAngle, double bRAngle, double power, boolean forwardOnly) {
+
+        double[] fLTargetAndModifier = getWheelTargetAndModifier(fLAngle, frontLeftSwerveWheel);
+        double[] fRTargetAndModifier = getWheelTargetAndModifier(fRAngle, frontRightSwerveWheel);
+        double[] bLTargetAndModifier = getWheelTargetAndModifier(bLAngle, backLeftSwerveWheel);
+        double[] bRTargetAndModifier = getWheelTargetAndModifier(bRAngle, backRightSwerveWheel);
+
+        final boolean setServoPosition;
+
+        if (forwardOnly) {
+            // If flag is set, only move thr servos if none of the wheels will go backwards (else it will mess up run to position)
+            setServoPosition = true; // TODO
+        } else {
+            // If flag isn't set, it is always ok to set the servos such that the wheels go backwards
+            setServoPosition = true;
+        }
+
+        if (setServoPosition) {
+            frontLeftSwerveWheel.setTargetAndModifier(fLTargetAndModifier);
+            frontRightSwerveWheel.setTargetAndModifier(fRTargetAndModifier);
+            backLeftSwerveWheel.setTargetAndModifier(bLTargetAndModifier);
+            backRightSwerveWheel.setTargetAndModifier(bRTargetAndModifier);
+
+
+            double servoPositionfL = frontLeftSwerveWheel.wheelAngleToServoPosition();
+            double servoPositionfR = frontRightSwerveWheel.wheelAngleToServoPosition();
+            double servoPositionbL = backLeftSwerveWheel.wheelAngleToServoPosition();
+            double servoPositionbR = backRightSwerveWheel.wheelAngleToServoPosition();
+
+            setWheelServoPosition(servoPositionfL, servoPositionfR, servoPositionbL, servoPositionbR);
+        }
+
+        double frontLeftPower = frontLeftSwerveWheel.modifier * power;
+        double frontRightPower = frontRightSwerveWheel.modifier * power;
+        double backLeftPower = backLeftSwerveWheel.modifier * power;
+        double backRightPower = backRightSwerveWheel.modifier * power;
+
+        setWheelMotorPower(frontLeftPower, frontRightPower, backLeftPower, backRightPower);
+
+        return setServoPosition;
     }
 
     public void moveLift (int counts){
