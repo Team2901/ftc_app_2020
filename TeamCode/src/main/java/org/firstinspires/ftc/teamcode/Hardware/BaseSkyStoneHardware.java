@@ -90,13 +90,13 @@ public class BaseSkyStoneHardware {
         public double maxWheelAngle = 0;
 
         public SwerveWheel(double offset) {
-          setOffset(offset);
+            setOffset(offset);
         }
 
         public SwerveWheel (String name){
             this.name = name;
         }
-       // this.AngleUtilities.getAngle()= getAngle;
+        // this.AngleUtilities.getAngle()= getAngle;
 
         public void setOffset(double offset) {
             this.offset = offset;
@@ -492,7 +492,9 @@ public class BaseSkyStoneHardware {
         frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         frontLeft.setTargetPosition(counts);
         frontLeft.setPower(.3);
-        while(frontLeft.isBusy());
+        while(frontLeft.isBusy()) {
+
+        }
         frontLeft.setPower(0);
 
     }
@@ -507,6 +509,7 @@ public class BaseSkyStoneHardware {
 
         return Range.clip(basePower + stallPower, -Math.abs(maxPower), Math.abs(maxPower));
     }
+
     public double getCurrentTurnPower(double absCurrent, double absGoal, double maxPower) {
         double remainingDistance = AngleUtilities.getNormalizedAngle(absGoal - absCurrent);
 
