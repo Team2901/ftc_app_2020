@@ -230,6 +230,9 @@ public class BuilderSkystoneTeleOp extends OpMode {
         telemetry.addData("", robot.backLeftSwerveWheel.toString());
         telemetry.addData("", robot.backRightSwerveWheel.toString());
         telemetry.addData("lift pos", robot.lift.getCurrentPosition());
+        telemetry.addData("claw position", robot.jaw.getPosition());
+        telemetry.addData("crane position", robot.crane.getPosition());
+        telemetry.addData("wrist position", robot.wrist.getPosition());
 
         telemetry.update();
     }
