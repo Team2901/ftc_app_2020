@@ -21,7 +21,7 @@ public class BuilderSkystoneTeleOp extends OpMode {
     public static final int ABSOLUTE_MODE = 0;
     public static final int RELATIVE_MODE = 1;
     public static final int OFFSET_MODE = 2;
-    public int mode = OFFSET_MODE;
+    public int mode = RELATIVE_MODE;
     Servo servoUnderTest;
     int servoIndex;
     public String[] driveModeNames = {"ABSOLUTE_MODE", "RELATIVE_MODE", "OFFSET_MODE"};

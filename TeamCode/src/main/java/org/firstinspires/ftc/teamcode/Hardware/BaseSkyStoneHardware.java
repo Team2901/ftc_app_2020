@@ -546,7 +546,10 @@ public class BaseSkyStoneHardware {
 
         if (forwardOnly) {
             // If flag is set, only move thr servos if none of the wheels will go backwards (else it will mess up run to position)
-            setServoPosition = true; // TODO
+            setServoPosition = Math.signum(frontLeftSwerveWheel.modifier) == Math.signum(fLTargetAndModifier[1])
+            && Math.signum(frontRightSwerveWheel.modifier) == Math.signum(fRTargetAndModifier[1])
+            && Math.signum(backLeftSwerveWheel.modifier) == Math.signum(bLTargetAndModifier[1])
+            && Math.signum(backRightSwerveWheel.modifier) == Math.signum(bRTargetAndModifier[1]);
         } else {
             // If flag isn't set, it is always ok to set the servos such that the wheels go backwards
             setServoPosition = true;

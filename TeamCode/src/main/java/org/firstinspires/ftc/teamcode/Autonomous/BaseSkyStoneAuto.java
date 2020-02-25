@@ -82,6 +82,7 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
 
         robot.swerveStraightAbsolute(angle, power);
         while (robot.wheelsAreBusy() && opModeIsActive()) {
+            boolean setServoPosition = robot.swerveStraightAbsolute(angle, power, true);
             telemetry.addData("FL", String.format("angle: %.2f, mod: %d, pos: %d",
                     robot.frontLeftSwerveWheel.targetAngle, robot.frontLeftSwerveWheel.modifier, robot.frontLeft.getCurrentPosition()));
             telemetry.addData("FR", String.format("angle: %.2f, mod: %d, pos: %d",
@@ -90,6 +91,7 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
                     robot.backLeftSwerveWheel.targetAngle, robot.backLeftSwerveWheel.modifier, robot.backLeft.getCurrentPosition()));
             telemetry.addData("BR", String.format("angle: %.2f, mod: %d, pos: %d",
                     robot.backRightSwerveWheel.targetAngle, robot.backRightSwerveWheel.modifier, robot.backRight.getCurrentPosition()));
+            telemetry.addData("Set Servo Position", setServoPosition);
 
             telemetry.update();
         }
