@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 
-@Autonomous(name = "FindSkystoneTester", group = "")
+@Autonomous(name = "Find Skystone Tester", group = "__TEST")
 public class FindSkystoneTester extends BaseSkyStoneAuto {
 
     final static int CONFIDENCE_PERCENTAGE = 5;

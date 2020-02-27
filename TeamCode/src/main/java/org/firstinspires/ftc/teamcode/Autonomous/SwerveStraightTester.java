@@ -23,7 +23,7 @@ import org.firstinspires.ftc.teamcode.Autonomous.BaseSkyStoneAuto;
  *  11) Park under the skybridge
  */
 
-@Autonomous(name = "SwerveStraightTester", group = "")
+@Autonomous(name = "Swerve Straight Tester", group = "__TEST")
 public class SwerveStraightTester extends BaseSkyStoneAuto {
 
     @Override

@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-@Autonomous
+@Autonomous(name = "Inches To Encoder Tester", group = "__TEST")
 public class InchesToEncoderTester extends BaseSkyStoneAuto{
     @Override
     public void runOpMode() throws InterruptedException {

@@ -41,8 +41,6 @@ public class ProgrammerMechanum extends OpMode {
             robot.arm.setPower(0);
         }
 
-
-
         double leftY= Math.abs(gamepad1.left_stick_y) > 0.3? -gamepad1.left_stick_y: 0 ;
 
         double leftX= Math.abs(gamepad1.left_stick_x) > 0.3? gamepad1.left_stick_x: 0 ;

@@ -42,15 +42,6 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
         }
     }
 
-    public static double getIMUAngle(double x, double y) {
-
-        double angleRad = Math.atan2(y, x);
-        double angleDegrees = AngleUtilities.radiansDegreesTranslation(angleRad);
-
-        return AngleUtilities.getNormalizedAngle(angleDegrees);
-    }
-
-
     public void moveInches(double angle, double inches, double power) {
 
         robot.swerveStraight(angle, 0);
@@ -225,7 +216,7 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
         }
     }
 
-    public void quarrySkyStoneParkBridge(boolean isRed) throws InterruptedException {
+    public void quarrySkyStoneParkBridge(boolean isRed) {
 
         /**
          *  Steps
