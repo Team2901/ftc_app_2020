@@ -5,13 +5,9 @@ import android.graphics.Color;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcontroller.internal.MotoLinearOpMode;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
-import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
-import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.Hardware.BuilderSkystoneHardware;
 import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
@@ -344,17 +340,19 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
         }
     }
 
-    public void init(boolean initWebCam){
-        // Step 0) Initialize robot and web camera with TensorFlow
+    public void init(boolean initWebCam, boolean setLiftServos){
         robot.init(hardwareMap);
 
         if(initWebCam){
+            // Init web camera with TensorFlow
             initAndActivateWebCameraWithTensorFlow();
         }
 
-        //robot.crane.setPosition(0);
-        //robot.wrist.setPosition(.5);
-        //robot.setGrabberPositition(.7, .84);
+        if (setLiftServos) {
+            robot.crane.setPosition(0);
+            robot.wrist.setPosition(.5);
+            robot.setGrabberPositition(.7, .84);
+        }
 
         // Step 0) Point wheels forward
         robot.swerveStraightAbsolute(0, 0);

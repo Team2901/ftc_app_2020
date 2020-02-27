@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.Autonomous.BaseSkyStoneAuto;
 public class BlueFoundationParkBridge extends BaseSkyStoneAuto {
     @Override
     public void runOpMode() throws InterruptedException {
-        init(false);
+        init(false, false);
         waitForStart();
         this.park (PARK_BRIDGE_INCHES, -90);
     }

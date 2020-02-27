@@ -9,7 +9,7 @@ public class RedQuarrySkyStoneParkBridge extends BaseSkyStoneAuto {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        init(true);
+        init(true, false);
         waitForStart();
         quarrySkyStoneParkBridge(true);
     }

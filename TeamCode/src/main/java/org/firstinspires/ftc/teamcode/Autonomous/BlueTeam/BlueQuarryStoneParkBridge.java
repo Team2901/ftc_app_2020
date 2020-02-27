@@ -32,7 +32,7 @@ public class BlueQuarryStoneParkBridge extends BaseSkyStoneAuto {
         //Start center of center tile quarry
 
         // Step 0) Initialize robot and web camera with TensorFlow
-        init(false);
+        init(false, false);
 
         robot.crane.setPosition(0);
         robot.wrist.setPosition(.5);

@@ -8,9 +8,8 @@ import org.firstinspires.ftc.teamcode.Autonomous.BaseSkyStoneAuto;
 public class BlueFoundationParkWall extends BaseSkyStoneAuto {
     @Override
     public void runOpMode() throws InterruptedException {
-        init(false);
+        init(false, false);
         waitForStart();
         this.park(SAFE_WALL_DISTANCE_INCHES,-90);
     }
-
 }
