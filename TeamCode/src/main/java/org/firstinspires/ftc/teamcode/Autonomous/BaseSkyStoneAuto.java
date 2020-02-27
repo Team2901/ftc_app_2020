@@ -241,8 +241,6 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
          *  5) Close the jaw on the skystone
          *  6) Move backwards 2 feet away from the skystone
          *  8) Move back to where we were in step 1
-         *
-         *  TODO:
          *  9) Move forwards to in front of the waffle
          *  10) deposit skystone on waffle
          *  11) Park under the skybridge
@@ -317,14 +315,15 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
         // Step 6) Move backwards 15 inches away from the skystone
         this.moveInchesAbsolute(0, -15, .2);
 
-        turnTo(0, .5, 5, 1000);
+        //turnTo(0, .5, 5, 1000);
 
         // Step 8) Move back to where we were in step 1
 
         this.moveInchesAbsolute(towardsFoundationAngle, diffInches, .3);
 
-        turnTo(0, .5, 5, 1000);
+        //turnTo(0, .5, 5, 1000);
 
+        // Step 9) Move forwards to in front of the waffle
         this.moveInchesAbsolute(towardsFoundationAngle, 72, .3);
 
         // Step 10) deposit skystone on waffle
