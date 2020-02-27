@@ -24,11 +24,13 @@ import org.firstinspires.ftc.teamcode.Autonomous.BaseSkyStoneAuto;
  *  11) Park under the skybridge
  */
 
-@Autonomous(name = "BlueQuarryTemporary", group = "")
-public class BlueQuarryTemporary extends BaseSkyStoneAuto {
+@Autonomous(name = "Blue Quarry Stone Park Bridge", group = "")
+public class BlueQuarryStoneParkBridge extends BaseSkyStoneAuto {
 
     @Override
     public void runOpMode() throws InterruptedException {
+
+        //Start center of center tile quarry
 
         // Step 0) Initialize robot and web camera with TensorFlow
         robot.init(hardwareMap);
@@ -71,6 +73,7 @@ public class BlueQuarryTemporary extends BaseSkyStoneAuto {
 
         this.moveInches(0, 36, .4);
 
+        robot.jaw.setPosition(robot.OPEN_JAW);
 
         while (opModeIsActive()) {
         }

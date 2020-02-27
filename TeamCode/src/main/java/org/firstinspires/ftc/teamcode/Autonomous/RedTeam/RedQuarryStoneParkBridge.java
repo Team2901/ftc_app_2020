@@ -23,8 +23,8 @@ import org.firstinspires.ftc.teamcode.Autonomous.BaseSkyStoneAuto;
  *  11) Park under the skybridge
  */
 
-@Autonomous(name = "RedQuarryTemporary", group = "")
-public class RedQuarryTemporary extends BaseSkyStoneAuto {
+@Autonomous(name = "Red Quarry Stone Park Bridge", group = "_RED")
+public class RedQuarryStoneParkBridge extends BaseSkyStoneAuto {
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -69,6 +69,8 @@ public class RedQuarryTemporary extends BaseSkyStoneAuto {
         turnTo(-90, .2);
 
         this.moveInches(0, 36, .4);
+
+        robot.jaw.setPosition(robot.OPEN_JAW);
 
 
         while (opModeIsActive()) {
