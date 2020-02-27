@@ -69,12 +69,20 @@ public class SweveServoOffsetSetter extends OpMode {
 
             robot.offsets.set(servoIndex, servoUnderTest.getPosition());
 
+            if (this.impGamepad.a.isInitialPress()) {
+                robot.swerveWheels[servoIndex].setOffset(servoUnderTest.getPosition());
+            }
+
             telemetry.addData("Left bumper","-0.1");
             telemetry.addData("Right bumper","+0.1");
             telemetry.addData("Left trigger","-0.01");
             telemetry.addData("Right trigger","+0.01");
-            telemetry.addData("Position", servoUnderTest.getPosition());
             telemetry.addData("Servo name",robot.swerveWheels[servoIndex].name);
+            telemetry.addData("Position", servoUnderTest.getPosition());
+            telemetry.addData("Offset", robot.swerveWheels[servoIndex].offset);
+            telemetry.addData("Rel Pos", servoUnderTest.getPosition() - robot.swerveWheels[servoIndex].offset);
+            telemetry.addData("hardMin", robot.swerveWheels[servoIndex].hardMinWheelAngle);
+            telemetry.addData("hardMax", robot.swerveWheels[servoIndex].hardMaxWheelAngle);
         }
 
         telemetry.addData("D Pad Right/Left", "Increment/decrement servos");

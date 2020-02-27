@@ -83,25 +83,35 @@ public class BaseSkyStoneHardware {
         public Servo servo;
         public DcMotor motor;
 
+
+        double hardMinWheelPositionRelToZero = 0;
+        double hardMaxWheelPositionRelToZero = 0;
         public double targetAngle = 0;
         public int modifier = 1;
         public double offset = 0;
         public double minWheelAngle=0;
         public double maxWheelAngle = 0;
 
-        public SwerveWheel(double offset) {
-            setOffset(offset);
-        }
+        public double hardMinWheelAngle = 0;
+        public double hardMaxWheelAngle = 0;
 
         public SwerveWheel (String name){
             this.name = name;
         }
-        // this.AngleUtilities.getAngle()= getAngle;
+
+        public SwerveWheel(String name, double hardMinWheelPositionRelToZero, double hardMaxWheelPositionRelToZero) {
+            this.name = name;
+            this.hardMinWheelPositionRelToZero = hardMinWheelPositionRelToZero;
+            this.hardMaxWheelPositionRelToZero = hardMaxWheelPositionRelToZero;
+        }
 
         public void setOffset(double offset) {
             this.offset = offset;
             minWheelAngle = servoPositionToWheelAngle(0);
             maxWheelAngle = servoPositionToWheelAngle(1);
+
+            hardMinWheelAngle = servoPositionToWheelAngle(offset + hardMinWheelPositionRelToZero);
+            hardMaxWheelAngle = servoPositionToWheelAngle(offset + hardMaxWheelPositionRelToZero);
         }
 
         public void setTargetAndModifier(double targetAngle, int modifier) {
