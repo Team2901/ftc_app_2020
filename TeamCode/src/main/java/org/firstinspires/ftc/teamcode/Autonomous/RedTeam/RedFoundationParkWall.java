@@ -5,15 +5,14 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.Autonomous.BaseSkyStoneAuto;
 
-@Autonomous(name = "Sky_Red_Go_Right_Park_Inner", group = "_RED")
-public class GoRightParkInner extends BaseSkyStoneAuto {
-
+@Autonomous (name = "Red Foundation Park Wall", group = "_RED")
+public class RedFoundationParkWall extends BaseSkyStoneAuto {
     @Override
     public void runOpMode() throws InterruptedException {
         robot.init(hardwareMap);
         robot.swerveStraight(0, 0);
         waitForStart();
-        this.moveInches(0.0,30, .2);
-        this.moveInches(-90,24, .2);
+        this.park(SAFE_WALL_DISTANCE_INCHES,90);
     }
+
 }

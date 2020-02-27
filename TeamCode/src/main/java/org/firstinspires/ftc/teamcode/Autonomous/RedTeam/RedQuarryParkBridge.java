@@ -5,15 +5,14 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.Autonomous.BaseSkyStoneAuto;
 
+@Autonomous(name = "Red Quarry Park Bridge", group = "_RED")
+public class RedQuarryParkBridge extends BaseSkyStoneAuto {
 
-@Autonomous(name = "Sky_Red_Go_Left_Park_Inner", group = "_RED")
-public class GoLeftParkInner extends BaseSkyStoneAuto {
     @Override
     public void runOpMode() throws InterruptedException {
         robot.init(hardwareMap);
         robot.swerveStraight(0, 0);
         waitForStart();
-        this.moveInches(0.0,26, .2);
-        this.moveInches(90,24, .2);
+        this.park (PARK_BRIDGE_INCHES, -90);
     }
 }

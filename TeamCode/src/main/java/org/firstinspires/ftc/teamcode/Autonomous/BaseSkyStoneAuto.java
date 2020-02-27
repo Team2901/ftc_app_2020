@@ -24,6 +24,8 @@ import static org.firstinspires.ftc.teamcode.Hardware.BaseSkyStoneHardware.LABEL
 public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
 
     public static final int GO_TO_ANGLE_BUFFER = 7;
+    public static final int SAFE_WALL_DISTANCE_INCHES = 2;
+    public static final int PARK_BRIDGE_INCHES = 30;
     public BuilderSkystoneHardware robot = new BuilderSkystoneHardware();
 
     public void turnTo(double angle) {
@@ -259,6 +261,10 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
         } else {
             telemetry.addData("Successful!", "");
         }
+    }
+    public void park (int forewardInches, double directionAngle){
+        this.moveInchesAbsolute(0.0, forewardInches, .2);
+        this.moveInchesAbsolute(directionAngle,24, .2);
     }
 }
 
