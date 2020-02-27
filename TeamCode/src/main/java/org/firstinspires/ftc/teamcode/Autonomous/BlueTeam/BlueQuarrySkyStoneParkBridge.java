@@ -1,11 +1,13 @@
-package org.firstinspires.ftc.teamcode.Autonomous.RedTeam;
+package org.firstinspires.ftc.teamcode.Autonomous.BlueTeam;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
 import org.firstinspires.ftc.teamcode.Autonomous.BaseSkyStoneAuto;
-
 
 
 /**
@@ -26,8 +28,8 @@ import org.firstinspires.ftc.teamcode.Autonomous.BaseSkyStoneAuto;
  *  11) Park under the skybridge
  */
 
-@Autonomous(name = "RedQuarry1StonePark", group = "")
-public class RedQuarry1StonePark extends BaseSkyStoneAuto {
+@Autonomous(name = "BlueQuarrySkyStoneParkBridge", group = "")
+public class BlueQuarrySkyStoneParkBridge extends BaseSkyStoneAuto {
 
     final static int CONFIDENCE_PERCENTAGE = 5;
 
@@ -41,7 +43,7 @@ public class RedQuarry1StonePark extends BaseSkyStoneAuto {
         initAndActivateWebCameraWithTensorFlow();
         //robot.crane.setPosition(0);
         robot.wrist.setPosition(.5);
-        robot.setGrabberPositition(.7,.84);
+        robot.setGrabberPositition(.7, .84);
 
         // Step 0) Point wheels forward
         robot.swerveStraightAbsolute(0, 0);
@@ -49,30 +51,31 @@ public class RedQuarry1StonePark extends BaseSkyStoneAuto {
         telemetry.addData(">", "Press Play to start op mode");
         telemetry.update();
 
-        robot.opMode=this;
+        robot.opMode = this;
         // Wait for start
         waitForStart();
 
+        // Move forwards 2 inches from the wall to turn wheels
         this.moveInchesAbsolute(0, 5, .2);
 
-        robot.swerveStraightAbsolute(90, 0);
+        // Make wheels point right
+        robot.swerveStraightAbsolute(-90, 0);
+
+        // Extend crane
         //robot.crane.setPosition(1);
         //robot.wrist.setPosition(.5);
-        /*double t = 0;
-        while (t < 10) {
-            t++;
-        }*/
+
         // Save the robot's current position prior to search for a skystone
         robot.setWheelMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         robot.setWheelMotorMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        double fLeftStart = Math.abs(robot.frontLeft.getCurrentPosition());
+        double fLeftStart = (robot.frontLeft.getCurrentPosition());
 
-        // Step 1) Move forwards/backwards until a skystone location is within 10% of the center of the camera's view
+
         Float skyStoneCenterPercentDiff = findSkyStone();
         Float skyStoneOffsetPercentDiff = skyStoneCenterPercentDiff == null ? null : skyStoneCenterPercentDiff + 45;
 
-        while (skyStoneOffsetPercentDiff == null /* don't see skystone yet */
-                || Math.abs(skyStoneOffsetPercentDiff) > CONFIDENCE_PERCENTAGE /* overshot or undershot */) {
+        while (skyStoneCenterPercentDiff == null
+                || Math.abs(skyStoneOffsetPercentDiff) > CONFIDENCE_PERCENTAGE) {
             telemetry.addData("loop is running", "");
             telemetry.addData("percent dif.", skyStoneCenterPercentDiff);
             telemetry.addData("percent offset", skyStoneOffsetPercentDiff);
@@ -80,22 +83,24 @@ public class RedQuarry1StonePark extends BaseSkyStoneAuto {
 
             if (skyStoneOffsetPercentDiff == null) {
                 // If we don't see a skystone: Move forwards
-                robot.swerveStraightAbsolute(90, 0.2);
+                robot.swerveStraightAbsolute(-90, 0.2);
             } else if (skyStoneOffsetPercentDiff < 0) {
                 // If the skystone is to the left: Move backwards
-                robot.swerveStraightAbsolute(90, 0.3);
+                robot.swerveStraightAbsolute(-90, 0.3);
             } else {
                 // If the skystone is to the right: Move forwards
-                robot.swerveStraightAbsolute(90, -0.3);
+                robot.swerveStraightAbsolute(-90, -0.3);
             }
+
 
             // Update the skystone location
             skyStoneCenterPercentDiff = findSkyStone();
             skyStoneOffsetPercentDiff = skyStoneCenterPercentDiff == null ? null : skyStoneCenterPercentDiff + 45;
         }
 
+        // Robot is now in front of a skystone, stop moving
         robot.swerveStraightAbsolute(0, 0);
-        if (Math.abs(robot.getAngle()) > 5) {
+        if(Math.abs(robot.getAngle()) > 5){
             robot.wait(1000, this);
             turnTo(0);
             robot.wait(1000, this);
@@ -123,44 +128,34 @@ public class RedQuarry1StonePark extends BaseSkyStoneAuto {
         // Step 5) Close the jaw on the skystone
         robot.jaw.setPosition(robot.CLOSED_JAW);
 
-        //back up so we don't hit bridge
+
         this.moveInchesAbsolute(0, -15, .2);
 
-        while(!gamepad1.left_stick_button && opModeIsActive()){}
+        if (Math.abs(robot.getAngle()) > 5) {
+            robot.wait(1000, this);
+            turnTo(0);
+            robot.wait(1000, this);
+        }
+        this.moveInchesAbsolute(90, diffInches, .3);
 
         if (Math.abs(robot.getAngle()) > 5) {
             robot.wait(1000, this);
             turnTo(0);
             robot.wait(1000, this);
         }
-        this.moveInchesAbsolute(270, diffInches, .3);
+        this.moveInchesAbsolute(90, 72, .3);
 
-        while(!gamepad1.left_stick_button && opModeIsActive()){}
-
-        if (Math.abs(robot.getAngle()) > 5) {
-            robot.wait(1000, this);
-            turnTo(0);
-            robot.wait(1000, this);
-        }
-        this.moveInchesAbsolute(270, 72, .4);
 
         //robot.moveLift(50 );
 
-        while(!gamepad1.left_stick_button && opModeIsActive()){}
 
         moveInchesAbsolute(0, 28, .3);
 
-        while(!gamepad1.left_stick_button && opModeIsActive()){}
-
         robot.jaw.setPosition(robot.OPEN_JAW);
-
-        while(!gamepad1.left_stick_button && opModeIsActive()){}
 
         moveInchesAbsolute(0, -22, .3);
 
-        while(!gamepad1.left_stick_button && opModeIsActive()){}
-
-        moveInchesAbsolute(90, 40, .3);
+        moveInchesAbsolute(270, 40, .3);
 /*
         // Step 8) Move back to where we were in step 1
 
