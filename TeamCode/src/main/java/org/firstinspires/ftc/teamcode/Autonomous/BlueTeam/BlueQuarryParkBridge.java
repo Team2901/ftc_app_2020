@@ -9,8 +9,7 @@ public class BlueQuarryParkBridge extends BaseSkyStoneAuto {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        robot.init(hardwareMap);
-        robot.swerveStraight(0, 0);
+        init(false);
         waitForStart();
         this.park (PARK_BRIDGE_INCHES, 90);
     }

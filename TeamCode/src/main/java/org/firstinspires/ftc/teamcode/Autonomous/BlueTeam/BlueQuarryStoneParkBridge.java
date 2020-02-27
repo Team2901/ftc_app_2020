@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.Autonomous.BlueTeam;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.Autonomous.BaseSkyStoneAuto;
 
@@ -24,7 +23,7 @@ import org.firstinspires.ftc.teamcode.Autonomous.BaseSkyStoneAuto;
  *  11) Park under the skybridge
  */
 
-@Autonomous(name = "Blue Quarry Stone Park Bridge", group = "")
+@Autonomous(name = "Blue Quarry Stone Park Bridge", group = "_BLUE")
 public class BlueQuarryStoneParkBridge extends BaseSkyStoneAuto {
 
     @Override
@@ -33,17 +32,11 @@ public class BlueQuarryStoneParkBridge extends BaseSkyStoneAuto {
         //Start center of center tile quarry
 
         // Step 0) Initialize robot and web camera with TensorFlow
-        robot.init(hardwareMap);
+        init(false);
 
         robot.crane.setPosition(0);
         robot.wrist.setPosition(.5);
         robot.setGrabberPositition(.7, .84);
-
-        // Step 0) Point wheels forward
-        robot.swerveStraight(0, 0);
-
-        telemetry.addData(">", "Press Play to start op mode");
-        telemetry.update();
 
         // Wait for start
         waitForStart();

@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Autonomous.BaseSkyStoneAuto;
 
-@Autonomous(name = "Red Quarry SkyStone Park Bridge", group = "red")
+@Autonomous(name = "Red Quarry SkyStone Park Bridge", group = "_RED")
 public class RedQuarrySkyStoneParkBridge extends BaseSkyStoneAuto {
 
     @Override

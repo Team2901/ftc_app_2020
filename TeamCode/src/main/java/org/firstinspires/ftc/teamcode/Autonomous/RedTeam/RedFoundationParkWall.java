@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.Autonomous.RedTeam;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.Autonomous.BaseSkyStoneAuto;
 
@@ -9,8 +8,7 @@ import org.firstinspires.ftc.teamcode.Autonomous.BaseSkyStoneAuto;
 public class RedFoundationParkWall extends BaseSkyStoneAuto {
     @Override
     public void runOpMode() throws InterruptedException {
-        robot.init(hardwareMap);
-        robot.swerveStraight(0, 0);
+        init(false);
         waitForStart();
         this.park(SAFE_WALL_DISTANCE_INCHES,90);
     }

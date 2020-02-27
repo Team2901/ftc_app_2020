@@ -30,17 +30,11 @@ public class RedQuarryStoneParkBridge extends BaseSkyStoneAuto {
     public void runOpMode() throws InterruptedException {
 
         // Step 0) Initialize robot and web camera with TensorFlow
-        robot.init(hardwareMap);
+        init(false);
 
         robot.crane.setPosition(0);
         robot.wrist.setPosition(.5);
         robot.setGrabberPositition(.7, .84);
-
-        // Step 0) Point wheels forward
-        robot.swerveStraight(0, 0);
-
-        telemetry.addData(">", "Press Play to start op mode");
-        telemetry.update();
 
         // Wait for start
         waitForStart();

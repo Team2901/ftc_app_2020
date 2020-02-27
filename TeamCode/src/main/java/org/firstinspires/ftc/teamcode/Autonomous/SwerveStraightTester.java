@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.Autonomous.RedTeam;
+package org.firstinspires.ftc.teamcode.Autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
@@ -23,8 +23,8 @@ import org.firstinspires.ftc.teamcode.Autonomous.BaseSkyStoneAuto;
  *  11) Park under the skybridge
  */
 
-@Autonomous(name = "RedQuarryTester", group = "")
-public class RedQuarryTester extends BaseSkyStoneAuto {
+@Autonomous(name = "SwerveStraightTester", group = "")
+public class SwerveStraightTester extends BaseSkyStoneAuto {
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -32,7 +32,7 @@ public class RedQuarryTester extends BaseSkyStoneAuto {
         // Step 0) Initialize robot and web camera with TensorFlow
         robot.init(hardwareMap);
 
-        robot.swerveStraight(0,0);
+        robot.swerveStraightAbsolute(0,0);
         waitForStart();
         this.moveInches(0, 120, .4);
 
