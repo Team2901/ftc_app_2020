@@ -30,12 +30,22 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
     public BuilderSkystoneHardware robot = new BuilderSkystoneHardware();
 
     public void turnTo(double angle) {
-        turnTo(angle, .5);
+        turnTo(angle, .5, 0 , 0);
     }
 
     public void turnTo(double angle, double power) {
-        goToAngle(robot.getAngle(), angle, power);
+        turnTo(angle, power, 0, 0);
     }
+
+    public void turnTo(double angle, double power, double tolerance, int milliseconds) {
+
+        if (Math.abs(AngleUtilities.getNormalizedAngle(robot.getAngle() - angle)) > tolerance) {
+            robot.wait(milliseconds, this);
+            goToAngle(robot.getAngle(), angle, power);
+            robot.wait(milliseconds, this);
+        }
+    }
+
     public static double getIMUAngle(double x, double y) {
 
         double angleRad = Math.atan2(y, x);
@@ -203,56 +213,6 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
         return centerPercentDifference;
     }
 
-    public void SkytoneScanner(int red) {
-        Float skyStonePosition = findSkyStone();
-
-        robot.setWheelMotorMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        double fLeftStart = Math.abs(robot.frontLeft.getCurrentPosition());
-        while ((skyStonePosition == null || Math.abs(skyStonePosition) < 1) && opModeIsActive()) {
-            telemetry.addData("loop is running", "");
-            telemetry.update();
-
-            robot.swerveStraight(0, .2);
-
-            skyStonePosition = findSkyStone();
-        }
-        telemetry.addData("out of loop", "");
-        telemetry.update();
-
-        double fLeftEnd = Math.abs(robot.frontLeft.getCurrentPosition());
-        double diff = Math.abs(fLeftEnd - fLeftStart);
-        robot.swerveStraight(0, 0);
-        telemetry.addData("Start ", fLeftStart);
-        telemetry.addData("End ", fLeftEnd);
-        telemetry.addData("Diff ", diff);
-        telemetry.addData("location", skyStonePosition);
-        telemetry.update();
-
-        //turning and grabbing the skystone
-
-        this.turnTo(90);
-
-        robot.jaw.setPosition(robot.OPEN_JAW);
-
-        moveInches(0, 6, .5);
-
-        robot.jaw.setPosition(robot.CLOSED_JAW);
-
-        //lifting skystone off the ground by .5 in
-
-        int targetPosition = 72;
-
-        robot.lift.setTargetPosition(targetPosition);
-        robot.lift.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        robot.lift.setPower(.5);
-
-        this.moveInches(0, -4, .5);
-
-        //turning robot 90 degrees clockwise
-
-        this.turnTo(90);
-    }
-
     public void initAndActivateWebCameraWithTensorFlow() {
 
         // Init the web camera with TensorFlow
@@ -280,7 +240,6 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
          *  4) Move forwards 2 feet towards the skystone
          *  5) Close the jaw on the skystone
          *  6) Move backwards 2 feet away from the skystone
-         *  7) Turn to face towards the building zone
          *  8) Move back to where we were in step 1
          *
          *  TODO:
@@ -329,11 +288,9 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
         }
 
         robot.swerveStraightAbsolute(0, 0);
-        if (Math.abs(robot.getAngle()) > 5) {
-            robot.wait(1000, this);
-            turnTo(0);
-            robot.wait(1000, this);
-        }
+
+        turnTo(0, .5, 5, 1000);
+
         telemetry.addData("out of loop", "");
         telemetry.addData("percent dif.", skyStoneCenterPercentDiff);
         telemetry.addData("percent offset", skyStoneOffsetPercentDiff);
@@ -357,22 +314,20 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
         // Step 5) Close the jaw on the skystone
         robot.jaw.setPosition(robot.CLOSED_JAW);
 
-        //back up so we don't hit bridge
+        // Step 6) Move backwards 15 inches away from the skystone
         this.moveInchesAbsolute(0, -15, .2);
 
-        if (Math.abs(robot.getAngle()) > 5) {
-            robot.wait(1000, this);
-            turnTo(0);
-            robot.wait(1000, this);
-        }
-        this.moveInchesAbsolute(towardsQuarryAngle, diffInches, .3);
+        turnTo(0, .5, 5, 1000);
 
-        if (Math.abs(robot.getAngle()) > 5) {
-            robot.wait(1000, this);
-            turnTo(0);
-            robot.wait(1000, this);
-        }
-        this.moveInchesAbsolute(towardsQuarryAngle, 72, .3);
+        // Step 8) Move back to where we were in step 1
+
+        this.moveInchesAbsolute(towardsFoundationAngle, diffInches, .3);
+
+        turnTo(0, .5, 5, 1000);
+
+        this.moveInchesAbsolute(towardsFoundationAngle, 72, .3);
+
+        // Step 10) deposit skystone on waffle
 
         //robot.moveLift(50 );
 
@@ -382,20 +337,10 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
 
         moveInchesAbsolute(0, -22, .3);
 
-        moveInchesAbsolute(towardsQuarryAngle, 40, .3);
-/*
-        // Step 8) Move back to where we were in step 1
-
-
-        // Step 9) Move forwards to in front of the waffle
-        // TODO
-
-        // Step 10) deposit skystone on waffle
-        // TODO
-
         // Step 11) Park under the skybridge
-        // TODO
-*/
+
+        moveInchesAbsolute(towardsQuarryAngle, 40, .3);
+
         while (opModeIsActive()) {
         }
     }
@@ -404,9 +349,10 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
         // Step 0) Initialize robot and web camera with TensorFlow
         robot.init(hardwareMap);
 
-        if(initWebCam == true){
+        if(initWebCam){
             initAndActivateWebCameraWithTensorFlow();
         }
+
         //robot.crane.setPosition(0);
         //robot.wrist.setPosition(.5);
         //robot.setGrabberPositition(.7, .84);
@@ -418,8 +364,8 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
         telemetry.update();
     }
 
-    public void park (int forewardInches, double directionAngle){
-        this.moveInchesAbsolute(0.0, forewardInches, .2);
+    public void park(int forwardInches, double directionAngle){
+        this.moveInchesAbsolute(0.0, forwardInches, .2);
         this.moveInchesAbsolute(directionAngle,24, .2);
     }
 }
