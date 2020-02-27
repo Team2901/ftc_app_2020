@@ -136,23 +136,28 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
             colorAngle = robot.ROBOT_RIGHT_ANGLE;
 
         }
+        //Prequel Step 1 clear wall by 2 inches, center on waffle
+
+        moveInchesAbsolute(0, SAFE_WALL_DISTANCE_INCHES, .5);
+        moveInchesAbsolute(colorAngle,12, .5);
+
         //Step one: turn wheels 90 degrees counterclockwise and go forward 28.5 inches and lower grabbers.
-        moveInches(colorAngle, 28.5, 0.5);
+        moveInchesAbsolute(colorAngle, 26.5, 0.5);
         robot.rightGrabber.setPosition(robot.GRABBER_MAX);
         robot.leftGrabber.setPosition(robot.GRABBER_MAX);
         ElapsedTime timer = new ElapsedTime();
         while (timer.milliseconds() < 500) ;
 
         //Step two: back up 26 inches and raise grabbers.
-        moveInches(colorAngle, -26, 0.5);
+        moveInchesAbsolute(colorAngle, -26, 0.5);
         robot.rightGrabber.setPosition(robot.GRABBER_MIN);
         robot.leftGrabber.setPosition(robot.GRABBER_MIN);
         //Step three: turn wheels 90 degrees counterclockwise and slide out 2 ft.
-        moveInches(robot.ROBOT_FRONT_ANGLE, -24, 0.5);
+        moveInchesAbsolute(robot.ROBOT_FRONT_ANGLE, -24, 0.5);
         //Step four: turn wheels to position 90, move forwards 2 ft
-        moveInches(colorAngle, 24, 0.5);
+        moveInchesAbsolute(colorAngle, 24, 0.5);
         //Step Five: Turn Wheels to 0, move forward 2 ft
-        moveInches(robot.ROBOT_FRONT_ANGLE, -24, 0.5);
+        moveInchesAbsolute(robot.ROBOT_FRONT_ANGLE, -24, 0.5);
         //Step  Six: Stop
     }
 
