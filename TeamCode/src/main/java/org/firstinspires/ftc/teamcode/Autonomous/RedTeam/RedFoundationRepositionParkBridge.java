@@ -8,8 +8,8 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import org.firstinspires.ftc.teamcode.Autonomous.BaseSkyStoneAuto;
 
 @Disabled
-@Autonomous(name = "Sky_Red_Platform_Park_Inner", group = "_RED")
-public class PlatformParkInner extends BaseSkyStoneAuto {
+@Autonomous(name = "Red Foundation Reposition Park Bridge", group = "_RED")
+public class RedFoundationRepositionParkBridge extends BaseSkyStoneAuto {
 
     @Override
     public void runOpMode() throws InterruptedException {
