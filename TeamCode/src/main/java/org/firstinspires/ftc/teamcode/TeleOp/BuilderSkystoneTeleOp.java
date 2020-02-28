@@ -10,12 +10,13 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.teamcode.Gamepad.ImprovedGamepad;
 import org.firstinspires.ftc.teamcode.Hardware.BuilderSkystoneHardware;
+import org.firstinspires.ftc.teamcode.Hardware.TEMPBuilderSkystoneHardware;
 
 @SuppressLint("DefaultLocale")
 @TeleOp(name = "Builder Skystone", group = "BUILDER_SKYSTONE")
 public class BuilderSkystoneTeleOp extends OpMode {
 
-    public BuilderSkystoneHardware robot = new BuilderSkystoneHardware();
+    public TEMPBuilderSkystoneHardware robot = new TEMPBuilderSkystoneHardware();
     public ElapsedTime timer = new ElapsedTime();
     public ImprovedGamepad improvedGamepad1;
     public ImprovedGamepad improvedGamepad2;
@@ -182,43 +183,6 @@ public class BuilderSkystoneTeleOp extends OpMode {
             robot.setWheelMotorPower(0, 0, 0, 0);
         }
 
-        //LIFT CONTROL
-        if (gamepad2.left_trigger > .2) {
-            robot.lift.setPower(-1);
-        } else if (gamepad2.right_trigger > .2) {
-            // Don't let the lift go below 0 encoder ticks
-            if (robot.lift.getCurrentPosition() > 0) {
-                robot.lift.setPower(.5);
-            } else {
-                robot.lift.setPower(0);
-            }
-        } else {
-            robot.lift.setPower(0);
-        }
-
-        //CRANE CONTROL
-        if (gamepad2.right_bumper) {
-            robot.crane.setPosition(robot.crane.getPosition() + .015);
-        } else if (gamepad2.left_bumper) {
-            robot.crane.setPosition(robot.crane.getPosition() - .015);
-        }
-
-        //WRIST CONTROL
-        if (gamepad2.x) {
-            robot.wrist.setPosition(robot.wrist.getPosition() + .01);
-        } else if (gamepad2.y) {
-            robot.wrist.setPosition(robot.wrist.getPosition() - .01);
-        } else if (gamepad2.start) {
-            robot.wrist.setPosition(.5);
-        }
-
-        //JAW CONTROL
-        if (gamepad2.a) {
-            robot.jaw.setPosition(robot.jaw.getPosition() + .01);
-        } else if (gamepad2.b) {
-            robot.jaw.setPosition(robot.jaw.getPosition() - .01);
-        }
-
         //Waffle Grabber
         if (gamepad2.dpad_up) {
             robot.setGrabberPositition(.7, .84);
@@ -227,13 +191,7 @@ public class BuilderSkystoneTeleOp extends OpMode {
         }
 
         telemetry.addData("", robot.frontLeftSwerveWheel.toString());
-        telemetry.addData("", robot.frontRightSwerveWheel.toString());
-        telemetry.addData("", robot.backLeftSwerveWheel.toString());
-        telemetry.addData("", robot.backRightSwerveWheel.toString());
-        telemetry.addData("lift pos", robot.lift.getCurrentPosition());
-        telemetry.addData("claw position", robot.jaw.getPosition());
-        telemetry.addData("crane position", robot.crane.getPosition());
-        telemetry.addData("wrist position", robot.wrist.getPosition());
+
 
         Velocity velocity = robot.imu.getVelocity();
         telemetry.addData("xVeloc", String.format("%s (%s)", velocity.xVeloc, velocity.unit));

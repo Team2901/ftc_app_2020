@@ -1,0 +1,514 @@
+package org.firstinspires.ftc.teamcode.Hardware;
+
+import android.annotation.SuppressLint;
+
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.IntegratingGyroscope;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
+import org.firstinspires.ftc.teamcode.Utility.FileUtilities;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.firstinspires.ftc.teamcode.Utility.AngleUtilities.getNormalizedAngle;
+
+@SuppressLint("DefaultLocale")
+public class TEMPBaseSkyStoneHardware {
+
+    String CONFIG_FILENAME = "servo_offset_config.txt";
+    public List<Double> offsets = new ArrayList<>();
+
+    // TODO
+    final double basePowerRatio = 0.025;
+    final double stallPowerRatio = 0; // 0.05;
+
+    public static final double GRABBER_MIN = 0.25;
+    public static final double GRABBER_MAX = 0.75;
+    public static final double ROBOT_FRONT_ANGLE = 0;
+    public static final double ROBOT_RIGHT_ANGLE = -90;
+    public static final double ROBOT_LEFT_ANGLE = 90;
+    public static final double OPEN_JAW = 0;
+    public static final double CLOSED_JAW = 1;
+    public static final double LIFT_STEP = 750;
+
+    public static final String WEB_CAM_NAME = "Webcam 1";
+
+    public OpMode opMode;
+    public final double inchesToEncoder;
+    public double wheelServoGearRatio;
+    public double widthOfRobot;
+    public double lengthOfRobot;
+    public double turnAngle;
+    public double servoMaxAngle;
+    public Servo leftGrabber;
+    public Servo rightGrabber;
+
+    public static final String TFOD_MODEL_ASSET = "Skystone.tflite";
+    public static final String LABEL_BUTTER = "Stone";
+    public static final String LABEL_SKY_BUTTER = "Skystone";
+
+    public TEMPBaseSkyStoneHardware(double widthOfRobot,
+                                    double lengthOfRobot,
+                                    double wheelServoGearRatio,
+                                    double servoMaxAngle,
+                                    double inchesToEncoder) {
+        this.inchesToEncoder = inchesToEncoder;
+        this.wheelServoGearRatio = wheelServoGearRatio;
+        this.widthOfRobot = widthOfRobot;
+        this.lengthOfRobot = lengthOfRobot;
+        this.servoMaxAngle = servoMaxAngle;
+        this.turnAngle = Math.atan(widthOfRobot/lengthOfRobot);
+        double x= 0;
+        double y = 0;
+    }
+
+    public class SwerveWheel {
+        public String name;
+        public String servoConfigName;
+        public Servo servo;
+        public DcMotor motor;
+
+
+        double hardMinWheelPositionRelToZero = 0;
+        double hardMaxWheelPositionRelToZero = 0;
+        public double targetAngle = 0;
+        public int modifier = 1;
+        public double offset = 0;
+        public double minWheelAngle=0;
+        public double maxWheelAngle = 0;
+
+        public double hardMinWheelAngle = 0;
+        public double hardMaxWheelAngle = 0;
+
+        public SwerveWheel (String name){
+            this.name = name;
+        }
+
+        public SwerveWheel(String name, double hardMinWheelPositionRelToZero, double hardMaxWheelPositionRelToZero) {
+            this.name = name;
+            this.hardMinWheelPositionRelToZero = hardMinWheelPositionRelToZero;
+            this.hardMaxWheelPositionRelToZero = hardMaxWheelPositionRelToZero;
+        }
+
+        public void setOffset(double offset) {
+            this.offset = offset;
+            minWheelAngle = servoPositionToWheelAngle(0);
+            maxWheelAngle = servoPositionToWheelAngle(1);
+
+            hardMinWheelAngle = minWheelAngle; // TODO servoPositionToWheelAngle(offset + hardMinWheelPositionRelToZero);
+            hardMaxWheelAngle = maxWheelAngle; // TODO servoPositionToWheelAngle(offset + hardMaxWheelPositionRelToZero);
+        }
+
+        public void setTargetAndModifier(double targetAngle, int modifier) {
+            this.targetAngle = targetAngle;
+            this.modifier = modifier;
+        }
+
+        public void setTargetAndModifier(double[] targetAngleAndModifier) {
+            this.targetAngle = targetAngleAndModifier[0];
+            this.modifier = (int) targetAngleAndModifier[1];
+        }
+
+        public double wheelAngleToServoPosition(double wheelAngle) {
+            /*
+            y=mx+b
+            ServoPosition = [gearRatio*wheelAngle]/ServoMaxAngle] + offset
+            wheelAngle is x
+            */
+            double servoAngle = wheelAngleToServoAngle(wheelAngle);
+            return servoAngleToServoPosition(servoAngle);
+        }
+
+        public double wheelAngleToServoPosition() {
+            return wheelAngleToServoPosition(targetAngle);
+        }
+
+        public double wheelAngleToServoAngle(double wheelAngle) {
+            return wheelAngle / wheelServoGearRatio;
+        }
+
+        public double servoAngleToServoPosition(double servoAngle) {
+            return (servoAngle / servoMaxAngle) + offset;
+        }
+
+        public double servoPositionToWheelAngle(double servoPosition){
+            return (wheelServoGearRatio*servoMaxAngle)*(servoPosition-offset);
+
+        }
+
+        @Override
+        public String toString() {
+            return String.format("%s angle: %.2f, mod: %d, pos: %.2f, offset: %.2f encoder: %d", name, targetAngle, modifier, wheelAngleToServoPosition(), offset, motor.getCurrentPosition());
+        }
+    }
+
+    public SwerveWheel frontLeftSwerveWheel = new SwerveWheel("FL");
+
+    public SwerveWheel[] swerveWheels = {frontLeftSwerveWheel};
+
+    public HardwareMap hardwareMap;
+
+    //Made for a 4 wheel swerve drive system
+    public DcMotor frontLeft;
+
+    //Steering servo for their respective motor
+    public Servo servoFrontLeft;
+
+    //Sensors and Things
+    public BNO055IMU imu;
+    public IntegratingGyroscope gyroscope;
+
+    public double offset = 0;
+
+    public TensorFlowCamera webCamera = new TensorFlowCamera();
+
+    public void init(HardwareMap hwMap) {
+        hardwareMap = hwMap;
+
+        //Inititialize all Motors
+        frontLeft = hardwareMap.dcMotor.get("frontLeft");
+
+        setWheelMotorMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+
+        //Initialize all servos
+        servoFrontLeft = hardwareMap.servo.get("servoFrontLeft");
+
+        // crane is skipping, dont move it on init
+        //crane.setPosition(.05);
+
+        // setting up the gyroscope
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        gyroscope = (IntegratingGyroscope) imu;
+
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        parameters.loggingEnabled = true;
+        parameters.loggingTag = "IMU";
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        imu.initialize(parameters);
+
+        readServoOffsets();
+
+        frontLeftSwerveWheel.servo = servoFrontLeft;
+        frontLeftSwerveWheel.motor = frontLeft;
+
+    }
+
+    public void readServoOffsets() {
+        try {
+            offsets = FileUtilities.readDoubleConfigFile(CONFIG_FILENAME);
+        } catch (IOException e) {
+            offsets = new ArrayList<>();
+        }
+
+        for (int i = 0; i < swerveWheels.length; i++) {
+            if (offsets.size() < i) {
+                offsets.add(0.0);
+            }
+        }
+
+        frontLeftSwerveWheel.setOffset(offsets.size() > 0 ? offsets.get(0) : 0.0);
+
+    }
+
+    public String writeOffsets() {
+        try {
+            FileUtilities.writeConfigFile(CONFIG_FILENAME, offsets);
+        } catch (Exception e) {
+            return String.format("Error writing to file. %s", e.getMessage());
+        }
+        return null;
+    }
+
+    public String initWebCamera(HardwareMap hardwareMap) {
+        return webCamera.initWebCamera(hardwareMap, WEB_CAM_NAME,.8, TFOD_MODEL_ASSET, LABEL_BUTTER, LABEL_SKY_BUTTER);
+    }
+
+    public double getRawAngle() {
+        Orientation orientation = gyroscope.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        return AngleUtilities.getNormalizedAngle(orientation.firstAngle);
+    }
+
+    public double getAngle() {
+        return AngleUtilities.getNormalizedAngle(getRawAngle() + offset);
+    }
+    public static double getIMUAngle(double x, double y) {
+
+        double angleRad = Math.atan2(y, x);
+        double angleDegrees = AngleUtilities.radiansDegreesTranslation(angleRad);
+        return AngleUtilities.getNormalizedAngle(angleDegrees);
+    }
+
+    public void setWheelMotorPower(double frontLeftPower, double frontRightPower, double backLeftPower, double backRightPower) {
+
+        frontLeft.setPower(frontLeftPower);
+    }
+
+    public void setWheelServoPosition(double fLPos, double fRPos, double bLPos, double bRPos) {
+
+        servoFrontLeft.setPosition(fLPos);
+    }
+
+    public void setWheelMotorMode(DcMotor.RunMode runMode) {
+
+        frontLeft.setMode(runMode);
+    }
+
+    public void setGrabberPositition (double leftGrabberPos, double rightGrabberPos){
+        leftGrabber.setPosition(leftGrabberPos);
+        rightGrabber.setPosition(rightGrabberPos);
+    }
+
+    public boolean wheelsAreBusy() {
+        return frontLeft.isBusy();
+
+    }
+
+    public void wait(int milliseconds, LinearOpMode opMode) {
+        ElapsedTime timer = new ElapsedTime();
+        while (opMode.opModeIsActive() && timer.milliseconds() < milliseconds) {
+
+        }
+    }
+
+    public void moveStraight (double setPower, int targetPosition){
+
+        frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
+        frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        frontLeft.setTargetPosition(targetPosition);
+
+        setWheelMotorMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        setWheelMotorPower(setPower, setPower, setPower, setPower);
+        //call whileMotorisBusy
+
+
+
+    }
+
+    public void parkingLowRisk(){
+        //Step one: turn wheels 90 degrees counterclockwise and go forward 1 ft.
+        moveStraight(0.5,1);
+        //Step two: turn wheels 90 degrees clockwise and go forward 1 ft.
+        moveStraight(0.5,1);
+        //Step three: turn wheels 90 degrees counterclockwise and go forward 1.5 ft.
+        moveStraight(0.5,2);
+        //Step four: stop
+    }
+
+    public void setWheelTargetPositions(int position){
+        frontLeft.setTargetPosition(position* frontLeftSwerveWheel.modifier);
+
+    }
+
+    public void angleCheck(double goal, TEMPBaseSkyStoneHardware.SwerveWheel swerveWheel) {
+
+        double start = swerveWheel.targetAngle;
+
+        goal = getNormalizedAngle(goal);
+
+        double dAngleForward = getNormalizedAngle(goal - start);
+        double targetAngleForward = dAngleForward + start;
+        boolean forwardPossible = (swerveWheel.hardMinWheelAngle <= targetAngleForward && targetAngleForward <= swerveWheel.hardMaxWheelAngle);
+
+        double dAngleBackward = getNormalizedAngle(dAngleForward + 180);
+        double targetAngleBackward = dAngleBackward + start;
+        boolean backwardPossible = (swerveWheel.hardMinWheelAngle <= targetAngleBackward && targetAngleBackward <= swerveWheel.hardMaxWheelAngle);
+
+        boolean goForward;
+
+        if (forwardPossible && backwardPossible) {
+            goForward = (Math.abs(dAngleForward) < Math.abs(dAngleBackward));
+        } else {
+            goForward = forwardPossible;
+        }
+
+        double targetAngle;
+        int modifier;
+
+        if (goForward) {
+            targetAngle = targetAngleForward;
+            modifier = 1;
+
+        } else {
+            targetAngle = targetAngleBackward;
+            modifier = -1;
+        }
+
+        swerveWheel.setTargetAndModifier(targetAngle, modifier);
+    }
+
+    public double[] getWheelTargetAndModifier(double goal, TEMPBaseSkyStoneHardware.SwerveWheel swerveWheel) {
+
+        double start = swerveWheel.targetAngle;
+
+        goal = getNormalizedAngle(goal);
+
+        double dAngleForward = getNormalizedAngle(goal - start);
+        double targetAngleForward = dAngleForward + start;
+        boolean forwardPossible = (swerveWheel.hardMinWheelAngle <= targetAngleForward && targetAngleForward <= swerveWheel.hardMaxWheelAngle);
+
+        double dAngleBackward = getNormalizedAngle(dAngleForward + 180);
+        double targetAngleBackward = dAngleBackward + start;
+        boolean backwardPossible = (swerveWheel.hardMinWheelAngle <= targetAngleBackward && targetAngleBackward <= swerveWheel.hardMaxWheelAngle);
+
+        boolean goForward;
+
+        if (forwardPossible && backwardPossible) {
+            goForward = (Math.abs(dAngleForward) < Math.abs(dAngleBackward));
+        } else {
+            goForward = forwardPossible;
+        }
+
+        double targetAngle;
+        int modifier;
+
+        if (goForward) {
+            targetAngle = targetAngleForward;
+            modifier = 1;
+
+        } else {
+            targetAngle = targetAngleBackward;
+            modifier = -1;
+        }
+
+        double[] targetAndModifier = {targetAngle, modifier};
+
+        return targetAndModifier;
+    }
+
+    public double joystickPositionToWheelAngle(double joystickPositionX, double joystickPositionY) {
+        double wheelAngleRad = Math.atan2(joystickPositionY, joystickPositionX);
+        double wheelAngle = AngleUtilities.radiansDegreesTranslation(wheelAngleRad) - 90;
+        return AngleUtilities.getPositiveNormalizedAngle(wheelAngle);
+
+    }
+
+    public void swerveStraight(double joyWheelAngle, double power) {
+        swerveMove(joyWheelAngle, joyWheelAngle, joyWheelAngle, joyWheelAngle, power);
+    }
+
+    public void swerveStraightAbsolute(double joyWheelAngle, double power) {
+        double absoluteAngle = joyWheelAngle - getAngle();
+        swerveMove(absoluteAngle, absoluteAngle, absoluteAngle, absoluteAngle, power);
+    }
+
+    public boolean swerveStraightAbsolute(double joyWheelAngle, double power, boolean forwardOnly) {
+        double absoluteAngle = joyWheelAngle - getAngle();
+        return swerveMove(absoluteAngle, absoluteAngle, absoluteAngle, absoluteAngle, power, forwardOnly);
+    }
+
+    public void swerveTurn(double power) {
+
+        double fLAngle = joystickPositionToWheelAngle(1, 1);
+        double fRAngle = joystickPositionToWheelAngle(1, -1);
+        double bLAngle = joystickPositionToWheelAngle(-1, 1);
+        double bRAngle = joystickPositionToWheelAngle(-1, -1);
+
+        swerveMove(fLAngle, fRAngle, bLAngle, bRAngle, power);
+    }
+
+    public void swerveMove(double fLAngle, double fRAngle, double bLAngle, double bRAngle, double power) {
+
+        angleCheck(fLAngle, frontLeftSwerveWheel);
+
+
+        double servoPositionfL = frontLeftSwerveWheel.wheelAngleToServoPosition();
+
+        setWheelServoPosition(servoPositionfL, servoPositionfL, servoPositionfL, servoPositionfL);
+
+        double frontLeftPower = frontLeftSwerveWheel.modifier * power;
+
+        setWheelMotorPower(frontLeftPower, frontLeftPower, frontLeftPower, frontLeftPower);
+    }
+
+    public boolean swerveMove(double fLAngle, double fRAngle, double bLAngle, double bRAngle, double power, boolean forwardOnly) {
+
+        double[] fLTargetAndModifier = getWheelTargetAndModifier(fLAngle, frontLeftSwerveWheel);
+
+        final boolean setServoPosition;
+
+        if (forwardOnly) {
+            // If flag is set, only move thr servos if none of the wheels will go backwards (else it will mess up run to position)
+            setServoPosition = Math.signum(frontLeftSwerveWheel.modifier) == Math.signum(fLTargetAndModifier[1]);
+        } else {
+            // If flag isn't set, it is always ok to set the servos such that the wheels go backwards
+            setServoPosition = true;
+        }
+
+        if (setServoPosition) {
+            frontLeftSwerveWheel.setTargetAndModifier(fLTargetAndModifier);
+            double servoPositionfL = frontLeftSwerveWheel.wheelAngleToServoPosition();
+
+            setWheelServoPosition(servoPositionfL, servoPositionfL, servoPositionfL, servoPositionfL);
+        }
+
+        double frontLeftPower = frontLeftSwerveWheel.modifier * power;
+        setWheelMotorPower(frontLeftPower, frontLeftPower, frontLeftPower, frontLeftPower);
+
+        return setServoPosition;
+    }
+
+    public void moveLift (int counts){
+        frontLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        frontLeft.setTargetPosition(counts);
+        frontLeft.setPower(.3);
+        while(frontLeft.isBusy()) {
+
+        }
+        frontLeft.setPower(0);
+
+    }
+
+    public double getCurrentTurnPower(double absCurrent, double absGoal, double absStart, double maxPower) {
+        double relCurrent = AngleUtilities.getNormalizedAngle(absCurrent - absStart);
+        double relGoal = AngleUtilities.getNormalizedAngle(absGoal - absStart);
+        double remainingDistance = AngleUtilities.getNormalizedAngle(relGoal - relCurrent);
+
+        double basePower = basePowerRatio * remainingDistance;
+        double stallPower = stallPowerRatio * Math.signum(remainingDistance);
+
+        return Range.clip(basePower + stallPower, -Math.abs(maxPower), Math.abs(maxPower));
+    }
+
+    public double getCurrentTurnPower(double absCurrent, double absGoal, double maxPower) {
+        double remainingDistance = AngleUtilities.getNormalizedAngle(absGoal - absCurrent);
+
+        double basePower = basePowerRatio * remainingDistance;
+        double stallPower = stallPowerRatio * Math.signum(remainingDistance);
+
+        return -Range.clip(basePower + stallPower, -Math.abs(maxPower), Math.abs(maxPower));
+    }
+    public void printRawAngle() {
+        Orientation orientation = gyroscope.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        // return AngleUtilities.getNormalizedAngle(orientation.firstAngle);
+        opMode.telemetry.addData("z/forwards", orientation.firstAngle);
+        opMode.telemetry.addData("y/sideways", orientation.secondAngle);
+    }
+}
+
