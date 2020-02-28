@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.Gamepad.ImprovedGamepad;
 import org.firstinspires.ftc.teamcode.Hardware.BuilderSkystoneHardware;
 
 @SuppressLint("DefaultLocale")
-@TeleOp(name = "Builder Skystone", group = "SKYSTONE")
+@TeleOp(name = "Builder Skystone", group = "BUILDER_SKYSTONE")
 public class BuilderSkystoneTeleOp extends OpMode {
 
     public BuilderSkystoneHardware robot = new BuilderSkystoneHardware();

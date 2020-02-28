@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.Hardware.BuilderSkystoneHardware;
 import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
 
 @SuppressLint("DefaultLocale")
-@TeleOp(name= "One Person TeleOp", group = "SKYSTONE")
+@TeleOp(name= "Builder Skystone - One Person", group = "BUILDER_SKYSTONE")
 public class OnePersonTeleOp extends OpMode {
 
 

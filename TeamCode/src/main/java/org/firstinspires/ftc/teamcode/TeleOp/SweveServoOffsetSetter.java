@@ -6,18 +6,10 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Gamepad.ImprovedGamepad;
-import org.firstinspires.ftc.teamcode.Hardware.BaseSkyStoneHardware;
 import org.firstinspires.ftc.teamcode.Hardware.BuilderSkystoneHardware;
-import org.firstinspires.ftc.teamcode.Utility.FileUtilities;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 @TeleOp(name = "Servo Swerve Offset Setter", group = "TEST")
 public class SweveServoOffsetSetter extends OpMode {
-
-    String CONFIG_FILENAME = "servo_offset_config.txt";
 
     BuilderSkystoneHardware robot = new BuilderSkystoneHardware();
     ImprovedGamepad impGamepad;
