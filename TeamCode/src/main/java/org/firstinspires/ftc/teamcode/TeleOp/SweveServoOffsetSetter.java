@@ -7,12 +7,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Gamepad.ImprovedGamepad;
 import org.firstinspires.ftc.teamcode.Hardware.BuilderSkystoneHardware;
-import org.firstinspires.ftc.teamcode.Hardware.TEMPBuilderSkystoneHardware;
 
 @TeleOp(name = "Servo Swerve Offset Setter", group = "TEST")
 public class SweveServoOffsetSetter extends OpMode {
 
-    TEMPBuilderSkystoneHardware robot = new TEMPBuilderSkystoneHardware();
+    BuilderSkystoneHardware robot = new BuilderSkystoneHardware();
     ImprovedGamepad impGamepad;
     ElapsedTime timer = new ElapsedTime();
 
@@ -34,7 +33,7 @@ public class SweveServoOffsetSetter extends OpMode {
     @Override
     public void loop() {
         impGamepad.update();
-/*
+
         if(this.impGamepad.dpad_right.isInitialPress()){
             servoIndex++;
             if(servoIndex >= robot.swerveWheels.length){
@@ -46,7 +45,7 @@ public class SweveServoOffsetSetter extends OpMode {
                 servoIndex = robot.swerveWheels.length - 1;
             }
         }
-*/
+
         servoUnderTest = robot.swerveWheels[servoIndex].servo;
 
         if(servoUnderTest != null){
