@@ -10,12 +10,13 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.teamcode.Gamepad.ImprovedGamepad;
 import org.firstinspires.ftc.teamcode.Hardware.BuilderSkystoneHardware;
+import org.firstinspires.ftc.teamcode.Hardware.CompetitionSkystoneHardware;
 
 @SuppressLint("DefaultLocale")
-@TeleOp(name = "Builder Skystone", group = "BUILDER_SKYSTONE")
+@TeleOp(name = "Competition Skystone", group = "BUILDER_SKYSTONE")
 public class BuilderSkystoneTeleOp extends OpMode {
 
-    public BuilderSkystoneHardware robot = new BuilderSkystoneHardware();
+    public CompetitionSkystoneHardware robot = new CompetitionSkystoneHardware();
     public ElapsedTime timer = new ElapsedTime();
     public ImprovedGamepad improvedGamepad1;
     public ImprovedGamepad improvedGamepad2;

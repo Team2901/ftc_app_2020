@@ -9,14 +9,15 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Gamepad.ImprovedGamepad;
 import org.firstinspires.ftc.teamcode.Hardware.BuilderSkystoneHardware;
+import org.firstinspires.ftc.teamcode.Hardware.CompetitionSkystoneHardware;
 import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
 
 @SuppressLint("DefaultLocale")
-@TeleOp(name= "Builder Skystone - One Person", group = "BUILDER_SKYSTONE")
+@TeleOp(name= "Competition Skystone - One Person", group = "BUILDER_SKYSTONE")
 public class OnePersonTeleOp extends OpMode {
 
 
-    public BuilderSkystoneHardware robot = new BuilderSkystoneHardware();
+    public CompetitionSkystoneHardware robot = new CompetitionSkystoneHardware();
     public ElapsedTime timer = new ElapsedTime();
     public ImprovedGamepad improvedGamepad1;
     public ImprovedGamepad improvedGamepad2;

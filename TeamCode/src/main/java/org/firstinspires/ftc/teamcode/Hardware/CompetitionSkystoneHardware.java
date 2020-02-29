@@ -7,18 +7,14 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 public class CompetitionSkystoneHardware extends BaseSkyStoneHardware{
 
-    public static final double WHEEL_POWER_RATIO = .5;
+    public static final double WHEEL_POWER_RATIO = .3;
 
-    public final static double WHEEL_SERVO_GEAR_RATIO = 84/60;
+    public final static double WHEEL_SERVO_GEAR_RATIO = 84.0/60.0;
     public final static double WIDTH_OF_ROBOT = 13.5;
     public final static double LENGTH_OF_ROBOT = 13.5;
     //This is the angle Phi that we defined in the math done before this
     public final static double TURN_ANGLE = Math.atan(WIDTH_OF_ROBOT/ LENGTH_OF_ROBOT);
     public final static int SERVO_MAX_ANGLE = 280;
-    public final static double FRONT_LEFT_OFFSET = 0.3205;
-    public final static double FRONT_RIGHT_OFFSET = .34;
-    public final static double BACK_LEFT_OFFSET = .4;
-    public final static double BACK_RIGHT_OFFSET = 0.16;
     public final static double INCHES_TO_ENCODER = 23;
 
     public CompetitionSkystoneHardware(){
@@ -41,8 +37,8 @@ public class CompetitionSkystoneHardware extends BaseSkyStoneHardware{
 
         frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
         frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        backLeft.setDirection(DcMotorSimple.Direction.FORWARD);
-        backRight.setDirection(DcMotorSimple.Direction.FORWARD);
+        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
         frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

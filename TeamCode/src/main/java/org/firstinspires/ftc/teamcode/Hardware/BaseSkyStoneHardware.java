@@ -110,8 +110,8 @@ public class BaseSkyStoneHardware {
             minWheelAngle = servoPositionToWheelAngle(0);
             maxWheelAngle = servoPositionToWheelAngle(1);
 
-            hardMinWheelAngle = minWheelAngle; // TODO servoPositionToWheelAngle(offset + hardMinWheelPositionRelToZero);
-            hardMaxWheelAngle = maxWheelAngle; // TODO servoPositionToWheelAngle(offset + hardMaxWheelPositionRelToZero);
+            hardMinWheelAngle = servoPositionToWheelAngle(offset + hardMinWheelPositionRelToZero);
+            hardMaxWheelAngle = servoPositionToWheelAngle(offset + hardMaxWheelPositionRelToZero);
         }
 
         public void setTargetAndModifier(double targetAngle, int modifier) {
@@ -157,10 +157,10 @@ public class BaseSkyStoneHardware {
         }
     }
 
-    public SwerveWheel frontLeftSwerveWheel = new SwerveWheel("FL");
-    public SwerveWheel frontRightSwerveWheel = new SwerveWheel("FR");
-    public SwerveWheel backLeftSwerveWheel = new SwerveWheel("BL");
-    public SwerveWheel backRightSwerveWheel = new SwerveWheel("BR");
+    public SwerveWheel frontLeftSwerveWheel = new SwerveWheel("FL",-0.78, 0.05);
+    public SwerveWheel frontRightSwerveWheel = new SwerveWheel("FR", -0.49, 0.021);
+    public SwerveWheel backLeftSwerveWheel = new SwerveWheel("BL", -0.04, 0.46);
+    public SwerveWheel backRightSwerveWheel = new SwerveWheel("BR",  -0.05, 0.45);
 
     public SwerveWheel[] swerveWheels = {frontLeftSwerveWheel, frontRightSwerveWheel, backLeftSwerveWheel, backRightSwerveWheel};
 
@@ -243,22 +243,6 @@ public class BaseSkyStoneHardware {
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
 
-        try {
-            offsets = FileUtilities.readDoubleConfigFile(CONFIG_FILENAME);
-        } catch (IOException e) {
-            offsets = new ArrayList<>();
-            for (int i = 0; i < 4; i++) {
-                offsets.add(0.0);
-            }
-        }
-
-        if (offsets.size() < 4) {
-            offsets = new ArrayList<>();
-            for (int i = 0; i < 4; i++) {
-                offsets.add(0.0);
-            }
-        }
-
         readServoOffsets();
 
         frontLeftSwerveWheel.servo = servoFrontLeft;
@@ -275,6 +259,9 @@ public class BaseSkyStoneHardware {
     }
 
     public void readServoOffsets() {
+
+        offsets = new ArrayList<>();
+
         try {
             offsets = FileUtilities.readDoubleConfigFile(CONFIG_FILENAME);
         } catch (IOException e) {
@@ -282,15 +269,15 @@ public class BaseSkyStoneHardware {
         }
 
         for (int i = 0; i < swerveWheels.length; i++) {
-            if (offsets.size() < i) {
+            if (offsets.size() <= i) {
                 offsets.add(0.0);
             }
         }
 
-        frontLeftSwerveWheel.setOffset(offsets.size() > 0 ? offsets.get(0) : 0.0);
-        frontRightSwerveWheel.setOffset(offsets.size() > 1 ? offsets.get(1) : 0.0);
-        backLeftSwerveWheel.setOffset(offsets.size() > 2 ? offsets.get(2) : 0.0);
-        backRightSwerveWheel.setOffset(offsets.size() > 3 ? offsets.get(3) : 0.0);
+        frontLeftSwerveWheel.setOffset(offsets.get(0));
+        frontRightSwerveWheel.setOffset(offsets.get(1));
+        backLeftSwerveWheel.setOffset(offsets.get(2));
+        backRightSwerveWheel.setOffset(offsets.get(3));
     }
 
     public String writeOffsets() {
