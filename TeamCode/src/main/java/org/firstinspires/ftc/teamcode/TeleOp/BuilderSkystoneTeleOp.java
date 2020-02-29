@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.util.Range;
@@ -199,11 +200,14 @@ public class BuilderSkystoneTeleOp extends OpMode {
         }
 
         //LIFT CONTROL
-        if (gamepad2.left_trigger > .2) {
+        if (gamepad2.left_trigger > .2 && gamepad2.start) {
+            robot.lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        } else if (gamepad2.left_trigger > .2) {
             robot.lift.setPower(-1);
         } else if (gamepad2.right_trigger > .2) {
             // Don't let the lift go below 0 encoder ticks
-            if (robot.lift.getCurrentPosition() > 0) {
+            if (robot.lift.getCurrentPosition() > 0 || gamepad2.start) {
                 robot.lift.setPower(.5);
             } else {
                 robot.lift.setPower(0);
@@ -242,6 +246,7 @@ public class BuilderSkystoneTeleOp extends OpMode {
             robot.setGrabberPositition(0, 0);
         }
 
+
         telemetry.addData("", robot.frontLeftSwerveWheel.toString());
         telemetry.addData("", robot.frontRightSwerveWheel.toString());
         telemetry.addData("", robot.backLeftSwerveWheel.toString());
@@ -250,6 +255,18 @@ public class BuilderSkystoneTeleOp extends OpMode {
         telemetry.addData("claw position", robot.jaw.getPosition());
         telemetry.addData("crane position", robot.crane.getPosition());
         telemetry.addData("wrist position", robot.wrist.getPosition());
+
+
+        telemetry.addData("", String.format("FL %f %f",robot.frontLeftSwerveWheel.hardMinWheelPositionRelToZero, robot.frontLeftSwerveWheel.hardMaxWheelPositionRelToZero));
+        telemetry.addData("", String.format("FR %f %f",robot.frontRightSwerveWheel.hardMinWheelPositionRelToZero, robot.frontRightSwerveWheel.hardMaxWheelPositionRelToZero));
+        telemetry.addData("", String.format("BL %f %f",robot.backLeftSwerveWheel.hardMinWheelPositionRelToZero, robot.backLeftSwerveWheel.hardMaxWheelPositionRelToZero));
+        telemetry.addData("", String.format("BR %f %f",robot.backRightSwerveWheel.hardMinWheelPositionRelToZero, robot.backRightSwerveWheel.hardMaxWheelPositionRelToZero));
+
+        telemetry.addData("", String.format("FL angle %f %f",robot.frontLeftSwerveWheel.hardMinWheelAngle, robot.frontLeftSwerveWheel.hardMaxWheelAngle));
+        telemetry.addData("", String.format("FR angle %f %f",robot.frontRightSwerveWheel.hardMinWheelAngle, robot.frontRightSwerveWheel.hardMaxWheelAngle));
+        telemetry.addData("", String.format("BL angle %f %f",robot.backLeftSwerveWheel.hardMinWheelAngle, robot.backLeftSwerveWheel.hardMaxWheelAngle));
+        telemetry.addData("", String.format("BR angle %f %f",robot.backRightSwerveWheel.hardMinWheelAngle, robot.backRightSwerveWheel.hardMaxWheelAngle));
+
 
         Velocity velocity = robot.imu.getVelocity();
         telemetry.addData("xVeloc", String.format("%s (%s)", velocity.xVeloc, velocity.unit));

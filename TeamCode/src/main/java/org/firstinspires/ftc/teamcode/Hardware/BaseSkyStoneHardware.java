@@ -6,6 +6,7 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -31,11 +32,20 @@ import static org.firstinspires.ftc.teamcode.Utility.AngleUtilities.getNormalize
 public class BaseSkyStoneHardware {
 
     String CONFIG_FILENAME = "servo_offset_config.txt";
+    String CONFIG_MIN_MAX_FILENAME = "servo_min_max_values_config.txt";
+    String CONFIG_POTENTIOMETER_FILENAME = "servo_potentiometer_values_config.txt";
+
+    String CONFIG_FILENAME_FL = "servo_offset_hard_fl_config.txt";
+    String CONFIG_FILENAME_BL = "servo_offset_hard_bl_config.txt";
+    String CONFIG_FILENAME_BR = "servo_offset_hard_br_config.txt";
+
     public List<Double> offsets = new ArrayList<>();
 
     // TODO
     final double basePowerRatio = 0.025;
     final double stallPowerRatio = 0; // 0.05;
+
+    public static final boolean USE_POTENTIOMETER = true;
 
     public static final double GRABBER_MIN = 0.25;
     public static final double GRABBER_MAX = 0.75;
@@ -78,14 +88,18 @@ public class BaseSkyStoneHardware {
     }
 
     public class SwerveWheel {
+
+        public List<Double> configValues = new ArrayList<>();
+
         public String name;
         public String servoConfigName;
         public Servo servo;
         public DcMotor motor;
+        public AnalogInput potentiometer;
+        public Double potentiometerTarget;
 
-
-        double hardMinWheelPositionRelToZero = 0;
-        double hardMaxWheelPositionRelToZero = 0;
+        public double hardMinWheelPositionRelToZero = 0;
+        public double hardMaxWheelPositionRelToZero = 0;
         public double targetAngle = 0;
         public int modifier = 1;
         public double offset = 0;
@@ -103,6 +117,10 @@ public class BaseSkyStoneHardware {
             this.name = name;
             this.hardMinWheelPositionRelToZero = hardMinWheelPositionRelToZero;
             this.hardMaxWheelPositionRelToZero = hardMaxWheelPositionRelToZero;
+
+            for (int i = 0; i < 3; i++) {
+                configValues.add(0.0);
+            }
         }
 
         public void setOffset(double offset) {
@@ -184,6 +202,11 @@ public class BaseSkyStoneHardware {
     public Servo jaw;
     public Servo wrist;
 
+    AnalogInput flPotentiometer;
+    AnalogInput frPotentiometer;
+    AnalogInput blPotentiometer;
+    AnalogInput brPotentiometer;
+
     //Sensors and Things
     public BNO055IMU imu;
     public IntegratingGyroscope gyroscope;
@@ -201,6 +224,7 @@ public class BaseSkyStoneHardware {
         backLeft = hardwareMap.dcMotor.get("backLeft");
         backRight = hardwareMap.dcMotor.get("backRight");
 
+        setWheelMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         setWheelMotorMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         leftGrabber = hwMap.get(Servo.class, "leftGrabber");
@@ -209,7 +233,7 @@ public class BaseSkyStoneHardware {
 
         lift = hardwareMap.dcMotor.get("lift");
         lift.setDirection(DcMotorSimple.Direction.REVERSE);
-        lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
         //Initialize all servos
@@ -243,24 +267,42 @@ public class BaseSkyStoneHardware {
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
 
+        readServoMinMaxValues();
         readServoOffsets();
+
+        frontLeftSwerveWheel.potentiometerTarget = 2.899;
+        frontRightSwerveWheel.potentiometerTarget = 3.336;
+        backLeftSwerveWheel.potentiometerTarget = 3.252;
+        backRightSwerveWheel.potentiometerTarget = 1.264;
+
+        if (USE_POTENTIOMETER) {
+            flPotentiometer = hardwareMap.analogInput.get("pfl");
+            frPotentiometer = hardwareMap.analogInput.get("pfr");
+            blPotentiometer = hardwareMap.analogInput.get("pbl");
+            brPotentiometer = hardwareMap.analogInput.get("pbr");
+        }
 
         frontLeftSwerveWheel.servo = servoFrontLeft;
         frontLeftSwerveWheel.motor = frontLeft;
+        frontLeftSwerveWheel.potentiometer = flPotentiometer;
 
         frontRightSwerveWheel.servo = servoFrontRight;
         frontRightSwerveWheel.motor = frontRight;
+        frontRightSwerveWheel.potentiometer = frPotentiometer;
 
         backLeftSwerveWheel.servo = servoBackLeft;
         backLeftSwerveWheel.motor = backLeft;
+        backLeftSwerveWheel.potentiometer = blPotentiometer;
 
         backRightSwerveWheel.servo = servoBackRight;
         backRightSwerveWheel.motor = backRight;
+        backRightSwerveWheel.potentiometer = brPotentiometer;
+
     }
 
     public void readServoOffsets() {
 
-        offsets = new ArrayList<>();
+        List<Double> offsets = new ArrayList<>();
 
         try {
             offsets = FileUtilities.readDoubleConfigFile(CONFIG_FILENAME);
@@ -280,9 +322,103 @@ public class BaseSkyStoneHardware {
         backRightSwerveWheel.setOffset(offsets.get(3));
     }
 
-    public String writeOffsets() {
+    public void readServoPotentiometerTargets() {
+
+        List<Double> potentiometer = new ArrayList<>();
+
         try {
-            FileUtilities.writeConfigFile(CONFIG_FILENAME, offsets);
+            potentiometer = FileUtilities.readDoubleConfigFile(CONFIG_POTENTIOMETER_FILENAME);
+        } catch (IOException e) {
+            potentiometer = new ArrayList<>();
+        }
+
+        for (int i = 0; i < swerveWheels.length; i++) {
+            if (potentiometer.size() <= i) {
+                potentiometer.add(0.0);
+            }
+        }
+
+        frontLeftSwerveWheel.potentiometerTarget = potentiometer.get(0);
+        frontRightSwerveWheel.potentiometerTarget = potentiometer.get(1);
+        backLeftSwerveWheel.potentiometerTarget = potentiometer.get(2);
+        backRightSwerveWheel.potentiometerTarget = potentiometer.get(3);
+    }
+
+    public void readServoMinMaxValues() {
+
+        List<Double> minMaxValues = new ArrayList<>();
+
+        try {
+            minMaxValues = FileUtilities.readDoubleConfigFile(CONFIG_MIN_MAX_FILENAME);
+        } catch (IOException e) {
+            minMaxValues = new ArrayList<>();
+        }
+
+        for (int i = 0; i < 8; i++) {
+            if (minMaxValues.size() <= i) {
+                minMaxValues.add(0.0);
+            }
+        }
+
+        frontLeftSwerveWheel.hardMinWheelPositionRelToZero = minMaxValues.get(0);
+        frontLeftSwerveWheel.hardMaxWheelPositionRelToZero = minMaxValues.get(1);
+
+        frontRightSwerveWheel.hardMinWheelPositionRelToZero = minMaxValues.get(2);
+        frontRightSwerveWheel.hardMaxWheelPositionRelToZero = minMaxValues.get(3);
+
+        backLeftSwerveWheel.hardMinWheelPositionRelToZero = minMaxValues.get(4);
+        backLeftSwerveWheel.hardMaxWheelPositionRelToZero = minMaxValues.get(5);
+
+        backRightSwerveWheel.hardMinWheelPositionRelToZero = minMaxValues.get(6);
+        backRightSwerveWheel.hardMaxWheelPositionRelToZero = minMaxValues.get(7);
+    }
+
+
+    public String writeOffsets() {
+        List<Double> values = new ArrayList<>();
+        values.add(frontLeftSwerveWheel.offset);
+        values.add(frontRightSwerveWheel.offset);
+        values.add(backRightSwerveWheel.offset);
+        values.add(backRightSwerveWheel.offset);
+
+        try {
+            FileUtilities.writeConfigFile(CONFIG_FILENAME, values);
+        } catch (Exception e) {
+            return String.format("Error writing to file. %s", e.getMessage());
+        }
+        return null;
+    }
+
+    public String writePotentiometerTargets() {
+        List<Double> values = new ArrayList<>();
+        values.add(frontLeftSwerveWheel.potentiometerTarget);
+        values.add(frontRightSwerveWheel.potentiometerTarget);
+        values.add(backRightSwerveWheel.potentiometerTarget);
+        values.add(backRightSwerveWheel.potentiometerTarget);
+
+        try {
+            FileUtilities.writeConfigFile(CONFIG_FILENAME, values);
+        } catch (Exception e) {
+            return String.format("Error writing to file. %s", e.getMessage());
+        }
+        return null;
+    }
+
+    public String writeHardMinMaxValues() {
+        try {
+            List<Double> values = new ArrayList<>();
+            values.add(frontLeftSwerveWheel.hardMinWheelPositionRelToZero);
+            values.add(frontLeftSwerveWheel.hardMaxWheelPositionRelToZero);
+
+            values.add(frontRightSwerveWheel.hardMinWheelPositionRelToZero);
+            values.add(frontRightSwerveWheel.hardMaxWheelPositionRelToZero);
+
+            values.add(backLeftSwerveWheel.hardMinWheelPositionRelToZero);
+            values.add(backLeftSwerveWheel.hardMaxWheelPositionRelToZero);
+
+            values.add(backRightSwerveWheel.hardMinWheelPositionRelToZero);
+            values.add(backRightSwerveWheel.hardMaxWheelPositionRelToZero);
+            FileUtilities.writeConfigFile(CONFIG_MIN_MAX_FILENAME, values);
         } catch (Exception e) {
             return String.format("Error writing to file. %s", e.getMessage());
         }
@@ -384,16 +520,6 @@ public class BaseSkyStoneHardware {
 
 
 
-    }
-
-    public void parkingLowRisk(){
-        //Step one: turn wheels 90 degrees counterclockwise and go forward 1 ft.
-        moveStraight(0.5,1);
-        //Step two: turn wheels 90 degrees clockwise and go forward 1 ft.
-        moveStraight(0.5,1);
-        //Step three: turn wheels 90 degrees counterclockwise and go forward 1.5 ft.
-        moveStraight(0.5,2);
-        //Step four: stop
     }
 
     public void setWheelTargetPositions(int position){
@@ -608,12 +734,6 @@ public class BaseSkyStoneHardware {
         double stallPower = stallPowerRatio * Math.signum(remainingDistance);
 
         return -Range.clip(basePower + stallPower, -Math.abs(maxPower), Math.abs(maxPower));
-    }
-    public void printRawAngle() {
-        Orientation orientation = gyroscope.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
-        // return AngleUtilities.getNormalizedAngle(orientation.firstAngle);
-        opMode.telemetry.addData("z/forwards", orientation.firstAngle);
-        opMode.telemetry.addData("y/sideways", orientation.secondAngle);
     }
 }
 

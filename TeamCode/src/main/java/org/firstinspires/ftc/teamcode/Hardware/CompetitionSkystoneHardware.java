@@ -16,7 +16,7 @@ public class CompetitionSkystoneHardware extends BaseSkyStoneHardware{
     //This is the angle Phi that we defined in the math done before this
     public final static double TURN_ANGLE = Math.atan(WIDTH_OF_ROBOT/ LENGTH_OF_ROBOT);
     public final static int SERVO_MAX_ANGLE = 280;
-    public final static double INCHES_TO_ENCODER = 23;
+    public final static double INCHES_TO_ENCODER = 13;
 
     public CompetitionSkystoneHardware(){
         super (WIDTH_OF_ROBOT,
@@ -37,7 +37,7 @@ public class CompetitionSkystoneHardware extends BaseSkyStoneHardware{
 
 
         frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
