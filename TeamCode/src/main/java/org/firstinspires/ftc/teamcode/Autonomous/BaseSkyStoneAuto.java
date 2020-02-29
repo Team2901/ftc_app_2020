@@ -10,6 +10,7 @@ import org.firstinspires.ftc.robotcontroller.internal.MotoLinearOpMode;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.Hardware.BuilderSkystoneHardware;
+import org.firstinspires.ftc.teamcode.Hardware.CompetitionSkystoneHardware;
 import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
 
 import java.util.List;
@@ -23,7 +24,7 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
     public static final int SAFE_WALL_DISTANCE_INCHES = 2;
     public static final int PARK_BRIDGE_INCHES = 30;
     final static int CONFIDENCE_PERCENTAGE = 5;
-    public BuilderSkystoneHardware robot = new BuilderSkystoneHardware();
+    public CompetitionSkystoneHardware robot = new CompetitionSkystoneHardware();
 
     public void turnTo(double angle) {
         turnTo(angle, .5, 0 , 0);

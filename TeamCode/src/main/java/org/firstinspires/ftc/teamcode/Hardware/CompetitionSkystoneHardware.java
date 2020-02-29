@@ -9,6 +9,7 @@ public class CompetitionSkystoneHardware extends BaseSkyStoneHardware{
 
     public static final double WHEEL_POWER_RATIO = .3;
 
+
     public final static double WHEEL_SERVO_GEAR_RATIO = 84.0/60.0;
     public final static double WIDTH_OF_ROBOT = 13.5;
     public final static double LENGTH_OF_ROBOT = 13.5;
@@ -35,8 +36,8 @@ public class CompetitionSkystoneHardware extends BaseSkyStoneHardware{
         servoBackRight.setDirection(Servo.Direction.REVERSE);
 
 
-        frontRight.setDirection(DcMotorSimple.Direction.FORWARD);
-        frontLeft.setDirection(DcMotorSimple.Direction.FORWARD);
+        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
         backRight.setDirection(DcMotorSimple.Direction.REVERSE);
 

@@ -157,8 +157,8 @@ public class BaseSkyStoneHardware {
         }
     }
 
-    public SwerveWheel frontLeftSwerveWheel = new SwerveWheel("FL",-0.78, 0.05);
-    public SwerveWheel frontRightSwerveWheel = new SwerveWheel("FR", -0.49, 0.021);
+    public SwerveWheel frontLeftSwerveWheel = new SwerveWheel("FL",-0.41, 0.05);
+    public SwerveWheel frontRightSwerveWheel = new SwerveWheel("FR", -0.31, 0.27);
     public SwerveWheel backLeftSwerveWheel = new SwerveWheel("BL", -0.04, 0.46);
     public SwerveWheel backRightSwerveWheel = new SwerveWheel("BR",  -0.05, 0.45);
 

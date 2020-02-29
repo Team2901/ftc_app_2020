@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.teamcode.Gamepad.ImprovedGamepad;
@@ -15,6 +16,8 @@ import org.firstinspires.ftc.teamcode.Hardware.CompetitionSkystoneHardware;
 @SuppressLint("DefaultLocale")
 @TeleOp(name = "Competition Skystone", group = "BUILDER_SKYSTONE")
 public class BuilderSkystoneTeleOp extends OpMode {
+
+    public double wheelPowerRatio = .3;
 
     public CompetitionSkystoneHardware robot = new CompetitionSkystoneHardware();
     public ElapsedTime timer = new ElapsedTime();
@@ -70,6 +73,18 @@ public class BuilderSkystoneTeleOp extends OpMode {
         }
 
         telemetry.addData("Current Drive Mode", driveModeNames[mode]);
+
+        if (mode == ABSOLUTE_MODE || mode == RELATIVE_MODE) {
+            if(this.improvedGamepad1.left_bumper.isInitialPress()) {
+                wheelPowerRatio -= 0.05;
+            } else if(this.improvedGamepad1.right_bumper.isInitialPress()){
+                wheelPowerRatio += 0.05;
+            }
+
+            wheelPowerRatio = Range.clip(wheelPowerRatio, .05 , .5);
+        }
+
+        telemetry.addData("wheelPowerRatio", wheelPowerRatio);
 
         if (mode == ABSOLUTE_MODE) {
 
@@ -247,7 +262,7 @@ public class BuilderSkystoneTeleOp extends OpMode {
         if (pause) {
             return 0;
         } else {
-            return radius * robot.WHEEL_POWER_RATIO;
+            return radius * wheelPowerRatio;
         }
     }
 
