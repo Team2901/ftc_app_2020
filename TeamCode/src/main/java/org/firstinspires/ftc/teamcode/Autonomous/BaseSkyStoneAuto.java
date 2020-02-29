@@ -9,7 +9,6 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcontroller.internal.MotoLinearOpMode;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
-import org.firstinspires.ftc.teamcode.Hardware.BuilderSkystoneHardware;
 import org.firstinspires.ftc.teamcode.Hardware.CompetitionSkystoneHardware;
 import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
 
@@ -218,32 +217,7 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
         }
     }
 
-    public void quarrySkyStoneParkBridge(boolean isRed, boolean scanForSkystone) {
-
-        /**
-         *  Steps
-         *  0) initialize robot and web camera with TensorFlow, point wheels forward
-         *  1) optional: Move forwards/backwards until a skystone location is within 10% of the center of the camera's view
-         *  3) Open the jaw
-         *  4) Move forwards 2 feet towards the skystone
-         *  5) Close the jaw on the skystone
-         *  6) Move backwards 2 feet away from the skystone
-         *  8) Move back to where we were in step 1
-         *  9) Move forwards to in front of the waffle
-         *  10) deposit skystone on waffle
-         *  11) Park under the skybridge
-         */
-
-        this.moveInchesAbsolute(0, 5, .2);
-
-        double towardsQuarryAngle = isRed? 90 : -90;
-        double towardsFoundationAngle = isRed? -90 : 90;
-
-        robot.swerveStraightAbsolute(towardsQuarryAngle, 0);
-
-        double fLeftStart = Math.abs(robot.frontLeft.getCurrentPosition());
-
-        if (scanForSkystone) {
+    public void scanForSkystone(double towardsQuarryAngle) {
             //robot.crane.setPosition(1);
             //robot.wrist.setPosition(.5);
             // Save the robot's current position prior to search for a skystone
@@ -285,6 +259,35 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
             telemetry.addData("percent dif.", skyStoneCenterPercentDiff);
             telemetry.addData("percent offset", skyStoneOffsetPercentDiff);
             telemetry.update();
+    }
+
+    public void quarrySkyStoneParkBridge(boolean isRed, boolean scanForSkystone, boolean placeStoneOnWaffle) {
+
+        /**
+         *  Steps
+         *  0) initialize robot and web camera with TensorFlow, point wheels forward
+         *  1) optional: Move forwards/backwards until a skystone location is within 10% of the center of the camera's view
+         *  3) Open the jaw
+         *  4) Move forwards 2 feet towards the skystone
+         *  5) Close the jaw on the skystone
+         *  6) Move backwards 2 feet away from the skystone
+         *  8) Move back to where we were in step 1
+         *  9) Move forwards to in front of the waffle
+         *  10) deposit skystone on waffle
+         *  11) Park under the skybridge
+         */
+
+        this.moveInchesAbsolute(0, 5, .2);
+
+        double towardsQuarryAngle = isRed? 90 : -90;
+        double towardsFoundationAngle = isRed? -90 : 90;
+
+        robot.swerveStraightAbsolute(towardsQuarryAngle, 0);
+
+        double fLeftStart = Math.abs(robot.frontLeft.getCurrentPosition());
+
+        if (scanForSkystone) {
+            scanForSkystone(towardsQuarryAngle);
         }
 
         // Calculate in inches how far the robot has moved while finding the skystone
@@ -314,24 +317,37 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
 
         this.moveInchesAbsolute(towardsFoundationAngle, diffInches, .3);
 
-        //turnTo(0, .5, 5, 1000);
+        if (placeStoneOnWaffle) {
+            //turnTo(0, .5, 5, 1000);
 
-        // Step 9) Move forwards to in front of the waffle
-        this.moveInchesAbsolute(towardsFoundationAngle, 72, .3);
+            // Step 9) Move forwards to in front of the waffle
+            this.moveInchesAbsolute(towardsFoundationAngle, 72, .3);
 
-        // Step 10) deposit skystone on waffle
+            // Step 10) deposit skystone on waffle
 
-        //robot.moveLift(50 );
+            //robot.moveLift(50 );
 
-        moveInchesAbsolute(0, 28, .3);
+            moveInchesAbsolute(0, 28, .3);
 
-        robot.jaw.setPosition(robot.OPEN_JAW);
+            robot.jaw.setPosition(robot.OPEN_JAW);
 
-        moveInchesAbsolute(0, -22, .3);
+            moveInchesAbsolute(0, -22, .3);
 
-        // Step 11) Park under the skybridge
+            // Step 11) Park under the skybridge
 
-        moveInchesAbsolute(towardsQuarryAngle, 40, .3);
+            moveInchesAbsolute(towardsQuarryAngle, 40, .3);
+
+        } else {
+
+            // Step 9) Move forwards to foundation side
+            moveInchesAbsolute(towardsFoundationAngle, 48, .3);
+
+            // Step 10) deposit skystone on foundation
+            robot.jaw.setPosition(robot.OPEN_JAW);
+
+            // Step 11) Park under the skybridge
+            moveInchesAbsolute(towardsQuarryAngle, 36, .3);
+        }
 
         while (opModeIsActive()) {
         }

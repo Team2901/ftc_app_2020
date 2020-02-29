@@ -4,14 +4,14 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.Autonomous.BaseSkyStoneAuto;
 
-@Autonomous(name = "Red Quarry Stone Park Bridge (11pt)", group = "_RED")
-public class RedQuarryStoneParkBridge extends BaseSkyStoneAuto {
+@Autonomous(name = "Red Quarry Stone Park Bridge No Waffle (7pt)", group = "_RED")
+public class RedQuarryStoneParkBridgeNoWaffle extends BaseSkyStoneAuto {
 
     @Override
     public void runOpMode() throws InterruptedException {
 
         init(false, false, null);
         waitForStart();
-        quarrySkyStoneParkBridge(true, false, true);
+        quarrySkyStoneParkBridge(true, false, false);
     }
 }

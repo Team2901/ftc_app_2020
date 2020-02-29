@@ -537,11 +537,11 @@ public class BaseSkyStoneHardware {
 
         double dAngleForward = getNormalizedAngle(goal - start);
         double targetAngleForward = dAngleForward + start;
-        boolean forwardPossible = (swerveWheel.hardMinWheelAngle <= targetAngleForward && targetAngleForward <= swerveWheel.hardMaxWheelAngle);
+        boolean forwardPossible = (swerveWheel.minWheelAngle <= targetAngleForward && targetAngleForward <= swerveWheel.maxWheelAngle);
 
         double dAngleBackward = getNormalizedAngle(dAngleForward + 180);
         double targetAngleBackward = dAngleBackward + start;
-        boolean backwardPossible = (swerveWheel.hardMinWheelAngle <= targetAngleBackward && targetAngleBackward <= swerveWheel.hardMaxWheelAngle);
+        boolean backwardPossible = (swerveWheel.minWheelAngle <= targetAngleBackward && targetAngleBackward <= swerveWheel.maxWheelAngle);
 
         boolean goForward;
 
@@ -574,11 +574,11 @@ public class BaseSkyStoneHardware {
 
         double dAngleForward = getNormalizedAngle(goal - start);
         double targetAngleForward = dAngleForward + start;
-        boolean forwardPossible = (swerveWheel.hardMinWheelAngle <= targetAngleForward && targetAngleForward <= swerveWheel.hardMaxWheelAngle);
+        boolean forwardPossible = (swerveWheel.minWheelAngle <= targetAngleForward && targetAngleForward <= swerveWheel.maxWheelAngle);
 
         double dAngleBackward = getNormalizedAngle(dAngleForward + 180);
         double targetAngleBackward = dAngleBackward + start;
-        boolean backwardPossible = (swerveWheel.hardMinWheelAngle <= targetAngleBackward && targetAngleBackward <= swerveWheel.hardMaxWheelAngle);
+        boolean backwardPossible = (swerveWheel.minWheelAngle <= targetAngleBackward && targetAngleBackward <= swerveWheel.maxWheelAngle);
 
         boolean goForward;
 
