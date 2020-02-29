@@ -216,13 +216,12 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
         }
     }
 
-    public void quarrySkyStoneParkBridge(boolean isRed) {
+    public void quarrySkyStoneParkBridge(boolean isRed, boolean scanForSkystone) {
 
         /**
          *  Steps
          *  0) initialize robot and web camera with TensorFlow, point wheels forward
-         *  1) Move forwards/backwards until a skystone location is within 10% of the center of the camera's view
-         *  2) Turn to face the skystone
+         *  1) optional: Move forwards/backwards until a skystone location is within 10% of the center of the camera's view
          *  3) Open the jaw
          *  4) Move forwards 2 feet towards the skystone
          *  5) Close the jaw on the skystone
@@ -237,54 +236,59 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
 
         double towardsQuarryAngle = isRed? 90 : -90;
         double towardsFoundationAngle = isRed? -90 : 90;
+
         robot.swerveStraightAbsolute(towardsQuarryAngle, 0);
-        //robot.crane.setPosition(1);
-        //robot.wrist.setPosition(.5);
-        // Save the robot's current position prior to search for a skystone
-        robot.setWheelMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        robot.setWheelMotorMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
         double fLeftStart = Math.abs(robot.frontLeft.getCurrentPosition());
 
-        // Step 1) Move forwards/backwards until a skystone location is within 10% of the center of the camera's view
-        Float skyStoneCenterPercentDiff = findSkyStone();
-        Float skyStoneOffsetPercentDiff = skyStoneCenterPercentDiff == null ? null : skyStoneCenterPercentDiff + 45;
+        if (scanForSkystone) {
+            //robot.crane.setPosition(1);
+            //robot.wrist.setPosition(.5);
+            // Save the robot's current position prior to search for a skystone
+            robot.setWheelMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            robot.setWheelMotorMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        while (skyStoneOffsetPercentDiff == null /* don't see skystone yet */
-                || Math.abs(skyStoneOffsetPercentDiff) > CONFIDENCE_PERCENTAGE /* overshot or undershot */) {
-            telemetry.addData("loop is running", "");
+            // Step 1) Move forwards/backwards until a skystone location is within 10% of the center of the camera's view
+            Float skyStoneCenterPercentDiff = findSkyStone();
+            Float skyStoneOffsetPercentDiff = skyStoneCenterPercentDiff == null ? null : skyStoneCenterPercentDiff + 45;
+
+            while (skyStoneOffsetPercentDiff == null /* don't see skystone yet */
+                    || Math.abs(skyStoneOffsetPercentDiff) > CONFIDENCE_PERCENTAGE /* overshot or undershot */) {
+                telemetry.addData("loop is running", "");
+                telemetry.addData("percent dif.", skyStoneCenterPercentDiff);
+                telemetry.addData("percent offset", skyStoneOffsetPercentDiff);
+                telemetry.update();
+
+                if (skyStoneOffsetPercentDiff == null) {
+                    // If we don't see a skystone: Move forwards
+                    robot.swerveStraightAbsolute(towardsQuarryAngle, 0.2);
+                } else if (skyStoneOffsetPercentDiff < 0) {
+                    // If the skystone is to the left: Move backwards
+                    robot.swerveStraightAbsolute(towardsQuarryAngle, 0.3);
+                } else {
+                    // If the skystone is to the right: Move forwards
+                    robot.swerveStraightAbsolute(towardsQuarryAngle, -0.3);
+                }
+
+                // Update the skystone location
+                skyStoneCenterPercentDiff = findSkyStone();
+                skyStoneOffsetPercentDiff = skyStoneCenterPercentDiff == null ? null : skyStoneCenterPercentDiff + 45;
+            }
+
+            robot.swerveStraightAbsolute(0, 0);
+
+            turnTo(0, .5, 5, 1000);
+
+            telemetry.addData("out of loop", "");
             telemetry.addData("percent dif.", skyStoneCenterPercentDiff);
             telemetry.addData("percent offset", skyStoneOffsetPercentDiff);
             telemetry.update();
-
-            if (skyStoneOffsetPercentDiff == null) {
-                // If we don't see a skystone: Move forwards
-                robot.swerveStraightAbsolute(towardsQuarryAngle, 0.2);
-            } else if (skyStoneOffsetPercentDiff < 0) {
-                // If the skystone is to the left: Move backwards
-                robot.swerveStraightAbsolute(towardsQuarryAngle, 0.3);
-            } else {
-                // If the skystone is to the right: Move forwards
-                robot.swerveStraightAbsolute(towardsQuarryAngle, -0.3);
-            }
-
-            // Update the skystone location
-            skyStoneCenterPercentDiff = findSkyStone();
-            skyStoneOffsetPercentDiff = skyStoneCenterPercentDiff == null ? null : skyStoneCenterPercentDiff + 45;
         }
 
-        robot.swerveStraightAbsolute(0, 0);
-
-        turnTo(0, .5, 5, 1000);
-
-        telemetry.addData("out of loop", "");
-        telemetry.addData("percent dif.", skyStoneCenterPercentDiff);
-        telemetry.addData("percent offset", skyStoneOffsetPercentDiff);
-        telemetry.update();
         // Calculate in inches how far the robot has moved while finding the skystone
         double fLeftEnd = Math.abs(robot.frontLeft.getCurrentPosition());
         double diff = Math.abs(fLeftEnd - fLeftStart);
         double diffInches = diff / robot.inchesToEncoder;
-
 
         // Step 2) Turn to face the skystone
         //turnTo(0, .2);
@@ -331,7 +335,7 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
         }
     }
 
-    public void init(boolean initWebCam, boolean setLiftServos){
+    public void init(boolean initWebCam, boolean setLiftServos, String message){
         robot.init(hardwareMap);
 
         if(initWebCam){
@@ -347,6 +351,10 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
 
         // Step 0) Point wheels forward
         robot.swerveStraightAbsolute(0, 0);
+
+        if (message != null) {
+            telemetry.addData(">", message);
+        }
 
         telemetry.addData(">", "Press Play to start op mode");
         telemetry.update();
