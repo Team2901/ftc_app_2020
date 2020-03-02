@@ -234,9 +234,9 @@ public class BuilderSkystoneTeleOp extends OpMode {
 
         //JAW CONTROL
         if (gamepad2.a) {
-            robot.jaw.setPosition(robot.jaw.getPosition() + .01);
+            robot.jaw.setPosition(robot.jaw.getPosition() + .05);
         } else if (gamepad2.b) {
-            robot.jaw.setPosition(robot.jaw.getPosition() - .01);
+            robot.jaw.setPosition(robot.jaw.getPosition() - .05);
         }
 
         //Waffle Grabber

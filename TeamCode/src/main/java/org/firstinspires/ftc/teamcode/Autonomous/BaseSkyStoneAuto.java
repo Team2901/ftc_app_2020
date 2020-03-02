@@ -380,6 +380,11 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
 
     public void park(int forwardInches, double directionAngle){
         this.moveInchesAbsolute(0.0, forwardInches, .2);
+
+        robot.wait(1000, this);
+        robot.swerveStraight(directionAngle, 0);
+
+        robot.wait(1000, this);
         this.moveInchesAbsolute(directionAngle,24, .2);
     }
 }

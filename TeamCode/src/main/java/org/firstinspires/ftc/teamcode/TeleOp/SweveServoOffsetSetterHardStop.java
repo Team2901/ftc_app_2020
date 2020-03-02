@@ -28,9 +28,11 @@ public class SweveServoOffsetSetterHardStop extends OpMode {
     @Override
     public void init() {
         impGamepad = new ImprovedGamepad(this.gamepad1, this.timer, "GP1");
-        impGamepad2 = new ImprovedGamepad(this.gamepad1, this.timer, "GP2");
+        impGamepad2 = new ImprovedGamepad(this.gamepad2, this.timer, "GP2");
 
         robot.init(hardwareMap);
+
+        robot.swerveStraight(0,0);
 
         telemetry.update();
     }

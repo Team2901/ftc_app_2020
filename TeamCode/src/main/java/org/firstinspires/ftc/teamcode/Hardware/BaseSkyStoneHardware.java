@@ -378,7 +378,7 @@ public class BaseSkyStoneHardware {
         List<Double> values = new ArrayList<>();
         values.add(frontLeftSwerveWheel.offset);
         values.add(frontRightSwerveWheel.offset);
-        values.add(backRightSwerveWheel.offset);
+        values.add(backLeftSwerveWheel.offset);
         values.add(backRightSwerveWheel.offset);
 
         try {
