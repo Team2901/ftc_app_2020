@@ -87,6 +87,7 @@ public class LEDBlinkinSample extends OpMode {
 
         display = telemetry.addData("Display Kind: ", displayKind.toString());
         patternName = telemetry.addData("Pattern: ", pattern.toString());
+        telemetry.addData("Blinkin Value", RevBlinkinLedDriver.BlinkinPattern.valueOf(String.valueOf(pattern)));
 
         ledCycleDeadline = new Deadline(LED_PERIOD, TimeUnit.SECONDS);
         gamepadRateLimit = new Deadline(GAMEPAD_LOCKOUT, TimeUnit.MILLISECONDS);
