@@ -1,8 +1,9 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 
-import Autonomous;
+
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 // This is our Duckinator helper function.
-public class Duckinator extends Autonomous {
-
+@Autonomous (name = "Duckinator")
+public class Duckinator{
 }
