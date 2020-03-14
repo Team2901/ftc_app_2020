@@ -27,7 +27,7 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
  * THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
-package org.firstinspires.ftc.teamcode.NewProgrammers;
+package org.firstinspires.ftc.teamcode.TeleOp;
 
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -49,8 +49,8 @@ import java.util.concurrent.TimeUnit;
  *
  * Displays the first pattern upon init.
  */
-@TeleOp(name="BlinkinExample")
-public class LEDBlinkinSample extends OpMode {
+@TeleOp(name="TestLEDBlinkin")
+public class TestLEDBlinkin extends OpMode {
 
     /*
      * Change the pattern every 10 seconds in AUTO mode.
@@ -82,13 +82,11 @@ public class LEDBlinkinSample extends OpMode {
         displayKind = DisplayKind.AUTO;
 
         blinkinLedDriver = hardwareMap.get(RevBlinkinLedDriver.class, "blinkin");
-        pattern = RevBlinkinLedDriver.BlinkinPattern.HOT_PINK;
+        pattern = RevBlinkinLedDriver.BlinkinPattern.RAINBOW_RAINBOW_PALETTE;
         blinkinLedDriver.setPattern(pattern);
 
         display = telemetry.addData("Display Kind: ", displayKind.toString());
         patternName = telemetry.addData("Pattern: ", pattern.toString());
-        telemetry.addData("Blinkin Value", RevBlinkinLedDriver.BlinkinPattern.valueOf(String.valueOf(pattern)));
-        telemetry.update();
 
         ledCycleDeadline = new Deadline(LED_PERIOD, TimeUnit.SECONDS);
         gamepadRateLimit = new Deadline(GAMEPAD_LOCKOUT, TimeUnit.MILLISECONDS);
@@ -97,11 +95,6 @@ public class LEDBlinkinSample extends OpMode {
     @Override
     public void loop()
     {
-        display = telemetry.addData("Display Kind: ", displayKind.toString());
-        patternName = telemetry.addData("Pattern: ", pattern.toString());
-        telemetry.addData("Blinkin Value", RevBlinkinLedDriver.BlinkinPattern.valueOf(String.valueOf(pattern)));
-        telemetry.update();
-
         handleGamepad();
 
         if (displayKind == DisplayKind.AUTO) {
