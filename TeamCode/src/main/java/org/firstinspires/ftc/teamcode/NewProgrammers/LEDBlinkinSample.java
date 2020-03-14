@@ -82,12 +82,13 @@ public class LEDBlinkinSample extends OpMode {
         displayKind = DisplayKind.AUTO;
 
         blinkinLedDriver = hardwareMap.get(RevBlinkinLedDriver.class, "blinkin");
-        pattern = RevBlinkinLedDriver.BlinkinPattern.RAINBOW_RAINBOW_PALETTE;
+        pattern = RevBlinkinLedDriver.BlinkinPattern.HOT_PINK;
         blinkinLedDriver.setPattern(pattern);
 
         display = telemetry.addData("Display Kind: ", displayKind.toString());
         patternName = telemetry.addData("Pattern: ", pattern.toString());
         telemetry.addData("Blinkin Value", RevBlinkinLedDriver.BlinkinPattern.valueOf(String.valueOf(pattern)));
+        telemetry.update();
 
         ledCycleDeadline = new Deadline(LED_PERIOD, TimeUnit.SECONDS);
         gamepadRateLimit = new Deadline(GAMEPAD_LOCKOUT, TimeUnit.MILLISECONDS);
@@ -96,6 +97,11 @@ public class LEDBlinkinSample extends OpMode {
     @Override
     public void loop()
     {
+        display = telemetry.addData("Display Kind: ", displayKind.toString());
+        patternName = telemetry.addData("Pattern: ", pattern.toString());
+        telemetry.addData("Blinkin Value", RevBlinkinLedDriver.BlinkinPattern.valueOf(String.valueOf(pattern)));
+        telemetry.update();
+
         handleGamepad();
 
         if (displayKind == DisplayKind.AUTO) {
