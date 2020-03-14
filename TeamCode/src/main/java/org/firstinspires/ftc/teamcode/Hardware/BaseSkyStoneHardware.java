@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
+import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.AnalogInput;
@@ -33,7 +34,7 @@ public class BaseSkyStoneHardware {
 
     String CONFIG_FILENAME = "servo_offset_config.txt";
     String CONFIG_MIN_MAX_FILENAME = "servo_min_max_values_config.txt";
-    String CONFIG_POTENTIOMETER_FILENAME = "servo_potentiometer_values_config.txt";
+    String  CONFIG_POTENTIOMETER_FILENAME = "servo_potentiometer_values_config.txt";
 
     String CONFIG_FILENAME_FL = "servo_offset_hard_fl_config.txt";
     String CONFIG_FILENAME_BL = "servo_offset_hard_bl_config.txt";
@@ -207,6 +208,8 @@ public class BaseSkyStoneHardware {
     AnalogInput blPotentiometer;
     AnalogInput brPotentiometer;
 
+    RevBlinkinLedDriver blinkinLedDriver;
+
     //Sensors and Things
     public BNO055IMU imu;
     public IntegratingGyroscope gyroscope;
@@ -251,6 +254,9 @@ public class BaseSkyStoneHardware {
 
         // crane is skipping, dont move it on init
         //crane.setPosition(.05);
+
+        blinkinLedDriver = hardwareMap.get(RevBlinkinLedDriver.class, "blinkin");
+        blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.VIOLET);
 
         // setting up the gyroscope
         imu = hardwareMap.get(BNO055IMU.class, "imu");
