@@ -22,6 +22,23 @@ public class ExemplaryBlinkinLED {
         SHOT,
         STROBE,
         SOLID;
+
+        private static TeamColorPattern[] elements = values();
+
+        public static TeamColorPattern fromNumber(int number)
+        {
+            return elements[number % elements.length];
+        }
+
+        public TeamColorPattern next()
+        {
+            return elements[(this.ordinal() + 1) % elements.length];
+        }
+
+        public TeamColorPattern previous()
+        {
+            return elements[(this.ordinal() - 1) < 0 ? elements.length - 1 : this.ordinal() - 1];
+        }
     }
 
     public void init(HardwareMap hardwareMap, String deviceName) {
