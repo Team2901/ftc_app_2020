@@ -68,6 +68,7 @@ public class BaseSkyStoneHardware {
     public double servoMaxAngle;
     public Servo leftGrabber;
     public Servo rightGrabber;
+    public ExemplaryBlinkinLED blinkinLED;
 
     public static final String TFOD_MODEL_ASSET = "Skystone.tflite";
     public static final String LABEL_BUTTER = "Stone";
@@ -255,8 +256,9 @@ public class BaseSkyStoneHardware {
         // crane is skipping, dont move it on init
         //crane.setPosition(.05);
 
-        blinkinLedDriver = hardwareMap.get(RevBlinkinLedDriver.class, "blinkin");
-        blinkinLedDriver.setPattern(RevBlinkinLedDriver.BlinkinPattern.VIOLET);
+       blinkinLED = new ExemplaryBlinkinLED();
+       blinkinLED.init(hardwareMap,"LED");
+       blinkinLED.setTeamPattern(ExemplaryBlinkinLED.TeamColorPattern.SOLID);
 
         // setting up the gyroscope
         imu = hardwareMap.get(BNO055IMU.class, "imu");

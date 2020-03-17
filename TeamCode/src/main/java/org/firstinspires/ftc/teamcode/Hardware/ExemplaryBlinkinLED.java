@@ -20,14 +20,21 @@ public class ExemplaryBlinkinLED {
         BREATH_SLOW,
         BREATH_FAST,
         SHOT,
-        STROBE;
+        STROBE,
+        SOLID;
     }
 
     public void init(HardwareMap hardwareMap, String deviceName) {
         blinkinLedDriver = hardwareMap.get(RevBlinkinLedDriver.class, deviceName);
     }
 
-    public RevBlinkinLedDriver.BlinkinPattern getTeamPattern(TeamColorPattern teamColorPattern) {
+    public void setTeamPattern (TeamColorPattern teamColorPattern) {
+        RevBlinkinLedDriver.BlinkinPattern blinkinPattern = calcTeamPattern(teamColorPattern);
+        blinkinLedDriver.setPattern(blinkinPattern);
+
+    }
+
+    public RevBlinkinLedDriver.BlinkinPattern calcTeamPattern(TeamColorPattern teamColorPattern) {
         switch (teamColorPattern) {
             case END_TO_END_BLEND_TO_BLACK:
                 return color == 1 ? CP1_END_TO_END_BLEND_TO_BLACK : CP2_END_TO_END_BLEND_TO_BLACK;
@@ -49,6 +56,8 @@ public class ExemplaryBlinkinLED {
                 return color == 1 ? CP1_SHOT : CP2_SHOT;
             case STROBE:
                 return color == 1 ? CP1_STROBE : CP2_STROBE;
+            case SOLID:
+                return color ==1 ? AQUA : RED;
             default:
                 return RAINBOW_OCEAN_PALETTE;
         }
