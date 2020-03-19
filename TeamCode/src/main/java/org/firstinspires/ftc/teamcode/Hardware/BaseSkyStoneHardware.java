@@ -257,8 +257,8 @@ public class BaseSkyStoneHardware {
         //crane.setPosition(.05);
 
        blinkinLED = new ExemplaryBlinkinLED();
-       blinkinLED.init(hardwareMap,"LED");
-       blinkinLED.setTeamPattern(ExemplaryBlinkinLED.TeamColorPattern.SOLID);
+        blinkinLED.init(hardwareMap,"LED");
+        blinkinLED.setTeamPattern(ExemplaryBlinkinLED.TeamColorPattern.SOLID);
 
         // setting up the gyroscope
         imu = hardwareMap.get(BNO055IMU.class, "imu");
