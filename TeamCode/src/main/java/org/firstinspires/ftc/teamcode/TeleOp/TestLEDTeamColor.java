@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Gamepad.ImprovedGamepad;
 import org.firstinspires.ftc.teamcode.Hardware.CompetitionSkystoneHardware;
+import org.firstinspires.ftc.teamcode.Hardware.ExemplaryBlinkinLED;
 
 @TeleOp(name = "Test LED Team Color", group = "TEST")
 public class TestLEDTeamColor extends OpMode {
@@ -16,7 +17,7 @@ public class TestLEDTeamColor extends OpMode {
     @Override
     public void init() {
         robot.init(hardwareMap);
-
+        robot.blinkinLED.setTeamPattern(ExemplaryBlinkinLED.TeamColorPattern.SOLID);
         telemetry.update();
     }
 
