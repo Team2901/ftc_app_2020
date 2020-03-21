@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode.Autonomous.RedTeam;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.Autonomous.RedSkyStoneAuto;
-
 @Autonomous(name = "Red Quarry Stone Park Bridge No Waffle (7pt)", group = "_RED")
 public class RedQuarryStoneParkBridgeNoWaffle extends RedSkyStoneAuto {
 

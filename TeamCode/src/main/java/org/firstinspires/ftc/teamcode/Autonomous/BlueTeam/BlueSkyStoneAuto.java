@@ -1,5 +1,6 @@
-package org.firstinspires.ftc.teamcode.Autonomous;
+package org.firstinspires.ftc.teamcode.Autonomous.BlueTeam;
 
+import org.firstinspires.ftc.teamcode.Autonomous.BaseSkyStoneAuto;
 import org.firstinspires.ftc.teamcode.Hardware.ExemplaryBlinkinLED;
 
 public class BlueSkyStoneAuto extends BaseSkyStoneAuto {
