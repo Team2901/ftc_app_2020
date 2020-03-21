@@ -40,6 +40,27 @@ public class FileUtilities {
         }
     }
 
+    public static void writeConfigFile(String filename, Object value) throws IOException{
+        final File teamDir = new File(Environment.getExternalStorageDirectory(), TEAM_FOLDER_NAME);
+        boolean newDir = teamDir.mkdirs();
+        final File file = new File(teamDir, filename);
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            writer.write(value.toString());
+        }
+    }
+
+    public static int readTeamColor(String filename) throws IOException{
+        final File teamDir = new File(Environment.getExternalStorageDirectory(), TEAM_FOLDER_NAME);
+        boolean newDir = teamDir.mkdirs();
+        final File file = new File(teamDir, filename);
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            String line = reader.readLine();
+            return Integer.valueOf(line);
+        }
+    }
+
     public static List<String> readConfigFile(String filename) throws IOException {
 
         final File teamDir = new File(Environment.getExternalStorageDirectory(), TEAM_FOLDER_NAME);

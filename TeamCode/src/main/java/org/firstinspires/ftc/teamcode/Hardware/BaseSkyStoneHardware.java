@@ -27,6 +27,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.firstinspires.ftc.teamcode.Hardware.ExemplaryBlinkinLED.LED_ERROR;
+import static org.firstinspires.ftc.teamcode.Hardware.ExemplaryBlinkinLED.LED_RED;
 import static org.firstinspires.ftc.teamcode.Utility.AngleUtilities.getNormalizedAngle;
 
 @SuppressLint("DefaultLocale")
@@ -35,6 +37,7 @@ public class BaseSkyStoneHardware {
     String CONFIG_FILENAME = "servo_offset_config.txt";
     String CONFIG_MIN_MAX_FILENAME = "servo_min_max_values_config.txt";
     String  CONFIG_POTENTIOMETER_FILENAME = "servo_potentiometer_values_config.txt";
+    String  CONFIG_TEAM_COLOR_FILENAME = "team_color_config.txt";
 
     String CONFIG_FILENAME_FL = "servo_offset_hard_fl_config.txt";
     String CONFIG_FILENAME_BL = "servo_offset_hard_bl_config.txt";
@@ -393,6 +396,23 @@ public class BaseSkyStoneHardware {
             return String.format("Error writing to file. %s", e.getMessage());
         }
         return null;
+    }
+
+    public String writeTeamColor(){
+        try{
+            FileUtilities.writeConfigFile(CONFIG_TEAM_COLOR_FILENAME, this.blinkinLED.color);
+        } catch (Exception e){
+            return String.format("Error writing to file. %s", e.getMessage());
+        }
+        return null;
+    }
+
+    public int readTeamColor(){
+        try {
+            return FileUtilities.readTeamColor(CONFIG_TEAM_COLOR_FILENAME);
+        } catch (Exception e){
+            return LED_ERROR;
+        }
     }
 
     public String writePotentiometerTargets() {

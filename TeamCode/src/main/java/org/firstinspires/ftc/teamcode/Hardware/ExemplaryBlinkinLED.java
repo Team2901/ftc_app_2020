@@ -10,6 +10,7 @@ public class ExemplaryBlinkinLED {
 
     public static final int LED_BLUE = 1;
     public static final int LED_RED = 2;
+    public static final int LED_ERROR = -1;
 
     RevBlinkinLedDriver blinkinLedDriver;
     public int color = 1;
@@ -56,6 +57,9 @@ public class ExemplaryBlinkinLED {
     }
 
     public RevBlinkinLedDriver.BlinkinPattern calcTeamPattern(TeamColorPattern teamColorPattern) {
+        if(color == LED_ERROR){
+            return WHITE;
+        }
         switch (teamColorPattern) {
             case END_TO_END_BLEND_TO_BLACK:
                 return color == 1 ? CP1_END_TO_END_BLEND_TO_BLACK : CP2_END_TO_END_BLEND_TO_BLACK;
