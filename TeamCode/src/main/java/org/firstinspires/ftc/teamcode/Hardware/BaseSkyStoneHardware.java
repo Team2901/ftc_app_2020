@@ -46,7 +46,7 @@ public class BaseSkyStoneHardware {
     final double basePowerRatio = 0.025;
     final double stallPowerRatio = 0; // 0.05;
 
-    public static final boolean USE_POTENTIOMETER = true;
+    public static final boolean USE_POTENTIOMETER = false;
 
     public static final double GRABBER_MIN = 0.25;
     public static final double GRABBER_MAX = 0.75;
