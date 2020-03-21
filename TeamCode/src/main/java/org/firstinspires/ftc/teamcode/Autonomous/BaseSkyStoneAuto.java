@@ -10,6 +10,7 @@ import org.firstinspires.ftc.robotcontroller.internal.MotoLinearOpMode;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.Hardware.CompetitionSkystoneHardware;
+import org.firstinspires.ftc.teamcode.Hardware.ExemplaryBlinkinLED;
 import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
 
 import java.util.List;
@@ -353,10 +354,10 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
         }
     }
 
-    public void init(boolean initWebCam, boolean setLiftServos, String message){
+    public void init(boolean initWebCam, boolean setLiftServos, String message, boolean driveWheels, int teamColor) {
         robot.init(hardwareMap);
 
-        if(initWebCam){
+        if (initWebCam) {
             // Init web camera with TensorFlow
             initAndActivateWebCameraWithTensorFlow();
         }
@@ -368,7 +369,12 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
         }
 
         // Step 0) Point wheels forward
-        robot.swerveStraightAbsolute(0, 0);
+        if (driveWheels) {
+            robot.swerveStraightAbsolute(0, 0);
+        }
+
+        robot.blinkinLED.color = teamColor;
+        robot.blinkinLED.setTeamPattern(ExemplaryBlinkinLED.TeamColorPattern.SOLID);
 
         if (message != null) {
             telemetry.addData(">", message);

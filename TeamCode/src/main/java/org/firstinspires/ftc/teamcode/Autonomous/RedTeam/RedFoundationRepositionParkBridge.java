@@ -13,7 +13,7 @@ public class RedFoundationRepositionParkBridge extends RedSkyStoneAuto {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        init(false, false, null);
+        init(false, false, null, true, 2);
         waitForStart();
         platformParkInner(Color.RED);
     }

@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.Autonomous.RedSkyStoneAuto;
 public class RedFoundationParkWall extends RedSkyStoneAuto {
     @Override
     public void runOpMode() throws InterruptedException {
-        init(false, false, null);
+        init(false, false, null, true, 2);
         waitForStart();
         this.park(SAFE_WALL_DISTANCE_INCHES,90);
     }

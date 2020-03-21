@@ -7,6 +7,10 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import static com.qualcomm.hardware.rev.RevBlinkinLedDriver.BlinkinPattern.*;
 
 public class ExemplaryBlinkinLED {
+
+    public static final int LED_BLUE = 1;
+    public static final int LED_RED = 2;
+
     RevBlinkinLedDriver blinkinLedDriver;
     public int color = 1;
 

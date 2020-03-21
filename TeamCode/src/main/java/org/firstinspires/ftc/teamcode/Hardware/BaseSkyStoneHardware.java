@@ -222,47 +222,45 @@ public class BaseSkyStoneHardware {
     public void init(HardwareMap hwMap) {
         hardwareMap = hwMap;
 
-        //Inititialize all Motors
-        frontLeft = hardwareMap.dcMotor.get("frontLeft");
-        frontRight = hardwareMap.dcMotor.get("frontRight");
-        backLeft = hardwareMap.dcMotor.get("backLeft");
-        backRight = hardwareMap.dcMotor.get("backRight");
+        try {
+            //Inititialize all Motors
+            frontLeft = hardwareMap.dcMotor.get("frontLeft");
+            frontRight = hardwareMap.dcMotor.get("frontRight");
+            backLeft = hardwareMap.dcMotor.get("backLeft");
+            backRight = hardwareMap.dcMotor.get("backRight");
 
-        setWheelMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        setWheelMotorMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            setWheelMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            setWheelMotorMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        leftGrabber = hwMap.get(Servo.class, "leftGrabber");
-        rightGrabber = hwMap.get(Servo.class, "rightGrabber");
-        leftGrabber.setDirection(Servo.Direction.REVERSE);
+            leftGrabber = hwMap.get(Servo.class, "leftGrabber");
+            rightGrabber = hwMap.get(Servo.class, "rightGrabber");
+            leftGrabber.setDirection(Servo.Direction.REVERSE);
 
-        lift = hardwareMap.dcMotor.get("lift");
-        lift.setDirection(DcMotorSimple.Direction.REVERSE);
-        //lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            lift = hardwareMap.dcMotor.get("lift");
+            lift.setDirection(DcMotorSimple.Direction.REVERSE);
+            //lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-        //Initialize all servos
-        servoFrontLeft = hardwareMap.servo.get("servoFrontLeft");
-        servoFrontRight = hardwareMap.servo.get("servoFrontRight");
-        servoBackLeft = hardwareMap.servo.get("servoBackLeft");
-        servoBackRight = hardwareMap.servo.get("servoBackRight");
+            //Initialize all servos
+            servoFrontLeft = hardwareMap.servo.get("servoFrontLeft");
+            servoFrontRight = hardwareMap.servo.get("servoFrontRight");
+            servoBackLeft = hardwareMap.servo.get("servoBackLeft");
+            servoBackRight = hardwareMap.servo.get("servoBackRight");
 
-        crane = hardwareMap.servo.get("crane");
-        jaw = hardwareMap.servo.get("jaw");
+            crane = hardwareMap.servo.get("crane");
+            jaw = hardwareMap.servo.get("jaw");
 
-        jaw.setDirection(Servo.Direction.REVERSE);
+            jaw.setDirection(Servo.Direction.REVERSE);
 
-        wrist = hardwareMap.servo.get("wrist");
+            wrist = hardwareMap.servo.get("wrist");
 
-        // crane is skipping, dont move it on init
-        //crane.setPosition(.05);
-
+            // crane is skipping, dont move it on init
+            //crane.setPosition(.05);
+        } catch(Exception e){}
        blinkinLED = new ExemplaryBlinkinLED();
         blinkinLED.init(hardwareMap,"LED");
         blinkinLED.setTeamPattern(ExemplaryBlinkinLED.TeamColorPattern.SOLID);
 
-        // setting up the gyroscope
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-        gyroscope = (IntegratingGyroscope) imu;
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
@@ -276,6 +274,8 @@ public class BaseSkyStoneHardware {
         imu.initialize(parameters);
 
         readServoMinMaxValues();
+        // setting up the gyroscope
+        gyroscope = (IntegratingGyroscope) imu;
         readServoOffsets();
 
         frontLeftSwerveWheel.potentiometerTarget = 2.899;

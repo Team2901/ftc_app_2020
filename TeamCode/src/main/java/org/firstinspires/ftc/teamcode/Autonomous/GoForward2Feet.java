@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 public class GoForward2Feet extends BaseSkyStoneAuto {
     @Override
     public void runOpMode() throws InterruptedException {
-        init(false, false, null);
+        init(false, false, null, true, 2);
         robot.crane.setPosition(0);
         waitForStart();
         robot.crane.setPosition(.5);

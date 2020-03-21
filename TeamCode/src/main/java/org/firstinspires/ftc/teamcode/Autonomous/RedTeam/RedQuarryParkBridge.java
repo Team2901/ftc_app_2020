@@ -9,7 +9,7 @@ public class RedQuarryParkBridge extends RedSkyStoneAuto {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        init(false, false, null);
+        init(false, false, null, true, 2);
         waitForStart();
         this.park (PARK_BRIDGE_INCHES, -90);
     }
