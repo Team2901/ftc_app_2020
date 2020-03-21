@@ -257,7 +257,7 @@ public class BaseSkyStoneHardware {
             // crane is skipping, dont move it on init
             //crane.setPosition(.05);
         } catch(Exception e){}
-       blinkinLED = new ExemplaryBlinkinLED();
+        blinkinLED = new ExemplaryBlinkinLED();
         blinkinLED.init(hardwareMap,"LED");
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
