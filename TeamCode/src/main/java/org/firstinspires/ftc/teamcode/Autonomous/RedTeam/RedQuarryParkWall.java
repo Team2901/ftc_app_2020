@@ -2,11 +2,11 @@ package org.firstinspires.ftc.teamcode.Autonomous.RedTeam;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-import org.firstinspires.ftc.teamcode.Autonomous.BaseSkyStoneAuto;
+import org.firstinspires.ftc.teamcode.Autonomous.RedSkyStoneAuto;
 
 
 @Autonomous(name = "Red Quarry Park Wall (5pt)", group = "_RED")
-public class RedQuarryParkWall extends BaseSkyStoneAuto {
+public class RedQuarryParkWall extends RedSkyStoneAuto {
 
     @Override
     public void runOpMode() throws InterruptedException {

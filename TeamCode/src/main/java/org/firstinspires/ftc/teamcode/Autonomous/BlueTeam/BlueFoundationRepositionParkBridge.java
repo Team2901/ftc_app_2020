@@ -5,11 +5,11 @@ import android.graphics.Color;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
-import org.firstinspires.ftc.teamcode.Autonomous.BaseSkyStoneAuto;
+import org.firstinspires.ftc.teamcode.Autonomous.BlueSkyStoneAuto;
 
 @Disabled
 @Autonomous(name = "Blue Foundation Reposition Park Bridge", group = "_BLUE")
-public class BlueFoundationRepositionParkBridge extends BaseSkyStoneAuto {
+public class BlueFoundationRepositionParkBridge extends BlueSkyStoneAuto {
 
     @Override
     public void runOpMode() throws InterruptedException {
