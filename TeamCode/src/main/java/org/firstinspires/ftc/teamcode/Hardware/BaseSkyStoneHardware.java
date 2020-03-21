@@ -259,8 +259,6 @@ public class BaseSkyStoneHardware {
         } catch(Exception e){}
        blinkinLED = new ExemplaryBlinkinLED();
         blinkinLED.init(hardwareMap,"LED");
-        blinkinLED.setTeamPattern(ExemplaryBlinkinLED.TeamColorPattern.SOLID);
-
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
