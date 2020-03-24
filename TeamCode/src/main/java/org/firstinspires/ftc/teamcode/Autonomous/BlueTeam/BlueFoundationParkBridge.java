@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 public class BlueFoundationParkBridge extends BlueSkyStoneAuto {
     @Override
     public void runOpMode() throws InterruptedException {
-        init(false, false, null, true, 2);
+        init(false, true, true, true, false, null);
         waitForStart();
         this.park (PARK_BRIDGE_INCHES, -90);
     }

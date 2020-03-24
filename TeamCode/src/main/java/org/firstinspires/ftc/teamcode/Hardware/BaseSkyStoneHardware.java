@@ -35,7 +35,7 @@ public class BaseSkyStoneHardware {
     public static final String CONFIG_MIN_MAX_FILENAME = "servo_min_max_values_config.txt";
     public static final String CONFIG_POTENTIOMETER_FILENAME = "servo_potentiometer_values_config.txt";
     public static final String CONFIG_TEAM_COLOR_FILENAME = "team_color_config.txt";
-    
+
     public static final double BASE_POWER_RATIO = 0.025;
     public static final double STALL_POWER_RATIO = 0;
 
@@ -64,7 +64,7 @@ public class BaseSkyStoneHardware {
 
     public HardwareMap hardwareMap;
 
-    public ExemplaryBlinkinLED blinkinLED;
+    public ExemplaryBlinkinLED blinkinLED = new ExemplaryBlinkinLED();
 
     //Made for a 4 wheel swerve drive system
     public DcMotor frontLeft;
@@ -208,45 +208,40 @@ public class BaseSkyStoneHardware {
     public void init(HardwareMap hwMap) {
         hardwareMap = hwMap;
 
-        try {
-            //Inititialize all Motors
-            frontLeft = hardwareMap.dcMotor.get("frontLeft");
-            frontRight = hardwareMap.dcMotor.get("frontRight");
-            backLeft = hardwareMap.dcMotor.get("backLeft");
-            backRight = hardwareMap.dcMotor.get("backRight");
+        //Inititialize all Motors
+        frontLeft = hardwareMap.dcMotor.get("frontLeft");
+        frontRight = hardwareMap.dcMotor.get("frontRight");
+        backLeft = hardwareMap.dcMotor.get("backLeft");
+        backRight = hardwareMap.dcMotor.get("backRight");
 
-            setWheelMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            setWheelMotorMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        setWheelMotorMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        setWheelMotorMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-            leftGrabber = hwMap.get(Servo.class, "leftGrabber");
-            rightGrabber = hwMap.get(Servo.class, "rightGrabber");
-            leftGrabber.setDirection(Servo.Direction.REVERSE);
+        leftGrabber = hwMap.get(Servo.class, "leftGrabber");
+        rightGrabber = hwMap.get(Servo.class, "rightGrabber");
+        leftGrabber.setDirection(Servo.Direction.REVERSE);
 
-            lift = hardwareMap.dcMotor.get("lift");
-            lift.setDirection(DcMotorSimple.Direction.REVERSE);
-            //lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        lift = hardwareMap.dcMotor.get("lift");
+        lift.setDirection(DcMotorSimple.Direction.REVERSE);
+        //lift.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        lift.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
 
-            //Initialize all servos
-            servoFrontLeft = hardwareMap.servo.get("servoFrontLeft");
-            servoFrontRight = hardwareMap.servo.get("servoFrontRight");
-            servoBackLeft = hardwareMap.servo.get("servoBackLeft");
-            servoBackRight = hardwareMap.servo.get("servoBackRight");
+        //Initialize all servos
+        servoFrontLeft = hardwareMap.servo.get("servoFrontLeft");
+        servoFrontRight = hardwareMap.servo.get("servoFrontRight");
+        servoBackLeft = hardwareMap.servo.get("servoBackLeft");
+        servoBackRight = hardwareMap.servo.get("servoBackRight");
 
-            crane = hardwareMap.servo.get("crane");
-            jaw = hardwareMap.servo.get("jaw");
+        crane = hardwareMap.servo.get("crane");
+        jaw = hardwareMap.servo.get("jaw");
 
-            jaw.setDirection(Servo.Direction.REVERSE);
+        jaw.setDirection(Servo.Direction.REVERSE);
 
-            wrist = hardwareMap.servo.get("wrist");
+        wrist = hardwareMap.servo.get("wrist");
 
-            // crane is skipping, dont move it on init
-            //crane.setPosition(.05);
-        } catch(Exception e) {}
+        // crane is skipping, dont move it on init
+        //crane.setPosition(.05);
 
-        blinkinLED = new ExemplaryBlinkinLED();
-        blinkinLED.init(hardwareMap,"LED");
-        blinkinLED.color = this.readTeamColor();
 
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
@@ -295,6 +290,11 @@ public class BaseSkyStoneHardware {
 
     public String initWebCamera(HardwareMap hardwareMap) {
         return webCamera.initWebCamera(hardwareMap, WEB_CAM_NAME,.8, TFOD_MODEL_ASSET, LABEL_BUTTER, LABEL_SKY_BUTTER);
+    }
+
+    public void initBlinkinLED(HardwareMap hardwareMap){
+        blinkinLED.init(hardwareMap,"LED");
+        blinkinLED.color = this.readTeamColor();
     }
 
     public String writeTeamColor(){
@@ -673,9 +673,9 @@ public class BaseSkyStoneHardware {
         if (forwardOnly) {
             // If flag is set, only move thr servos if none of the wheels will go backwards (else it will mess up run to position)
             setServoPosition = Math.signum(frontLeftSwerveWheel.modifier) == Math.signum(fLTargetAndModifier[1])
-            && Math.signum(frontRightSwerveWheel.modifier) == Math.signum(fRTargetAndModifier[1])
-            && Math.signum(backLeftSwerveWheel.modifier) == Math.signum(bLTargetAndModifier[1])
-            && Math.signum(backRightSwerveWheel.modifier) == Math.signum(bRTargetAndModifier[1]);
+                    && Math.signum(frontRightSwerveWheel.modifier) == Math.signum(fRTargetAndModifier[1])
+                    && Math.signum(backLeftSwerveWheel.modifier) == Math.signum(bLTargetAndModifier[1])
+                    && Math.signum(backRightSwerveWheel.modifier) == Math.signum(bRTargetAndModifier[1]);
         } else {
             // If flag isn't set, it is always ok to set the servos such that the wheels go backwards
             setServoPosition = true;

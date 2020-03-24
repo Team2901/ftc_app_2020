@@ -52,8 +52,10 @@ public class ExemplaryBlinkinLED {
 
     public void setTeamPattern (TeamColorPattern teamColorPattern) {
         RevBlinkinLedDriver.BlinkinPattern blinkinPattern = calcTeamPattern(teamColorPattern);
-        blinkinLedDriver.setPattern(blinkinPattern);
 
+        if(blinkinLedDriver != null){
+            blinkinLedDriver.setPattern(blinkinPattern);
+        }
     }
 
     public RevBlinkinLedDriver.BlinkinPattern calcTeamPattern(TeamColorPattern teamColorPattern) {

@@ -354,23 +354,28 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
         }
     }
 
-    public void init(boolean initWebCam, boolean setLiftServos, String message, boolean driveWheels, int teamColor) {
-        robot.init(hardwareMap);
-
+    public void init(boolean initWebCam, boolean initRobot, boolean initBlinkinLED, boolean driveWheels, boolean setLiftServos, String message, int teamColor) {
         if (initWebCam) {
             // Init web camera with TensorFlow
             initAndActivateWebCameraWithTensorFlow();
         }
 
-        if (setLiftServos) {
-            robot.crane.setPosition(0);
-            robot.wrist.setPosition(.5);
-            robot.setGrabberPositition(.7, .84);
+        if(initRobot){
+            robot.init(hardwareMap);
+
+            if (setLiftServos) {
+                robot.crane.setPosition(0);
+                robot.wrist.setPosition(.5);
+                robot.setGrabberPositition(.7, .84);
+            }
+
+            if (driveWheels) {
+                robot.swerveStraightAbsolute(0, 0);
+            }
         }
 
-        // Step 0) Point wheels forward
-        if (driveWheels) {
-            robot.swerveStraightAbsolute(0, 0);
+        if(initBlinkinLED){
+            robot.initBlinkinLED(hardwareMap);
         }
 
         robot.blinkinLED.color = teamColor;

@@ -30,23 +30,20 @@ public class CompetitionSkystoneHardware extends BaseSkyStoneHardware{
     public void init(HardwareMap hwMap) {
 
         super.init(hwMap);
-        try {
-            servoFrontLeft.setDirection(Servo.Direction.REVERSE);
-            servoFrontRight.setDirection(Servo.Direction.REVERSE);
-            servoBackLeft.setDirection(Servo.Direction.REVERSE);
-            servoBackRight.setDirection(Servo.Direction.REVERSE);
+        servoFrontLeft.setDirection(Servo.Direction.REVERSE);
+        servoFrontRight.setDirection(Servo.Direction.REVERSE);
+        servoBackLeft.setDirection(Servo.Direction.REVERSE);
+        servoBackRight.setDirection(Servo.Direction.REVERSE);
 
+        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
 
-            frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-            frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-            backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-            backRight.setDirection(DcMotorSimple.Direction.REVERSE);
-
-            frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-            backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        }catch (Exception e){}
+        frontLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        frontRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        backRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
 
         //Platform Grabber
