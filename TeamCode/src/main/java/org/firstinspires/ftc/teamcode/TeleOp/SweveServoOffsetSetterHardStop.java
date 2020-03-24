@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.TeleOp;
 
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -143,12 +142,12 @@ public class SweveServoOffsetSetterHardStop extends OpMode {
 
         super.stop();
 
-        String errorMsg = robot.writeOffsets();
+        String errorMsg = robot.writeServoOffsets();
         if (errorMsg != null) {
             throw new RuntimeException(errorMsg);
         }
 
-        errorMsg = robot.writeHardMinMaxValues();
+        errorMsg = robot.writeServoHardMinMaxValues();
 
         if (errorMsg != null) {
             throw new RuntimeException(errorMsg);

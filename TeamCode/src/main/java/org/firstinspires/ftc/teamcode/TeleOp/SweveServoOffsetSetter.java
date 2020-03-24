@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.Gamepad.ImprovedGamepad;
-import org.firstinspires.ftc.teamcode.Hardware.BuilderSkystoneHardware;
 import org.firstinspires.ftc.teamcode.Hardware.CompetitionSkystoneHardware;
 
 @TeleOp(name = "Servo Swerve Offset Setter", group = "TEST")
@@ -85,7 +84,7 @@ public class SweveServoOffsetSetter extends OpMode {
 
         super.stop();
 
-        String errorMsg = robot.writeOffsets();
+        String errorMsg = robot.writeServoOffsets();
         if (errorMsg != null) {
             throw new RuntimeException(errorMsg);
         }
