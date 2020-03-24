@@ -11,7 +11,6 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.Velocity;
 import org.firstinspires.ftc.teamcode.Gamepad.ImprovedGamepad;
-import org.firstinspires.ftc.teamcode.Hardware.BuilderSkystoneHardware;
 import org.firstinspires.ftc.teamcode.Hardware.CompetitionSkystoneHardware;
 
 @SuppressLint("DefaultLocale")
@@ -288,7 +287,7 @@ public class BuilderSkystoneTeleOp extends OpMode {
 
         super.stop();
 
-        String errorMsg = robot.writeOffsets();
+        String errorMsg = robot.writeServoOffsets();
         if (errorMsg != null) {
             throw new RuntimeException(errorMsg);
         }
