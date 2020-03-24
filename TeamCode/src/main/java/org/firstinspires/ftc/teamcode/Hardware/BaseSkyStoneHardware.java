@@ -49,6 +49,10 @@ public class BaseSkyStoneHardware {
     public static final double OPEN_JAW = 0;
     public static final double CLOSED_JAW = 1;
 
+    public static final String TFOD_MODEL_ASSET = "Skystone.tflite";
+    public static final String LABEL_BUTTER = "Stone";
+    public static final String LABEL_SKY_BUTTER = "Skystone";
+
     public static final String WEB_CAM_NAME = "Webcam 1";
 
     public final double inchesToEncoder;
@@ -57,13 +61,49 @@ public class BaseSkyStoneHardware {
     public double lengthOfRobot;
     public double turnAngle;
     public double servoMaxAngle;
-    public Servo leftGrabber;
-    public Servo rightGrabber;
+
+    public HardwareMap hardwareMap;
+
     public ExemplaryBlinkinLED blinkinLED;
 
-    public static final String TFOD_MODEL_ASSET = "Skystone.tflite";
-    public static final String LABEL_BUTTER = "Stone";
-    public static final String LABEL_SKY_BUTTER = "Skystone";
+    //Made for a 4 wheel swerve drive system
+    public DcMotor frontLeft;
+    public DcMotor frontRight;
+    public DcMotor backLeft;
+    public DcMotor backRight;
+
+    public DcMotor lift;
+
+    //Steering servo for their respective motor
+    public Servo servoFrontLeft;
+    public Servo servoFrontRight;
+    public Servo servoBackLeft;
+    public Servo servoBackRight;
+
+    public Servo crane;
+    public Servo jaw;
+    public Servo wrist;
+    public Servo leftGrabber;
+    public Servo rightGrabber;
+
+    AnalogInput flPotentiometer;
+    AnalogInput frPotentiometer;
+    AnalogInput blPotentiometer;
+    AnalogInput brPotentiometer;
+
+    //Sensors and Things
+    public BNO055IMU imu;
+    public IntegratingGyroscope gyroscope;
+    public double offset = 0;
+
+    public TensorFlowCamera webCamera = new TensorFlowCamera();
+
+    public SwerveWheel frontLeftSwerveWheel = new SwerveWheel("FL");
+    public SwerveWheel frontRightSwerveWheel = new SwerveWheel("FR");
+    public SwerveWheel backLeftSwerveWheel = new SwerveWheel("BL");
+    public SwerveWheel backRightSwerveWheel = new SwerveWheel("BR");
+
+    public SwerveWheel[] swerveWheels = {frontLeftSwerveWheel, frontRightSwerveWheel, backLeftSwerveWheel, backRightSwerveWheel};
 
     public BaseSkyStoneHardware(double widthOfRobot,
                                 double lengthOfRobot,
@@ -164,46 +204,6 @@ public class BaseSkyStoneHardware {
             return String.format("%s angle: %.2f, mod: %d, pos: %.2f, offset: %.2f encoder: %d", name, targetAngle, modifier, wheelAngleToServoPosition(), offset, motor.getCurrentPosition());
         }
     }
-
-    public SwerveWheel frontLeftSwerveWheel = new SwerveWheel("FL");
-    public SwerveWheel frontRightSwerveWheel = new SwerveWheel("FR");
-    public SwerveWheel backLeftSwerveWheel = new SwerveWheel("BL");
-    public SwerveWheel backRightSwerveWheel = new SwerveWheel("BR");
-
-    public SwerveWheel[] swerveWheels = {frontLeftSwerveWheel, frontRightSwerveWheel, backLeftSwerveWheel, backRightSwerveWheel};
-
-    public HardwareMap hardwareMap;
-
-    //Made for a 4 wheel swerve drive system
-    public DcMotor frontLeft;
-    public DcMotor frontRight;
-    public DcMotor backLeft;
-    public DcMotor backRight;
-
-    public DcMotor lift;
-
-    //Steering servo for their respective motor
-    public Servo servoFrontLeft;
-    public Servo servoFrontRight;
-    public Servo servoBackLeft;
-    public Servo servoBackRight;
-
-    public Servo crane;
-    public Servo jaw;
-    public Servo wrist;
-
-    AnalogInput flPotentiometer;
-    AnalogInput frPotentiometer;
-    AnalogInput blPotentiometer;
-    AnalogInput brPotentiometer;
-
-    //Sensors and Things
-    public BNO055IMU imu;
-    public IntegratingGyroscope gyroscope;
-
-    public double offset = 0;
-
-    public TensorFlowCamera webCamera = new TensorFlowCamera();
 
     public void init(HardwareMap hwMap) {
         hardwareMap = hwMap;
