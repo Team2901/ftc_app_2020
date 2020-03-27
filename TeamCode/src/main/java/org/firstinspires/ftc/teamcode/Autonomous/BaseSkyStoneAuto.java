@@ -379,7 +379,7 @@ public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
         }
 
         robot.blinkinLED.color = teamColor;
-        robot.blinkinLED.setTeamPattern(ExemplaryBlinkinLED.TeamColorPattern.SOLID);
+        robot.blinkinLED.setTeamPattern(ExemplaryBlinkinLED.TeamColorPattern.LARSON_SCANNER);
         robot.writeTeamColor();
         if (message != null) {
             telemetry.addData(">", message);
