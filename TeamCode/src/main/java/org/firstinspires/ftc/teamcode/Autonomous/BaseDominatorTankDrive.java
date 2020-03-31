@@ -15,15 +15,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
  * Created with Team 6183's Duckinator 3000
  */
 
-@Autonomous(name = "DominatorTankDrive", group = "DuckSquad")
-public class DominatorTankDrive extends LinearOpMode {
+public abstract class BaseDominatorTankDrive extends LinearOpMode implements Dominator{
     private DcMotor leftWheel;
     private DcMotor rightWheel;
     private int globalAngle;
-    BNO055IMU imu;
-    Orientation lastAngles = new Orientation();
+
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void initRobot() {
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.mode = BNO055IMU.SensorMode.IMU;
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
@@ -32,34 +30,26 @@ public class DominatorTankDrive extends LinearOpMode {
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
         // make sure the imu gyro is calibrated before continuing.
-        while (!isStopRequested() && !imu.isGyroCalibrated())
-        {
+        while (!isStopRequested() && !imu.isGyroCalibrated()) {
             sleep(50);
             idle();
         }
         leftWheel = hardwareMap.dcMotor.get("leftWheel");
         rightWheel = hardwareMap.dcMotor.get("rightWheel");
         rightWheel.setDirection(DcMotor.Direction.REVERSE);
-        waitForStart();
-        if (opModeIsActive()){
-            goForward(3071);
-            rotate(-89);
-            goForward(8531);
-            rotate(90);
-            goForward(1007);
-            rotate(179);
-            goForward(1988);
-            rotate(-89);
-            goForward(4203);
-
-        }
     }
+
+    BNO055IMU imu;
+    Orientation lastAngles = new Orientation();
+
+    @Override
     public void motorReset() {
         leftWheel.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightWheel.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         rightWheel.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftWheel.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
+    @Override
     public void powerBusy() {
         leftWheel.setPower(0.5);
         rightWheel.setPower(0.5);
@@ -67,17 +57,20 @@ public class DominatorTankDrive extends LinearOpMode {
         leftWheel.setPower(0);
         rightWheel.setPower(0);
     }
+    @Override
     public void goForward(int gofront){
         motorReset();
         rightWheel.setTargetPosition(gofront);
         leftWheel.setTargetPosition(gofront);
         powerBusy();
     }
-    private void resetAngle() {
+    @Override
+    public void resetAngle() {
         lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         globalAngle = 0;
     }
-    private double getAngle() {
+    @Override
+    public double getAngle() {
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
         if (deltaAngle < -180)
@@ -88,7 +81,8 @@ public class DominatorTankDrive extends LinearOpMode {
         lastAngles = angles;
         return globalAngle;
     }
-    private void rotate(int degrees) {
+    @Override
+    public void rotate(int degrees) {
         double leftPower, rightPower;
         resetAngle();
         if (degrees < 0) {   // turn right.
