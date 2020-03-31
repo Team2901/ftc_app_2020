@@ -14,8 +14,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
  * Created with Team 6183's Duckinator 3000
  */
 
-@Autonomous(name = "DominatorXDrive", group = "DuckSquad")
-public class DominatorXDrive extends LinearOpMode {
+public class BaseDominatorMechanum extends LinearOpMode {
     private DcMotor fl;
     private DcMotor fr;
     private DcMotor bl;
@@ -81,10 +80,10 @@ public class DominatorXDrive extends LinearOpMode {
     }
     public void goForward(int gofront){
         motorReset();
-        fl.setTargetPosition((int)Math.round(1.2*gofront));
-        fr.setTargetPosition((int)Math.round(-1.2*gofront));
-        bl.setTargetPosition((int)Math.round(1.2*gofront));
-        br.setTargetPosition((int)Math.round(1.2*gofront ));
+        fl.setTargetPosition((int)Math.round(1.0*gofront));
+        fr.setTargetPosition((int)Math.round(-1.0*gofront));
+        bl.setTargetPosition((int)Math.round(1.0*gofront));
+        br.setTargetPosition((int)Math.round(1.0*gofront ));
         powerBusy();
     }
     private void resetAngle() {
