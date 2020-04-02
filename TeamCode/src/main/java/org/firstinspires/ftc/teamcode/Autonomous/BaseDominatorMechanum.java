@@ -15,12 +15,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
  */
 
 /*
- * HOMEWORK TODO
- *
- * 1) Implement the Dominator interface
- * 2) Create a subclass called DominatorMachanum9000 that does the moves in this classes runOpMode
+ * Supplied by duckinator; teams can implement individual subclasses
  */
-public class BaseDominatorMechanum extends LinearOpMode {
+public abstract class BaseDominatorMechanum extends LinearOpMode implements Dominator{
     private DcMotor fl;
     private DcMotor fr;
     private DcMotor bl;
@@ -30,8 +27,9 @@ public class BaseDominatorMechanum extends LinearOpMode {
     private int globalAngle;
     BNO055IMU imu;
     Orientation lastAngles = new Orientation();
+
     @Override
-    public void runOpMode() throws InterruptedException {
+    public void initRobot() {
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
         parameters.mode = BNO055IMU.SensorMode.IMU;
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
@@ -49,20 +47,8 @@ public class BaseDominatorMechanum extends LinearOpMode {
         fr = hardwareMap.dcMotor.get("fr");
         bl = hardwareMap.dcMotor.get("bl");
         br = hardwareMap.dcMotor.get("br");
-        waitForStart();
-        if (opModeIsActive()){
-            goForward(3071);
-            rotate(-89);
-            goForward(8531);
-            rotate(90);
-            goForward(1007);
-            rotate(179);
-            goForward(1988);
-            rotate(-89);
-            goForward(4203);
-
-        }
     }
+
     public void motorReset() {
         fl.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         fr.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -92,11 +78,11 @@ public class BaseDominatorMechanum extends LinearOpMode {
         br.setTargetPosition((int)Math.round(1.0*gofront ));
         powerBusy();
     }
-    private void resetAngle() {
+    public void resetAngle() {
         lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         globalAngle = 0;
     }
-    private double getAngle() {
+    public double getAngle() {
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
         if (deltaAngle < -180)
@@ -107,7 +93,7 @@ public class BaseDominatorMechanum extends LinearOpMode {
         lastAngles = angles;
         return globalAngle;
     }
-    private void rotate(int degrees) {
+    public void rotate(int degrees) {
         double flp, frp, blp, brp;
         resetAngle();
         if (degrees < 0) {   // turn right.
@@ -140,4 +126,6 @@ public class BaseDominatorMechanum extends LinearOpMode {
         sleep(1000);
         resetAngle();
     }
+
+
 }
