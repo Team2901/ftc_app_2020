@@ -14,8 +14,12 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
  * Created with Team 6183's Duckinator 3000
  */
 
+<<<<<<< HEAD:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/BaseDominatorXDrive.java
 @Autonomous(name = "BaseDominatorXDrive", group = "DuckSquad")
 public abstract class BaseDominatorXDrive extends LinearOpMode {
+=======
+public class BaseDominatorXDrive extends LinearOpMode {
+>>>>>>> 4c5985b6ca3281bb65a259128457daec1a027139:TeamCode/src/main/java/org/firstinspires/ftc/teamcode/Autonomous/BaseDominatorXDrive.java
     private DcMotor fl;
     private DcMotor fr;
     private DcMotor bl;
