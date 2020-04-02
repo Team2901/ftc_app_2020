@@ -4,25 +4,14 @@ import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+
 @Autonomous (name = "DominatorXDrive9000", group = "DuckSquad")
-public abstract class DominatorXDrive9000 extends BaseDominatorXDrive implements Dominator {
+public abstract class DominatorXDrive9000 extends BaseDominatorXDrive {
     @Override
     public void runOpMode() throws InterruptedException {
-        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
-        parameters.mode = BNO055IMU.SensorMode.IMU;
-        parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
-        parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
-        parameters.loggingEnabled = false;
-        //imu = hardwareMap.get(BNO055IMU.class, "imu");
-        //imu.initialize(parameters);
-        // make sure the imu gyro is calibrated before continuing.
-        //while (!isStopRequested() && !imu.isGyroCalibrated())
-        {
-            sleep(50);
-            idle();
-        }
+        initRobot();
         waitForStart();
-        if (opModeIsActive()){
+        if (opModeIsActive()) {
             goForward(3071);
             rotate(-89);
             goForward(8531);
