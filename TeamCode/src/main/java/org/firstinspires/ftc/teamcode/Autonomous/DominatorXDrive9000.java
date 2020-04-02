@@ -13,10 +13,10 @@ public abstract class DominatorXDrive9000 extends BaseDominatorXDrive implements
         parameters.angleUnit = BNO055IMU.AngleUnit.DEGREES;
         parameters.accelUnit = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
         parameters.loggingEnabled = false;
-        imu = hardwareMap.get(BNO055IMU.class, "imu");
-        imu.initialize(parameters);
+        //imu = hardwareMap.get(BNO055IMU.class, "imu");
+        //imu.initialize(parameters);
         // make sure the imu gyro is calibrated before continuing.
-        while (!isStopRequested() && !imu.isGyroCalibrated())
+        //while (!isStopRequested() && !imu.isGyroCalibrated())
         {
             sleep(50);
             idle();

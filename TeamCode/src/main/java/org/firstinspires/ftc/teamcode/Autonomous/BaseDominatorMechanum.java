@@ -14,8 +14,13 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
  * Created with Team 6183's Duckinator 3000
  */
 
-@Autonomous(name = "DominatorMechanum", group = "DuckSquad")
-public class DominatorMechanum extends LinearOpMode {
+/*
+ * HOMEWORK TODO
+ *
+ * 1) Implement the Dominator interface
+ * 2) Create a subclass called DominatorMachanum9000 that does the moves in this classes runOpMode
+ */
+public class BaseDominatorMechanum extends LinearOpMode {
     private DcMotor fl;
     private DcMotor fr;
     private DcMotor bl;
