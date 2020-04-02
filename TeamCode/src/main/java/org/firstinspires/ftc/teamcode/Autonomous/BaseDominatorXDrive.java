@@ -15,16 +15,15 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
  */
 
 @Autonomous(name = "BaseDominatorXDrive", group = "DuckSquad")
-public abstract class BaseDominatorXDrive extends LinearOpMode {
+public abstract class BaseDominatorXDrive extends LinearOpMode implements Dominator {
     private DcMotor fl;
     private DcMotor fr;
     private DcMotor bl;
     private DcMotor br;
-    //holonomic encoder counts are slightly innacurate and need to be tested due to different amounts of force and friction on the wheels depending on what you get
-//please adjust personally to each program, we have accounted for slight slippage but just please make sure
     private int globalAngle;
     BNO055IMU imu;
     Orientation lastAngles = new Orientation();
+
     @Override
     public void runOpMode() throws InterruptedException {
         BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
@@ -87,11 +86,11 @@ public abstract class BaseDominatorXDrive extends LinearOpMode {
         br.setTargetPosition((int)Math.round(1.2*gofront ));
         powerBusy();
     }
-    private void resetAngle() {
+    public void resetAngle() {
         lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         globalAngle = 0;
     }
-    private double getAngle() {
+    public double getAngle() {
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         double deltaAngle = angles.firstAngle - lastAngles.firstAngle;
         if (deltaAngle < -180)
@@ -102,7 +101,7 @@ public abstract class BaseDominatorXDrive extends LinearOpMode {
         lastAngles = angles;
         return globalAngle;
     }
-    private void rotate(int degrees) {
+    public void rotate(int degrees) {
         double flp, frp, blp, brp;
         resetAngle();
         if (degrees < 0) {   // turn right.
