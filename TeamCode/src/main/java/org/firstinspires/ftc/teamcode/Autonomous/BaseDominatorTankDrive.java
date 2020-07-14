@@ -1,8 +1,6 @@
 package org.firstinspires.ftc.teamcode.Autonomous;
 
-
 import com.qualcomm.hardware.bosch.BNO055IMU;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -11,14 +9,14 @@ import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
-/**
- * Created with Team 6183's Duckinator 3000
- */
+public abstract class BaseDominatorTankDrive extends LinearOpMode implements Dominator {
 
-public abstract class BaseDominatorTankDrive extends LinearOpMode implements Dominator{
     private DcMotor leftWheel;
     private DcMotor rightWheel;
+    private BNO055IMU imu;
+
     private int globalAngle;
+    private Orientation lastAngles = new Orientation();
 
     @Override
     public void initRobot() {
@@ -39,9 +37,6 @@ public abstract class BaseDominatorTankDrive extends LinearOpMode implements Dom
         rightWheel.setDirection(DcMotor.Direction.REVERSE);
     }
 
-    BNO055IMU imu;
-    Orientation lastAngles = new Orientation();
-
     @Override
     public void motorReset() {
         leftWheel.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -49,26 +44,31 @@ public abstract class BaseDominatorTankDrive extends LinearOpMode implements Dom
         rightWheel.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         leftWheel.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     }
+
     @Override
     public void powerBusy() {
         leftWheel.setPower(0.5);
         rightWheel.setPower(0.5);
-        while ((rightWheel.isBusy() && leftWheel.isBusy())){}
+        while ((rightWheel.isBusy() && leftWheel.isBusy())) {
+        }
         leftWheel.setPower(0);
         rightWheel.setPower(0);
     }
+
     @Override
-    public void goForward(int gofront){
+    public void goForward(int gofront) {
         motorReset();
         rightWheel.setTargetPosition(gofront);
         leftWheel.setTargetPosition(gofront);
         powerBusy();
     }
+
     @Override
     public void resetAngle() {
         lastAngles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         globalAngle = 0;
     }
+
     @Override
     public double getAngle() {
         Orientation angles = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
@@ -81,6 +81,7 @@ public abstract class BaseDominatorTankDrive extends LinearOpMode implements Dom
         lastAngles = angles;
         return globalAngle;
     }
+
     @Override
     public void rotate(int degrees) {
         double leftPower, rightPower;
@@ -88,19 +89,20 @@ public abstract class BaseDominatorTankDrive extends LinearOpMode implements Dom
         if (degrees < 0) {   // turn right.
             leftPower = 0.5;
             rightPower = -0.5;
-        }
-        else if (degrees > 0) {   // turn left.
+        } else if (degrees > 0) {   // turn left.
             leftPower = -0.5;
             rightPower = 0.5;
-        }
-        else return;
+        } else return;
         leftWheel.setPower(leftPower);
         rightWheel.setPower(rightPower);
         if (degrees < 0) {//right
-            while (opModeIsActive() && getAngle() == 0) {}
-            while (opModeIsActive() && getAngle() > degrees) {}
+            while (opModeIsActive() && getAngle() == 0) {
+            }
+            while (opModeIsActive() && getAngle() > degrees) {
+            }
         } else {//left
-            while (opModeIsActive() && getAngle() < degrees) {}
+            while (opModeIsActive() && getAngle() < degrees) {
+            }
         }
         rightWheel.setPower(0);
         leftWheel.setPower(0);
