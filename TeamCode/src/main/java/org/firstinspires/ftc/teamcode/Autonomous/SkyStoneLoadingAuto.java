@@ -56,11 +56,7 @@ public class SkyStoneLoadingAuto extends LinearOpMode {
 
         initVuforia();
 
-        if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
-            initTfod();
-        } else {
-            telemetry.addData("Sorry!", "This device is not compatible with TFOD");
-        }
+        initTfod();
 
         if (tfod != null) {
             tfod.activate();
