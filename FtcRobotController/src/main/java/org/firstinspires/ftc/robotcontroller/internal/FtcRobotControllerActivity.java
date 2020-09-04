@@ -55,9 +55,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.view.ViewGroup;
 import android.webkit.WebView;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
@@ -175,73 +173,6 @@ public class FtcRobotControllerActivity extends Activity
   private static boolean permissionsValidated = false;
 
   private WifiDirectChannelChanger wifiDirectChannelChanger;
-
-    /////////////////////////////////////////////////////////
-
-    public static final int COLOR_BLUE = 0x5533ccff;
-    public static final int COLOR_GREEN = 0x5500ff00;
-    public static final int COLOR_PINK = 0x55ff3399;
-    public static final int COLOR_YELLOW = 0x55ffff00;
-    public static final int COLOR_WHITE = 0x55ffffff;
-
-
-    public void setupPreviewLayout(final int cameraMonitorViewIdParent, final LinearOpModeJewelCamera context) {
-      final View parentView = findViewById(cameraMonitorViewIdParent);
-      final View cameraView = ((ViewGroup) parentView).getChildAt(0);
-      final int cWidth = cameraView.getWidth();
-      final int cHeight = cameraView.getHeight();
-
-      setupPreviewLayout(cWidth, cHeight, context);
-    }
-
-    // ADDED FOR CAMERA!!!
-    public void setupPreviewLayout(final int cameraWidth, final int cameraHeight, final LinearOpModeJewelCamera context) {
-      runOnUiThread(new Runnable() {
-        @Override
-        public void run() {
-          FrameLayout previewLayout = (FrameLayout) findViewById(R.id.previewLayout);
-          ViewGroup.LayoutParams params = previewLayout.getLayoutParams();
-          params.width = cameraWidth;
-          params.height = cameraHeight;
-          previewLayout.setLayoutParams(params);
-
-          previewLayout.removeAllViews();
-
-          context.jewelRight = new JewelFinder(FtcRobotControllerActivity.this, COLOR_BLUE, "Right");
-          context.jewelMiddle = new JewelFinder(FtcRobotControllerActivity.this, COLOR_GREEN, "Middle");
-          context.jewelLeft = new JewelFinder(FtcRobotControllerActivity.this, COLOR_PINK, "Left");
-
-          previewLayout.addView(context.jewelLeft);
-          previewLayout.addView(context.jewelMiddle);
-          previewLayout.addView(context.jewelRight);
-
-          if (context.leftConfig != null) {
-            context.jewelLeft.moveTo(context.leftConfig, params.width, params.height);
-          }
-
-          if (context.leftConfig != null) {
-            context.jewelMiddle.moveTo(context.middleConfig, params.width, params.height);
-          }
-
-          if (context.rightConfig != null) {
-            context.jewelRight.moveTo(context.rightConfig, params.width, params.height);
-          }
-        }
-      });
-    }
-
-    public void removeJewelFinder() {
-      runOnUiThread(new Runnable() {
-        @Override
-        public void run() {
-          FrameLayout previewLayout = (FrameLayout) findViewById(R.id.previewLayout);
-          previewLayout.removeAllViews();
-        }
-      });
-    }
-
-    // END CAMERA ADD!!!
-    //////////////////////////////////////////////
 
   protected class RobotRestarter implements Restarter {
 
