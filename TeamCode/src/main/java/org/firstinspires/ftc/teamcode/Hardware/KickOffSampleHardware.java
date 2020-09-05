@@ -1,8 +1,16 @@
 package org.firstinspires.ftc.teamcode.Hardware;
 
+import com.qualcomm.hardware.bosch.BNO055IMU;
+import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
+import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
+import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
+import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
 
 public class KickOffSampleHardware {
 
@@ -31,27 +39,51 @@ public class KickOffSampleHardware {
     //Define the left and right motors as class variables
     public DcMotor leftDrive;
     public DcMotor rightDrive;
+
     //Define the servo
     public Servo armServo;
 
+    //Define the imu
+    public BNO055IMU imu;
+
     public void init(HardwareMap hardwareMap){
 
-        //initializing the left and right motors
+        // Initialize the left and right motors
         leftDrive = hardwareMap.dcMotor.get("left_drive");
         rightDrive = hardwareMap.dcMotor.get("right_drive");
-        //Initialize the servo
+
+        // Initialize the servo
         armServo = hardwareMap.servo.get("arm");
 
-        //setting motor directions
+        // Set motor directions
         leftDrive.setDirection(DcMotor.Direction.FORWARD);
         rightDrive.setDirection(DcMotor.Direction.REVERSE);
 
-        //stopping motors during initialization
+        // Stop motors during initialization
         leftDrive.setPower(0);
         rightDrive.setPower(0);
 
-        //setting motors up to run with encoders
+        // Set motors up to run with encoders
         leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+
+        BNO055IMU.Parameters parameters = new BNO055IMU.Parameters();
+        parameters.angleUnit           = BNO055IMU.AngleUnit.DEGREES;
+        parameters.accelUnit           = BNO055IMU.AccelUnit.METERS_PERSEC_PERSEC;
+        parameters.calibrationDataFile = "BNO055IMUCalibration.json"; // see the calibration sample opmode
+        parameters.loggingEnabled      = true;
+        parameters.loggingTag          = "IMU";
+        parameters.accelerationIntegrationAlgorithm = new JustLoggingAccelerationIntegrator();
+
+        // Initialize the imu with the parameters above
+        imu = hardwareMap.get(BNO055IMU.class, "imu");
+        imu.initialize(parameters);
+
+    }
+
+    public double getAngle() {
+        // Get the Z-angle from the imu (in degrees) and return it as a value from -180 to 180
+        Orientation orientation = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
+        return AngleUnit.normalizeDegrees(orientation.firstAngle);
     }
 }

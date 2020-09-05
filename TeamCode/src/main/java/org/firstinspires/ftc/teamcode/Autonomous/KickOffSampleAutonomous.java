@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Hardware.KickOffSampleHardware;
 
 @Autonomous(name = "Kick-off Sample Autonomous")
@@ -12,25 +13,10 @@ public class KickOffSampleAutonomous extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
-        // Initialize robot's hardware
         robot.init(this.hardwareMap);
-
-        // Make the robot wait for you to click start
         waitForStart();
-
-        // Move forwards 6 inches
-        moveInches(6);
-
-        robot.armServo.setPosition(.25);
-        sleep(1000);
-        robot.armServo.setPosition(.75);
     }
 
-    /**
-     * Moves robot forward given number of inches (or backwards if negative)
-     *
-     * @param inches number of inches to move by
-     */
     public void moveInches(double inches) {
         // Calculate the target position
         int ticks = (int) (inches * robot.TICKS_PER_INCH);
@@ -64,5 +50,61 @@ public class KickOffSampleAutonomous extends LinearOpMode {
         // Reset the motors to run using encoders
         robot.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    /**
+     * Turns the robot by the given turnAngle degrees
+     *
+     * @param turnAngle degrees to turn the robot by
+     */
+    public void turnByAngle(double turnAngle) {
+
+        // Get robot's start angle
+        double startAngle = robot.getAngle();
+
+        // Calculate the robot's end angle (Normalize to be between -180 and 180)
+        double targetAngle = AngleUnit.normalizeDegrees(startAngle + turnAngle);
+
+        // Determine which direction the robot needs to turn (counter-clockwise or clockwise)
+        int turnDirection;
+        if (turnAngle >= 0) {
+            // Turn counter-clockwise
+            turnDirection = 1;
+        } else {
+            // Turn clockwise
+            turnDirection = -1;
+        }
+
+        // Set the wheels to turn the correct direction
+        robot.leftDrive.setPower(-0.25 * turnDirection);
+        robot.rightDrive.setPower(0.25 * turnDirection);
+
+        double currentAngle = robot.getAngle();
+
+        if (turnDirection == 1) {
+            // If turning counter-clockwise: update currentAngle until it is at or greater than the targetAngle
+            while (AngleUnit.normalizeDegrees(currentAngle - targetAngle) < 0 && opModeIsActive()) {
+
+                telemetry.addData("Current Angle", currentAngle);
+                telemetry.addData("Target Angle", targetAngle);
+                telemetry.update();
+
+                currentAngle = robot.getAngle();
+            }
+        } else {
+            //  If turning clockwise: update currentAngle until it is at or less than the targetAngle
+            while (AngleUnit.normalizeDegrees(currentAngle - targetAngle) > 0 && opModeIsActive()) {
+
+                telemetry.addData("Current Angle", currentAngle);
+                telemetry.addData("Target Angle", targetAngle);
+                telemetry.update();
+
+                currentAngle = robot.getAngle();
+            }
+        }
+
+        // Stop the motors once we hit the targetAngle
+        robot.leftDrive.setPower(0);
+        robot.rightDrive.setPower(0);
     }
 }
