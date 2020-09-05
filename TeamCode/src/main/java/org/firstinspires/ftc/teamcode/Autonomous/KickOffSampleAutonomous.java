@@ -15,8 +15,28 @@ public class KickOffSampleAutonomous extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
         robot.init(this.hardwareMap);
         waitForStart();
+
+        // Move forwards 6 inches
+        moveInches(6);
+
+        // Make the servo "wave" 4 times
+        for (int i = 0; i < 4; i++) {
+            // Make servo move to first position
+            robot.armServo.setPosition(.25);
+            // Wait for servo to reach position
+            sleep(1000);
+            // Make servo move to second position
+            robot.armServo.setPosition(.75);
+            // Wait for servo to reach position
+            sleep(1000);
+        }
     }
 
+    /**
+     * Moves robot forward given number of inches (or backwards if negative)
+     *
+     * @param inches number of inches to move by
+     */
     public void moveInches(double inches) {
         // Calculate the target position
         int ticks = (int) (inches * robot.TICKS_PER_INCH);
