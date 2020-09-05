@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.Hardware;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 public class KickOffSampleHardware {
 
@@ -30,12 +31,16 @@ public class KickOffSampleHardware {
     //Define the left and right motors as class variables
     public DcMotor leftDrive;
     public DcMotor rightDrive;
+    //Define the servo
+    public Servo armServo;
 
     public void init(HardwareMap hardwareMap){
 
         //initializing the left and right motors
         leftDrive = hardwareMap.dcMotor.get("left_drive");
         rightDrive = hardwareMap.dcMotor.get("right_drive");
+        //Initialize the servo
+        armServo = hardwareMap.servo.get("arm");
 
         //setting motor directions
         leftDrive.setDirection(DcMotor.Direction.FORWARD);
