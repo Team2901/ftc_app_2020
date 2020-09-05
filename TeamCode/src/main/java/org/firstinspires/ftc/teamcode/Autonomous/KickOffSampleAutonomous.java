@@ -13,4 +13,9 @@ public class KickOffSampleAutonomous extends LinearOpMode {
         robot.init(this.hardwareMap);
         waitForStart();
     }
+    public void moveInches (double inches){
+        int ticks = (int) (inches * robot.TICKS_PER_INCH);
+        robot.leftDrive.setTargetPosition(robot.leftDrive.getCurrentPosition() + ticks);
+        robot.rightDrive.setTargetPosition(robot.rightDrive.getCurrentPosition() + ticks);
+    }
 }
