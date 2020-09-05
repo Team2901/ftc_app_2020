@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
  * Future output generated from duckinatorin response to clicking imput
  */
 
-@Autonomous(name = "DominatorTankDrive9000", group = "DuckSquad")
+@Autonomous(name = "DominatorMechanum9000", group = "DuckSquad")
 public class DominatorMechanum9000 extends BaseDominatorMechanum {
     @Override
     public void runOpMode() throws InterruptedException {

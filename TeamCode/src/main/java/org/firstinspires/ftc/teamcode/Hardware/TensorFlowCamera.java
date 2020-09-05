@@ -33,16 +33,10 @@ public class TensorFlowCamera extends BaseCamera {
                             final String... labels) {
 
         if (tfod == null && vuforia != null) {
-
-            if (ClassFactory.getInstance().canCreateTFObjectDetector()) {
-                TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+             TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
                 tfodParameters.minimumConfidence = minimumConfidence;
                 tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
                 tfod.loadModelFromAsset(assetName, labels);
-            } else {
-                errorMessage = "Failed to initialize Tensorflow. This device is not compatible with TFOD";
-                tfod = null;
-            }
         }
 
         return errorMessage;
