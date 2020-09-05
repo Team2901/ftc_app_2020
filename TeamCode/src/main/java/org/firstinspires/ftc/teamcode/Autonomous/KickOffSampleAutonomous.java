@@ -30,6 +30,9 @@ public class KickOffSampleAutonomous extends LinearOpMode {
             // Wait for servo to reach position
             sleep(1000);
         }
+
+        // Turn the robot 90 degrees (counter-clockwise)
+        turnByAngle(90);
     }
 
     /**
