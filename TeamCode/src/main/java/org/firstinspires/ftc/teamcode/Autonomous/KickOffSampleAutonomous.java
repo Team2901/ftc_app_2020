@@ -12,10 +12,21 @@ public class KickOffSampleAutonomous extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+        // Initialize robot's hardware
         robot.init(this.hardwareMap);
+
+        // Make the robot wait for you to click start
         waitForStart();
+
+        // Move forwards 6 inches
+        moveInches(6);
     }
 
+    /**
+     * Moves robot forward given number of inches (or backwards if negative)
+     *
+     * @param inches number of inches to move by
+     */
     public void moveInches(double inches) {
         // Calculate the target position
         int ticks = (int) (inches * robot.TICKS_PER_INCH);
