@@ -3,10 +3,11 @@ package org.firstinspires.ftc.teamcode.Autonomous;
 import android.annotation.SuppressLint;
 import android.graphics.Color;
 
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcontroller.internal.MotoLinearOpMode;
+
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.Hardware.CompetitionSkystoneHardware;
@@ -18,7 +19,7 @@ import java.util.List;
 import static org.firstinspires.ftc.teamcode.Hardware.BaseSkyStoneHardware.LABEL_SKY_BUTTER;
 
 @SuppressLint("DefaultLocale")
-public abstract class BaseSkyStoneAuto extends MotoLinearOpMode {
+public abstract class BaseSkyStoneAuto extends LinearOpMode {
 
     public static final int GO_TO_ANGLE_BUFFER = 7;
     public static final int SAFE_WALL_DISTANCE_INCHES = 2;
