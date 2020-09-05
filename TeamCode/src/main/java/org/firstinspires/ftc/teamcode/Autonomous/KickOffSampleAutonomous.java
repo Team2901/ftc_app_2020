@@ -20,6 +20,10 @@ public class KickOffSampleAutonomous extends LinearOpMode {
 
         // Move forwards 6 inches
         moveInches(6);
+
+        robot.armServo.setPosition(.25);
+        sleep(1000);
+        robot.armServo.setPosition(.75);
     }
 
     /**
