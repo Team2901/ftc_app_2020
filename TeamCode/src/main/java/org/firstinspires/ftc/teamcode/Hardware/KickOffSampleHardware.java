@@ -20,7 +20,7 @@ public class KickOffSampleHardware {
      */
     public static final double TICKS_PER_MOTOR_REV = 1140;
     //This is the ratio of the gears.
-    public static final double DRIVE_GEAR_RATIO = 1;
+    public static final double DRIVE_GEAR_RATIO = 2;
     /*
     To find the number of encoder ticks it takes to make the wheel go around once,
     you need to multiply the gear ratio by the motor tick count
