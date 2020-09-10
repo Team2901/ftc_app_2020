@@ -10,16 +10,19 @@ import org.firstinspires.ftc.teamcode.Hardware.KickOffSampleHardware;
 
 import java.util.List;
 
-import static org.firstinspires.ftc.robotcore.external.tfod.TfodSkyStone.LABEL_SKY_STONE;
-import static org.firstinspires.ftc.teamcode.Hardware.BaseSkyStoneHardware.LABEL_SKY_BUTTER;
-
 @Autonomous(name = "Kick-off Sample Autonomous")
 public class KickOffSampleAutonomous extends LinearOpMode {
     public KickOffSampleHardware robot = new KickOffSampleHardware();
 
     @Override
     public void runOpMode() throws InterruptedException {
+
         robot.init(this.hardwareMap);
+
+        robot.initTfod(this.hardwareMap);
+
+        robot.activateTfod();
+
         waitForStart();
 
         // Move forwards 6 inches
@@ -39,6 +42,15 @@ public class KickOffSampleAutonomous extends LinearOpMode {
 
         // Turn the robot 90 degrees (counter-clockwise)
         turnByAngle(90);
+
+        waitForStart();
+
+        // Continually call findSkyStone until the opmode ends
+        while (opModeIsActive()) {
+            Float centerPercentDifference = findSkyStone();
+        }
+
+        robot.shutdownTfod();
     }
 
     /**
@@ -137,25 +149,25 @@ public class KickOffSampleAutonomous extends LinearOpMode {
         robot.rightDrive.setPower(0);
     }
 
+
     public Float findSkyStone() {
 
-        List<Recognition> updatedRecognitions;
-
-        // Get the list of recognitions from TensorFlow (if you only want to get NEW recognitions, call getUpdatedRecognitions())
+        // Get the list of all recognitions from TensorFlow. Use getUpdatedRecognitions() if you only want NEW ones
+        List<Recognition> recognitions;
         if (robot.tfod != null) {
-            updatedRecognitions = robot.tfod.getRecognitions();
+            recognitions = robot.tfod.getRecognitions();
         } else {
-            updatedRecognitions = null;
+            recognitions = null;
         }
 
         Float centerPercentDifference = null;
 
-        if (updatedRecognitions != null) {
+        if (recognitions != null) {
 
-            telemetry.addData("# Object Detected", updatedRecognitions.size());
+            telemetry.addData("# Object Detected", recognitions.size());
 
             // Look at each recognition
-            for (Recognition recognition : updatedRecognitions) {
+            for (Recognition recognition : recognitions) {
 
                 // Ignore non-skystone recognitions
                 if (!recognition.getLabel().equals(robot.LABEL_SECOND_ELEMENT)) {
@@ -174,11 +186,6 @@ public class KickOffSampleAutonomous extends LinearOpMode {
                 // Calculate what percentage (-100 to 100) the recognition is off from the center of the image
                 centerPercentDifference = (centerDifference / centerFrame) * 100;
 
-                // if centerDifference/centerPercentDifference is...
-                // Negative: the recognition is to the left side of the image
-                // Zero:     the recognition is in the dead center of the image
-                // Positive: the recognition is to the left side of the image
-
                 telemetry.addData("Center", centerSkyStone);
                 telemetry.addData("Difference", centerDifference);
                 telemetry.addData("Percent Difference", centerPercentDifference);
@@ -186,6 +193,12 @@ public class KickOffSampleAutonomous extends LinearOpMode {
         }
 
         telemetry.update();
+
+        // if centerDifference/centerPercentDifference is...
+        // Null:     no recognitions were found
+        // Negative: the recognition is to the left side of the image
+        // Zero:     the recognition is in the dead center of the image
+        // Positive: the recognition is to the left side of the image
         return centerPercentDifference;
     }
 }
