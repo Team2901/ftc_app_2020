@@ -6,11 +6,13 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcore.external.ClassFactory;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
 import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
-import org.firstinspires.ftc.teamcode.Utility.AngleUtilities;
+import org.firstinspires.ftc.robotcore.external.navigation.VuforiaLocalizer;
+import org.firstinspires.ftc.robotcore.external.tfod.TFObjectDetector;
 
 public class KickOffSampleHardware {
 
@@ -46,6 +48,13 @@ public class KickOffSampleHardware {
     //Define the imu
     public BNO055IMU imu;
 
+    public static final String TFOD_MODEL_ASSET = "Skystone.tflite";
+    public static final String LABEL_FIRST_ELEMENT = "Stone";
+    public static final String LABEL_SECOND_ELEMENT = "Skystone";
+    public static final String VUFORIA_KEY = " -- YOUR NEW VUFORIA KEY GOES HERE  --- ";
+
+    public TFObjectDetector tfod;
+
     public void init(HardwareMap hardwareMap){
 
         // Initialize the left and right motors
@@ -78,12 +87,41 @@ public class KickOffSampleHardware {
         // Initialize the imu with the parameters above
         imu = hardwareMap.get(BNO055IMU.class, "imu");
         imu.initialize(parameters);
-
     }
 
     public double getAngle() {
         // Get the Z-angle from the imu (in degrees) and return it as a value from -180 to 180
         Orientation orientation = imu.getAngularOrientation(AxesReference.INTRINSIC, AxesOrder.ZYX, AngleUnit.DEGREES);
         return AngleUnit.normalizeDegrees(orientation.firstAngle);
+    }
+
+    public void initTfod(HardwareMap hardwareMap) {
+
+        VuforiaLocalizer.Parameters parameters = new VuforiaLocalizer.Parameters();
+
+        parameters.vuforiaLicenseKey = VUFORIA_KEY;
+        parameters.cameraDirection = VuforiaLocalizer.CameraDirection.BACK;
+
+        //  Instantiate the Vuforia engine
+        VuforiaLocalizer vuforia = ClassFactory.getInstance().createVuforia(parameters);
+
+        int tfodMonitorViewId = hardwareMap.appContext.getResources().getIdentifier(
+                "tfodMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        TFObjectDetector.Parameters tfodParameters = new TFObjectDetector.Parameters(tfodMonitorViewId);
+        tfodParameters.minResultConfidence = 0.8f;
+        tfod = ClassFactory.getInstance().createTFObjectDetector(tfodParameters, vuforia);
+        tfod.loadModelFromAsset(TFOD_MODEL_ASSET, LABEL_FIRST_ELEMENT, LABEL_SECOND_ELEMENT);
+    }
+
+    public void activateTfod() {
+        if (tfod != null) {
+            tfod.activate();
+        }
+    }
+
+    public void shutdownTfod() {
+        if (tfod != null) {
+            tfod.shutdown();
+        }
     }
 }
