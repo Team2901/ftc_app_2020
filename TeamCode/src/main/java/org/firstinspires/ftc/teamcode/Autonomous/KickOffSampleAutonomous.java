@@ -5,7 +5,13 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.robotcore.external.tfod.Recognition;
 import org.firstinspires.ftc.teamcode.Hardware.KickOffSampleHardware;
+
+import java.util.List;
+
+import static org.firstinspires.ftc.robotcore.external.tfod.TfodSkyStone.LABEL_SKY_STONE;
+import static org.firstinspires.ftc.teamcode.Hardware.BaseSkyStoneHardware.LABEL_SKY_BUTTER;
 
 @Autonomous(name = "Kick-off Sample Autonomous")
 public class KickOffSampleAutonomous extends LinearOpMode {
@@ -129,5 +135,57 @@ public class KickOffSampleAutonomous extends LinearOpMode {
         // Stop the motors once we hit the targetAngle
         robot.leftDrive.setPower(0);
         robot.rightDrive.setPower(0);
+    }
+
+    public Float findSkyStone() {
+
+        List<Recognition> updatedRecognitions;
+
+        // Get the list of recognitions from TensorFlow (if you only want to get NEW recognitions, call getUpdatedRecognitions())
+        if (robot.tfod != null) {
+            updatedRecognitions = robot.tfod.getRecognitions();
+        } else {
+            updatedRecognitions = null;
+        }
+
+        Float centerPercentDifference = null;
+
+        if (updatedRecognitions != null) {
+
+            telemetry.addData("# Object Detected", updatedRecognitions.size());
+
+            // Look at each recognition
+            for (Recognition recognition : updatedRecognitions) {
+
+                // Ignore non-skystone recognitions
+                if (!recognition.getLabel().equals(robot.LABEL_SECOND_ELEMENT)) {
+                    continue;
+                }
+
+                // get the center x pixel of the recognition
+                float centerSkyStone = (recognition.getRight() + recognition.getLeft()) / 2;
+
+                // get the center x pixel of the image
+                int centerFrame = recognition.getImageWidth() / 2;
+
+                // Calculate how many pixels the recognition is off from the center of the image
+                float centerDifference = centerSkyStone - centerFrame;
+
+                // Calculate what percentage (-100 to 100) the recognition is off from the center of the image
+                centerPercentDifference = (centerDifference / centerFrame) * 100;
+
+                // if centerDifference/centerPercentDifference is...
+                // Negative: the recognition is to the left side of the image
+                // Zero:     the recognition is in the dead center of the image
+                // Positive: the recognition is to the left side of the image
+
+                telemetry.addData("Center", centerSkyStone);
+                telemetry.addData("Difference", centerDifference);
+                telemetry.addData("Percent Difference", centerPercentDifference);
+            }
+        }
+
+        telemetry.update();
+        return centerPercentDifference;
     }
 }
