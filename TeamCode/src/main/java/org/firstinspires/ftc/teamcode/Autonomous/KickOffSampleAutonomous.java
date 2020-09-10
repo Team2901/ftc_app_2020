@@ -32,9 +32,7 @@ public class KickOffSampleAutonomous extends LinearOpMode {
 
         // Turn the robot 90 degrees (counter-clockwise)
         turnByAngle(90);
-
-        waitForStart();
-
+        
         // Continually call findSkyStone until the opmode ends
         while (opModeIsActive()) {
             Float centerPercentDifference = findSkyStone();
