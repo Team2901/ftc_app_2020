@@ -28,17 +28,7 @@ public class KickOffSampleAutonomous extends LinearOpMode {
         // Move forwards 6 inches
         moveInches(6);
 
-        // Make the servo "wave" 4 times
-        for (int i = 0; i < 4; i++) {
-            // Make servo move to first position
-            robot.armServo.setPosition(.25);
-            // Wait for servo to reach position
-            sleep(1000);
-            // Make servo move to second position
-            robot.armServo.setPosition(.75);
-            // Wait for servo to reach position
-            sleep(1000);
-        }
+        waveServoHand();
 
         // Turn the robot 90 degrees (counter-clockwise)
         turnByAngle(90);
@@ -91,6 +81,15 @@ public class KickOffSampleAutonomous extends LinearOpMode {
         // Reset the motors to run using encoders
         robot.leftDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         robot.rightDrive.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+    }
+
+    public void waveServoHand() {
+        for (int i = 0; i < 4; i++) {
+            robot.armServo.setPosition(.25);
+            sleep(1000);
+            robot.armServo.setPosition(.75);
+            sleep(1000);
+        }
     }
 
     /**
